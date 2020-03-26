@@ -33,6 +33,7 @@
               <!-- <router-link class="font-weight-regular body-2" to="/login">Cadastre-se</router-link> -->
               <v-btn
                 :loading="logando"
+                v-on:click="login()"
                 small
                 outlined
                 color="tertiary"
@@ -50,9 +51,7 @@
             border="top"
             icon="mdi-alert"
             transition="scale-transition"
-          >
-            {{ errorMessage }}
-          </v-alert>
+          >{{ errorMessage }}</v-alert>
         </v-card>
       </v-col>
     </v-row>
@@ -60,7 +59,7 @@
 </template>
 
 <script>
-import  routes  from "../router/index.js";
+import routes from "../router/index.js";
 
 export default {
   name: "Login",
@@ -87,19 +86,41 @@ export default {
       this.errorMessage = message;
     },
     hideErrorAlert() {
-        this.alertError = false;
+      this.alertError = false;
     },
     validarFormularioLogin() {
       return this.$refs.form.validate();
     },
+    login() {
+      let request = new Object();
+
+      request.username = "";
+      request.email = this.email;
+      request.password = this.senha;
+
+      console.log(request);
+      var url = "http://itexas.pythonanywhere.com/rest-auth/login/";
+
+      this.$http
+        .post(url, request)
+        .then(function(res) {
+          //let resultado = res.json();
+          alert("sucess");
+          return res;
+        })
+        .catch(function(err) {
+          alert("fail");
+          return console.log(err);
+        });
+    }
   }
-}
+};
 </script>
 
 <style scoped>
 .container {
   height: 100%;
-  background-color: #FBF9FC;
+  background-color: #fbf9fc;
   /* padding-top: -10px;
   background-image: url("../assets/19185.jpg");
   background-repeat: no-repeat;

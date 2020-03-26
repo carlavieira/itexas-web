@@ -49,7 +49,8 @@
       return {
         items: [
           { text: 'Dashboard', icon: 'mdi-view-dashboard-outline', path:'/dashboard' },
-          { text: 'Relatórios', icon: 'mdi-clipboard-text-multiple-outline', path:'/' }
+          { text: 'Relatórios', icon: 'mdi-clipboard-text-multiple-outline', path:'/' },
+          { text: 'Gráficos', icon: 'mdi-clipboard-text-multiple-outline', path:'/' }
         ],
         drawer: true
       }
