@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon color="tertiary" @click=" drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
       <v-toolbar-title class="pl-0">
-        <v-img src="../assets/branco2.png" max-width="70px"/>
+        <v-img src="../assets/branco2.png" max-width="70px" />
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-app-bar-nav-icon color="primary"></v-app-bar-nav-icon>
@@ -38,28 +38,40 @@
     </v-navigation-drawer>
 
     <div class="pa-3">
-        <router-view></router-view>
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        items: [
-          { text: 'Dashboard', icon: 'mdi-view-dashboard-outline', path:'/dashboard' },
-          { text: 'Relatórios', icon: 'mdi-clipboard-text-multiple-outline', path:'/' },
-          { text: 'Gráficos', icon: 'mdi-clipboard-text-multiple-outline', path:'/' }
-        ],
-        drawer: true
-      }
-    },
+export default {
+  data() {
+    return {
+      items: [
+        {
+          text: "Dashboard",
+          icon: "mdi-view-dashboard-outline",
+          path: "/dashboard"
+        },
+        {
+          text: "Relatórios",
+          icon: "mdi-clipboard-text-multiple",
+          path: "/"
+        },
+        {
+          text: "Cadastrar Membro",
+          icon: "mdi-account-plus",
+          path: "/cadastrar-membro"
+        }
+      ],
+      drawer: true
+    };
   }
+};
 </script>
 
 <style scoped>
-.radius{
+.radius {
   border-radius: 6px !important;
 }
 </style>
