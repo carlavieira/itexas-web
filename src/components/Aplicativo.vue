@@ -38,7 +38,9 @@
     </v-navigation-drawer>
 
     <div class="pa-3">
-      <router-view></router-view>
+      <router-view>
+        
+      </router-view>
     </div>
   </div>
 </template>
@@ -59,9 +61,9 @@ export default {
           path: "/"
         },
         {
-          text: "Cadastrar Membro",
+          text: "Membros",
           icon: "mdi-account-plus",
-          path: "/cadastrar-membro"
+          path: "/aplicativo/membros"
         }
       ],
       drawer: true
