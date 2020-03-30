@@ -49,8 +49,6 @@
           <v-row>
             <v-col class="col-12" sm="6" md="6" lg="6">
               <v-text-field
-                class=""
-                v-model="name"
                 :counter="20"
                 :rules="nameRules"
                 label="Nome"
@@ -62,8 +60,6 @@
 
             <v-col class="col-12" sm="6" md="6" lg="6">
               <v-text-field
-                class=""
-                v-model="sobrenome"
                 :counter="40"
                 :rules="nameRules"
                 label="Sobrenome"
@@ -75,8 +71,6 @@
 
             <v-col class="col-12" sm="6" md="6" lg="6">
               <v-text-field
-                class=""
-                v-model="email"
                 :rules="emailRules"
                 label="E-mail"
                 prepend-icon="mdi-email"
@@ -86,9 +80,6 @@
             </v-col>
             <v-col class="col-12" sm="6" md="6" lg="6">
               <v-select
-                v-model="select"
-                :cargo="cargo"
-                :rules="[v => !!v || 'Cargo is required']"
                 label="Cargo"
                 prepend-icon="mdi-briefcase"
                 required
@@ -96,9 +87,6 @@
             </v-col>
             <v-col class="col-12" sm="6" md="6" lg="6">
               <v-select
-                v-model="select"
-                :area="area"
-                :rules="[v => !!v || 'Área is required']"
                 label="Área"
                 prepend-icon="mdi-border-none-variant"
                 required
@@ -106,18 +94,12 @@
             </v-col>
             <v-col class="col-12" sm="6" md="6" lg="6">
               <v-select
-                v-model="select"
-                :lider="lider"
-                :rules="[v => !!v || 'Lider is required']"
                 label="Líder"
                 prepend-icon="mdi-account-star"
               ></v-select>
             </v-col>
             <v-col class="col-12" sm="6" md="6" lg="6">
               <v-text-field
-                class=""
-                v-model="slack"
-                :rules="slackRules"
                 label="Slack"
                 prepend-icon="mdi-slack"
                 no-gutters
@@ -125,17 +107,15 @@
             </v-col>
             <v-col class="col-12" sm="6" md="6" lg="6">
               <v-text-field
-                class=""
-                v-model="celular"
-                :rules="celular"
-                label="Celular"
+                name="celular"
+                label="Celular (xx) xxxxx-xxxx"
+                type="number"
                 prepend-icon="mdi-cellphone-iphone"
                 no-gutters
               ></v-text-field>
             </v-col>
             <v-col class="col-12" sm="6" md="6" lg="6">
               <v-file-input
-              :rules="rules"
               accept="image/png, image/jpeg, image/bmp"
               placeholder="Selecionar Foto"
               prepend-icon="mdi-camera"
@@ -145,18 +125,10 @@
           </v-row>
             <v-row>
               <v-col class="col-12 offset-md-4 offset-lg-3 offset-sm-3 column-button" sm="6" md="4" lg="6">
-                <v-btn class= "ma-2" depressed color="error">Cadastrar</v-btn>
-                <v-btn class="ma-2" outlined color="error">Limpar Campos</v-btn>
+                <v-btn class= "ma-2" v-on:click.native="submit()" depressed color="success">Cadastrar</v-btn>
+                <v-btn class="ma-2" v-on:click.native="clear()" outlined >Limpar Campos</v-btn>
               </v-col>
             </v-row>
-
-
-
-
-      
-
-
-
         </v-form>
       </v-container>
     </div>
@@ -197,19 +169,18 @@ export default {
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
       ],
       select: null,
-      methods: {
-        validate () {
-          this.$refs.form.validate()
-        },
-        reset () {
-          this.$refs.form.reset()
-        },
-        resetValidation () {
-          this.$refs.form.resetValidation()
-        },
-      },
     }
-  }
+  },
+  methods: {
+  clear() {
+    this.$refs.form.reset()
+    this.celular = '';
+  },
+  submit() {
+    //let request = new Object();
+    
+  },
+},
 };
 </script>
 
