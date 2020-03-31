@@ -12,6 +12,7 @@
         <v-card class="w-100">
           <v-card-title>
             <v-text-field
+              style="max-width: 300px"
               v-model="search"
               append-icon="mdi-magnify"
               label="Pesquisar"
@@ -45,48 +46,57 @@ export default {
           value: "name"
         },
         { text: "Cargo", value: "cargo" },
-        { text: "Área", value: "area" }
+        { text: "Área", value: "area" },
+        { text: "Líder", value: "lider" },
       ],
       membros: [
         {
-          name: "Frozen Yogurt",
-          cargo: 159,
-          area: 6.0
+          name: "Pedro Rocha",
+          cargo: "Team Leader",
+          area: "B2B",
+          lider: "Antônio"
         },
         {
-          name: "Alex",
+          name: "Alex Mascarenhas",
+          cargo: "Membro",
+          area: "oGT",
+          lider: "Pedro Rocha"
+        },
+        {
+          name: "Marina Figueiredo",
+          cargo: "Team Leader",
+          area: "iGT",
+          lider: "Pedro Rocha"
+        },
+        {
+          name: "Victoria Nunes",
+          cargo: "Membro",
+          area: "iGT",
+          lider: "Marina Figueiredo"
+        },
+        {
+          name: "Marlon Silva",
+          cargo: "Membro",
+          area: "F&L",
+          lider: "Pedro Rocha"
+        },
+        {
+          name: "Flávio Junior",
           cargo: "Presidente",
-          area: "2"
+          area: "-",
+          lider: "-"
         },
         {
-          name: "Frozen Yogurt",
-          cargo: 159,
-          area: 6.0
+          name: "Bruna Neves",
+          cargo: "Membro",
+          area: "B2B",
+          lider: "Marina Figueiredo"
         },
         {
-          name: "Alex",
-          cargo: "Presidente",
-          area: "2"
-        },
-        {
-          name: "Frozen Yogurt",
-          cargo: 159,
-          area: 6.0
-        },
-        {
-          name: "Alex",
-          cargo: "Presidente",
-          area: "2"
-        },
-        {
-          name: "Frozen Yogurt",
-          cargo: 159,
-          area: 6.0
-        },
-        {
-          name: "Alex",
-          cargo: "Presidente",
-          area: "2"
+          name: "Lucas Pacheco",
+          cargo: "Membro",
+          area: "B2B",
+          lider: "Marina Figueiredo"
         },
       ]
     };

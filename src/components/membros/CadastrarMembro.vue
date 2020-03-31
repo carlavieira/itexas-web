@@ -77,20 +77,16 @@
               label="Avatar"
             ></v-file-input>
           </v-col>
+
+          <!-- Data de Entrada (Calendário) -->
           <v-row justify="space-around">
             <span class="span-title">Data de entrada na AIESEC</span>
           </v-row>
-
           <v-row style="margin-left: 2px" justify="space-around" class="col-12" sm="12" md="12" lg="12">
 
             <v-date-picker color="red lighten-1" locale="pt-br" v-model="picker"></v-date-picker>
           </v-row>
 
-
-
-            
-
-          
         </v-row>
         <v-row>
           <v-col
@@ -165,6 +161,6 @@ export default {
 }
 
 .span-title {
-  color: #212121;
+  color: #8e8e8e;
 }
 </style>
