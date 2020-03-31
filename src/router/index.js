@@ -4,6 +4,7 @@ import VueRouter from "vue-router";
 import app from "../components/Aplicativo.vue";
 import members from "../components/membros/Membros.vue";
 import reuniao from "../components/reuniao/Reuniao.vue";
+import eventos from "../components/eventos/Eventos.vue"
 
 Vue.use(VueRouter);
 
@@ -14,7 +15,8 @@ const routes = [
   {
     path: "/aplicativo", name: "app", component: app, children: [
       { path: "/aplicativo/membros", name: "members", component: members },
-      { path: "/aplicativo/reuniao", name: "reunioes", component: reuniao }
+      { path: "/aplicativo/reuniao", name: "reuniao", component: reuniao },
+      { path: "/aplicativo/eventos", name: "eventos", component: eventos }
     ]
   }
 ];

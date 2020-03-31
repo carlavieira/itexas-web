@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 <template>
   <v-container>
     <v-row class="px-4">
@@ -29,77 +30,98 @@
 </template>
 
 <script>
-import NovoMembro from "./CadastrarMembro.vue";
+  import NovoMembro from "./CadastrarMembro.vue";
+  export default {
+    components: {
+      NovoMembro
+    },
+    data() {
+      return {
+        btnMembro: false,
+        search: "",
+        headersMembros: [
+          {
+            text: "Nome",
+            align: "start",
+            value: "name"
+          },
+          { text: "Cargo", value: "cargo" },
+          { text: "Área", value: "area" },
+          { text: "Líder", value: "lider" },
+        ],
+        membros: [
+          {
+            name: "Pedro Rocha",
+            cargo: "Team Leader",
+            area: "B2B",
+            lider: "Antônio"
+          },
+          {
+            name: "Alex Mascarenhas",
+            cargo: "Membro",
+            area: "oGT",
+            lider: "Pedro Rocha"
+          },
+          {
+            name: "Marina Figueiredo",
+            cargo: "Team Leader",
+            area: "iGT",
+            lider: "Pedro Rocha"
+          },
+          {
+            name: "Victoria Nunes",
+            cargo: "Membro",
+            area: "iGT",
+            lider: "Marina Figueiredo"
+          },
+          {
+            name: "Marlon Silva",
+            cargo: "Membro",
+            area: "F&L",
+            lider: "Pedro Rocha"
+          },
+          {
+            name: "Flávio Junior",
+            cargo: "Presidente",
+            area: "-",
+            lider: "-"
+          },
+          {
+            name: "Bruna Neves",
+            cargo: "Membro",
+            area: "B2B",
+            lider: "Marina Figueiredo"
+          },
+          {
+            name: "Lucas Pacheco",
+            cargo: "Membro",
+            area: "B2B",
+            lider: "Marina Figueiredo"
+          },
+        ]
+      };
+    },
+    methods: {
+      requestGetMembers() {
+        let url = "http://itexas.pythonanywhere.com/members/";
 
-export default {
-  components: {
-    NovoMembro
-  },
-  data() {
-    return {
-      btnMembro: false,
-      search: "",
-      headersMembros: [
-        {
-          text: "Nome",
-          align: "start",
-          value: "name"
-        },
-        { text: "Cargo", value: "cargo" },
-        { text: "Área", value: "area" },
-        { text: "Líder", value: "lider" },
-      ],
-      membros: [
-        {
-          name: "Pedro Rocha",
-          cargo: "Team Leader",
-          area: "B2B",
-          lider: "Antônio"
-        },
-        {
-          name: "Alex Mascarenhas",
-          cargo: "Membro",
-          area: "oGT",
-          lider: "Pedro Rocha"
-        },
-        {
-          name: "Marina Figueiredo",
-          cargo: "Team Leader",
-          area: "iGT",
-          lider: "Pedro Rocha"
-        },
-        {
-          name: "Victoria Nunes",
-          cargo: "Membro",
-          area: "iGT",
-          lider: "Marina Figueiredo"
-        },
-        {
-          name: "Marlon Silva",
-          cargo: "Membro",
-          area: "F&L",
-          lider: "Pedro Rocha"
-        },
-        {
-          name: "Flávio Junior",
-          cargo: "Presidente",
-          area: "-",
-          lider: "-"
-        },
-        {
-          name: "Bruna Neves",
-          cargo: "Membro",
-          area: "B2B",
-          lider: "Marina Figueiredo"
-        },
-        {
-          name: "Lucas Pacheco",
-          cargo: "Membro",
-          area: "B2B",
-          lider: "Marina Figueiredo"
-        },
-      ]
-    };
-  }
-};
+        this.$http
+          .get(url)
+          .then(function(res) {
+            //let resultado = res.json();
+            alert("sucess");
+            console.log(res)
+            return res;
+          })
+          .catch(function(err) {
+            alert("fail");
+            return console.log(err);
+          });
+      }
+    },
+    created: function(){
+      this.requestGetMembers();
+      console.log('Teste')
+    }
+  };
 </script>
