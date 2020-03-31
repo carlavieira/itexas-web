@@ -32,6 +32,15 @@
 
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
+              :counter="40"
+              label="Apelido"
+              prepend-icon="mdi-account-heart"
+              no-gutters
+            ></v-text-field>
+          </v-col>
+
+          <v-col class="col-12" sm="6" md="6" lg="6">
+            <v-text-field
               :rules="emailRules"
               label="E-mail"
               prepend-icon="mdi-email"
@@ -68,6 +77,20 @@
               label="Avatar"
             ></v-file-input>
           </v-col>
+          <v-row justify="space-around">
+            <span class="span-title">Data de entrada na AIESEC</span>
+          </v-row>
+
+          <v-row style="margin-left: 2px" justify="space-around" class="col-12" sm="12" md="12" lg="12">
+
+            <v-date-picker color="red lighten-1" locale="pt-br" v-model="picker"></v-date-picker>
+          </v-row>
+
+
+
+            
+
+          
         </v-row>
         <v-row>
           <v-col
@@ -100,7 +123,15 @@ export default {
         v => !!v || "E-mail is required",
         v => /.+@.+\..+/.test(v) || "E-mail inválido"
       ],
-      select: null
+      select: null,
+      picker: new Date().toISOString().substr(0, 10),
+      date: null,
+      trip: {
+        name: '',
+        location: null,
+        start: null,
+        end: null,
+      },
     };
   },
 
@@ -131,5 +162,9 @@ export default {
 
 .column-button {
   display: flex;
+}
+
+.span-title {
+  color: #212121;
 }
 </style>
