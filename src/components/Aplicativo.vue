@@ -62,7 +62,7 @@ export default {
         },
         {
           text: "Membros",
-          icon: "mdi-account-plus",
+          icon: "mdi-account-multiple",
           path: "/aplicativo/membros"
         }
       ],

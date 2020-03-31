@@ -10,7 +10,7 @@ export default new Vuetify({
     themes: {
       light: {
         primary: colors.grey.darken4, // #E53935
-        secondary: colors.red.darken4,
+        secondary: colors.red.lighten1,
         tertiary: '#ff3535', 
         branco: '#FBF9FC'
       },
