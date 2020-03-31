@@ -51,7 +51,7 @@
         ],
         membros: [
           {
-            name: "Pedro Rocha",
+            name: "Pedro Machado",
             cargo: "Team Leader",
             area: "B2B",
             lider: "Antônio"
