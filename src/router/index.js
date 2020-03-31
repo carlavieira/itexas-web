@@ -9,8 +9,8 @@ Vue.use(VueRouter);
 const routes = [
   { path: "*", redirect: "/login" },
   { path: "/", redirect: "/login" },
-  { path: "/login", name: "login", component: login },
-  { path: "/aplicativo", name: "app", component: app },
+  { path: "/login", name: "login", component: app },
+  { path: "/aplicativo", name: "app", component: login },
   { path: "/cadastrar-membro", name: "register-member", component: cadastrarMembro }
 ];
 
