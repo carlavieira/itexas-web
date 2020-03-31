@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 //import login from "../components/Login.vue";
 import app from "../components/Aplicativo.vue";
 import members from "../components/membros/Membros.vue";
+import reuniao from "../components/reuniao/Reuniao.vue";
 
 Vue.use(VueRouter);
 
@@ -12,7 +13,8 @@ const routes = [
   { path: "/login", name: "login", component: app },
   {
     path: "/aplicativo", name: "app", component: app, children: [
-      { path: "/aplicativo/membros", name: "members", component: members }
+      { path: "/aplicativo/membros", name: "members", component: members },
+      { path: "/aplicativo/reuniao", name: "reunioes", component: reuniao }
     ]
   }
 ];

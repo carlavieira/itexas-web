@@ -3,7 +3,7 @@
     <v-card class="pa-5">
       <v-layout row class="px-3" justify-space-between>
         <h2>Cadastro de Membro</h2>
-        <v-btn @click="$emit('close')" icon>
+        <v-btn @click="$emit('close')" title="Fechar" icon>
           <v-icon color="grey">mdi-close</v-icon>
         </v-btn>
       </v-layout>
@@ -83,7 +83,6 @@
             <span class="span-title">Data de entrada na AIESEC</span>
           </v-row>
           <v-row style="margin-left: 2px" justify="space-around" class="col-12" sm="12" md="12" lg="12">
-
             <v-date-picker color="red lighten-1" locale="pt-br" v-model="picker"></v-date-picker>
           </v-row>
 
@@ -161,6 +160,6 @@ export default {
 }
 
 .span-title {
-  color: #8e8e8e;
+  color: #777777;
 }
 </style>

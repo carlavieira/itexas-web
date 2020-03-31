@@ -64,6 +64,11 @@ export default {
           text: "Membros",
           icon: "mdi-account-multiple",
           path: "/aplicativo/membros"
+        },
+        {
+          text: "Reunião",
+          icon: "mdi-calendar-month ",
+          path: "/aplicativo/reuniao"
         }
       ],
       drawer: true
