@@ -99,7 +99,7 @@ export default {
       request.password = this.senha;
 
       console.log(request);
-      var url = "http://itexas.pythonanywhere.com/rest-auth/login/";
+      let url = "http://itexas.pythonanywhere.com/rest-auth/login/";
 
       this.$http
         .post(url, request)
