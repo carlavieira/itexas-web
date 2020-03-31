@@ -14,7 +14,7 @@
               :counter="20"
               :rules="nameRules"
               label="Nome"
-              prepend-icon="mdi-alpha-n"
+              prepend-icon="mdi-card-account-details"
               required
               no-gutters
             ></v-text-field>
@@ -25,7 +25,6 @@
               :counter="40"
               :rules="nameRules"
               label="Sobrenome"
-              prepend-icon="mdi-alpha-s"
               required
               no-gutters
             ></v-text-field>
