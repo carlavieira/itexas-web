@@ -1,8 +1,8 @@
 <template>
   <v-dialog max-width="800px" persistent v-model="show">
-    <v-card class="pa-5">
+    <v-card class="py-5 pr-4 pl-8">
       <v-layout row class="px-3" justify-space-between>
-        <h2>Marcação de Reunião</h2>
+        <h2>Marcação de Evento</h2>
         <v-btn @click="$emit('close')" title="Fechar" icon>
           <v-icon color="grey">mdi-close</v-icon>
         </v-btn>
@@ -23,24 +23,74 @@
           </v-col>
 
           <v-row justify="space-around">
-            <v-col class="col-12 column" sm="6" md="6" lg="6">
-              <span class="span-title">Data do Evento</span>
-              <v-date-picker class="w-290" color="red lighten-1" locale="pt-br" v-model="picker"></v-date-picker>
-            </v-col>
-            <v-col class="col-12 column" sm="6" md="6" lg="6">
-              <span class="span-title">Hora do Evento</span>
-              <v-time-picker class="w-290" v-model="e7" color="red lighten-1" format="24hr"></v-time-picker>
-            </v-col>
-          </v-row>
-            <v-col
-              class="col-12 offset-md-4 offset-lg-4 offset-sm-3 column-button"
-              sm="6"
-              md="6"
-              lg="6"
-            >
-              <v-btn class="ma-2" v-on:click.native="submit()" depressed color="success">Cadastrar</v-btn>
-              <v-btn class="ma-2" v-on:click.native="clear()" outlined>Limpar Campos</v-btn>
-            </v-col>
+
+
+      <v-col cols="11" sm="5">
+        <v-dialog
+          ref="dialog2"
+          v-model="modal1"
+          :return-value.sync="date"
+          persistent
+          width="290px"
+        >
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              v-model="date"
+              label="Data do Evento"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="date" color="red lighten-1" locale="pt-br" scrollable>
+            <v-spacer></v-spacer>
+            <v-btn text color="primary" @click="modal1 = false">Voltar</v-btn>
+            <v-btn text color="primary" @click="$refs.dialog2.save(date)">OK</v-btn>
+          </v-date-picker>
+        </v-dialog>
+      </v-col>
+
+      <v-col cols="11" sm="5">
+        <v-dialog
+          ref="dialog"
+          v-model="modal2"
+          :return-value.sync="time"
+          persistent
+          width="290px"
+        >
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              v-model="time"
+              label="Hora do Evento"
+              prepend-icon="mdi-clock-outline"
+              readonly
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-time-picker
+            v-if="modal2"
+            v-model="time"
+            color="red lighten-1"
+            format="24h"
+            full-width
+          >
+            <v-spacer></v-spacer>
+            <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
+            <v-btn text color="primary" @click="$refs.dialog.save(time)">OK</v-btn>
+          </v-time-picker>
+        </v-dialog>
+      </v-col>
+    </v-row>
+      <v-col
+        class="mt-6 col-12 offset-md-4 offset-lg-4 offset-sm-3 column-button"
+        sm="6"
+        md="6"
+        lg="6"
+      >
+        <v-btn class="ma-2" v-on:click.native="submit()" depressed color="success">Cadastrar</v-btn>
+        <v-btn class="ma-2" v-on:click.native="clear()" outlined>Limpar Campos</v-btn>
+      </v-col>
+
         </v-row>
       </v-form>
     </v-card>
@@ -51,7 +101,10 @@
 export default {
   data() {
     return {
-      picker: new Date().toISOString().substr(0, 10),
+      date: new Date().toISOString().substr(0, 10),
+      modal1: false,
+      modal2: false,
+      time: null,
       e7: null,
       select: null,
       valid: true,

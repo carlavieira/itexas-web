@@ -64,7 +64,6 @@ export default {
 }
 </script>
 
-
 <style scoped>
   .w-290 {
     max-width: 290px;
