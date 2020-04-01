@@ -60,6 +60,7 @@
 
 <script>
 import routes from "../router/index.js";
+import authController from "../controllers/AuthController"
 
 export default {
   name: "Login",
@@ -71,6 +72,7 @@ export default {
       alertError: false,
       errorMessage: "",
       routes,
+      authController,
       validacaoEmail: [
         v => !!v || "E-mail é obrigatório",
         v => /.+@.+/.test(v) || "E-mail inválido"
@@ -91,28 +93,10 @@ export default {
     validarFormularioLogin() {
       return this.$refs.form.validate();
     },
-    login() {
-      let request = new Object();
 
-      request.username = "";
-      request.email = this.email;
-      request.password = this.senha;
-
-      console.log(request);
-      let url = "http://itexas.pythonanywhere.com/rest-auth/login/";
-
-      this.$http
-        .post(url, request)
-        .then(function(res) {
-          //let resultado = res.json();
-          alert("sucess");
-          console.log(res)
-          return res;
-        })
-        .catch(function(err) {
-          alert("fail");
-          return console.log(err);
-        });
+    async login(){
+      let res = await this.authController.login(this.$http, this.email, this.senha)
+      console.log(res)
     }
   }
 };
