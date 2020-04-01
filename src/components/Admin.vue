@@ -63,17 +63,17 @@ export default {
         {
           text: "Membros",
           icon: "mdi-account-multiple",
-          path: "/aplicativo/membros"
+          path: "/adm/membros"
         },
         {
           text: "Reunião",
           icon: "mdi-calendar-month ",
-          path: "/aplicativo/reuniao"
+          path: "/adm/reuniao"
         },
         {
           text: "Evento",
           icon: "mdi-account-group",
-          path: "/aplicativo/eventos"
+          path: "/adm/eventos"
         }
       ],
       drawer: true

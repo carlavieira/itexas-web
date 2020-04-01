@@ -9,10 +9,12 @@ export default {
         request.password = senha
 
         let url = "http://itexas.pythonanywhere.com/rest-auth/login/";
-        
+
         return http
             .post(url, request)
             .then(res => {
+                localStorage.setItem("access_token", res.data.token)
+                localStorage.setItem("user_id", res.data.user.email)
                 this.routerPath(res)
                 return res;
             })
@@ -22,7 +24,7 @@ export default {
     },
 
     routerPath(res){
-        res.data.user.is_staff ? router.push("/aplicativo/membros") : router.push("/aplicativo/eventos")
+        res.data.user.is_staff ? router.push("/adm/membros") : router.push("/adm/eventos")
     }
 
 

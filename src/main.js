@@ -7,6 +7,8 @@ import VueResource from "vue-resource";
 Vue.config.productionTip = false;
 Vue.use(VueResource);
 
+// Vue.http.headers.common['Authorization'] = ``
+
 new Vue({
   router,
   vuetify,
