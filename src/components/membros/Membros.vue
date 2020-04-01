@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 <template>
   <v-container>
     <v-row class="px-4">
