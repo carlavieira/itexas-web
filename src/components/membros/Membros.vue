@@ -3,7 +3,13 @@
     <v-row class="px-4">
       <h2>Membros</h2>
       <v-spacer></v-spacer>
-      <v-btn @click="btnMembro = true" title="Cadastrar novo membro" small color="secondary" fab>
+      <v-btn
+        @click="btnMembro = true"
+        title="Cadastrar novo membro"
+        small
+        color="secondary"
+        fab
+      >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-row>
@@ -20,7 +26,13 @@
               hide-details
             ></v-text-field>
           </v-card-title>
-          <v-data-table no-data-text="Nenhum membro cadastrado" no-results-text="Nenhum membro encontrado" :headers="headersMembros" :items="membros" :search="search"></v-data-table>
+          <v-data-table
+            no-data-text="Nenhum membro cadastrado"
+            no-results-text="Nenhum membro encontrado"
+            :headers="headersMembros"
+            :items="membros"
+            :search="search"
+          ></v-data-table>
         </v-card>
       </v-flex>
     </v-row>
@@ -29,37 +41,42 @@
 </template>
 
 <script>
-  import NovoMembro from "./CadastrarMembro.vue";
-  import memberController from "../../controllers/MemberController"
+import NovoMembro from "./CadastrarMembro.vue";
+import memberController from "../../controllers/MemberController";
 
-  export default {
-    components: {
-      NovoMembro
-    },
+/* Ajeitar futuramente para os imports irem no main.js */
+import axios from "axios";
+import Vue from "vue";
 
-    async created(){
-      let res = await this.memberController.getAllMembers(this.$http)
-      console.log(res)
-      this.membros = res.data
-    },
+Vue.prototype.$http = axios;
 
-    data() {
-      return {
-        btnMembro: false,
-        memberController,
-        search: "",
-        headersMembros: [
-          {
-            text: "Nome",
-            align: "start",
-            value: "first_name"
-          },
-          { text: "Cargo", value: "post" },
-          { text: "Área", value: "department" },
-          { text: "Líder", value: "leader" },
-        ],
-        membros: []
-      };
-    }
-  };
+export default {
+  components: {
+    NovoMembro
+  },
+
+  async created() {
+    let res = await this.memberController.getAllMembers(axios);
+    this.membros = res;
+  },
+
+  data() {
+    return {
+      btnMembro: false,
+      memberController,
+      search: "",
+      headersMembros: [
+        {
+          text: "Nome",
+          align: "start",
+          value: "first_name"
+        },
+        { text: "Cargo", value: "post" },
+        { text: "Área", value: "department" },
+        { text: "Líder", value: "leader" }
+      ],
+      membros: []
+    };
+  }
+};
 </script>
