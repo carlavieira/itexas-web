@@ -3,13 +3,7 @@
     <v-row class="px-4">
       <h2>Membros</h2>
       <v-spacer></v-spacer>
-      <v-btn
-        @click="btnMembro = true"
-        title="Cadastrar novo membro"
-        small
-        color="secondary"
-        fab
-      >
+      <v-btn @click="btnMembro = true" title="Cadastrar novo membro" small color="secondary" fab>
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-row>
@@ -32,11 +26,16 @@
             :headers="headersMembros"
             :items="membros"
             :search="search"
-          ></v-data-table>
+          >
+            <template v-slot:item.actions="{ item }">
+              <v-icon small @click="memberShow(item)">mdi-account-details</v-icon>
+            </template>
+          </v-data-table>
         </v-card>
       </v-flex>
     </v-row>
     <NovoMembro :show="btnMembro" @close="btnMembro = false"></NovoMembro>
+    <modalDetail v-if="showDetail" :show="showDetail" :member="userDetail" @close="showDetail = false"></modalDetail>
   </v-container>
 </template>
 
@@ -46,17 +45,19 @@ import memberController from "../../controllers/membros/MemberController";
 /* Ajeitar futuramente para os imports irem no main.js */
 import axios from "axios";
 import Vue from "vue";
+import modalDetail from "./ModalDetail.vue"
 
 Vue.prototype.$http = axios;
 
 export default {
   components: {
-    NovoMembro
+    NovoMembro,
+    modalDetail
   },
 
   async created() {
     let res = await this.memberController.getAllMembers(axios);
-    this.membros = res.data;
+    this.membros = res;
   },
 
   data() {
@@ -72,10 +73,21 @@ export default {
         },
         { text: "Cargo", value: "post" },
         { text: "Área", value: "department" },
-        { text: "Líder", value: "leader" }
+        { text: "Líder", value: "leader" },
+        { text: 'Detalhes', value: 'actions', sortable: false },
       ],
-      membros: []
+      membros: [],
+      userDetail: null,
+      showDetail: false
     };
+  },
+
+  methods: {
+    memberShow(user){
+      console.log(user)
+      this.userDetail = user
+      this.showDetail = true
+    }
   }
 };
 </script>
