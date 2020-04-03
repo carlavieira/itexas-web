@@ -9,6 +9,7 @@ export default {
         }
       })
       .then(function(response) {
+        console.log(response.data);
         return response;
       })
       .catch(function(error) {

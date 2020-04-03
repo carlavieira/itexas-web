@@ -42,7 +42,7 @@
 
 <script>
 import NovoMembro from "./CadastrarMembro.vue";
-import memberController from "../../controllers/MemberController";
+import memberController from "../../controllers/membros/MemberController";
 /* Ajeitar futuramente para os imports irem no main.js */
 import axios from "axios";
 import Vue from "vue";

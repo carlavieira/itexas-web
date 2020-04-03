@@ -42,7 +42,7 @@
 
 <script>
 import NovaReuniao from "./CadastrarReuniao.vue";
-import meetingController from "../../controllers/MeetingController";
+import meetingController from "../../controllers/reuniao/MeetingController";
 /* Ajeitar futuramente para os imports irem no main.js */
 import axios from "axios";
 import Vue from "vue";
@@ -68,38 +68,13 @@ export default {
         {
           text: "Tipo",
           align: "start",
-          value: "tipo"
+          value: "type"
         },
-        { text: "Lider", value: "lider" },
-        { text: "Data", value: "data" },
-        { text: "Hora", value: "hora" }
+        { text: "Líder", value: "member" },
+        { text: "Data", value: "date" },
+        { text: "Hora", value: "time" }
       ],
-      reunioes: [
-        {
-          tipo: "Reunião Geral",
-          lider: "Marcos Antônio",
-          data: "22/01/2020",
-          hora: "20:30"
-        },
-        {
-          tipo: "Reunião de Evento",
-          lider: "Maria Luisa",
-          data: "30/03/2020",
-          hora: "19:00"
-        },
-        {
-          tipo: "Reunião de Marketing",
-          lider: "Marco Antônio",
-          data: "27/03/2020",
-          hora: "18:00"
-        },
-        {
-          tipo: "Reunião de Team Leader",
-          lider: "Murilo Costa",
-          data: "26/02/2020",
-          hora: "10:00"
-        }
-      ]
+      reunioes: []
     };
   }
 };

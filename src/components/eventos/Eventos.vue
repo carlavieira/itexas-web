@@ -42,7 +42,7 @@
 
 <script>
 import NovoEvento from "./CadastrarEvento.vue";
-import eventController from "../../controllers/EventController";
+import eventController from "../../controllers/eventos/EventController";
 /* Ajeitar futuramente para os imports irem no main.js */
 import axios from "axios";
 import Vue from "vue";
@@ -68,50 +68,13 @@ export default {
         {
           text: "Nome",
           align: "start",
-          value: "name"
+          value: "type"
         },
-        { text: "Lider", value: "lider" },
-        { text: "Data", value: "data" },
-        { text: "Hora", value: "hora" }
+        { text: "Lider", value: "member" },
+        { text: "Data", value: "date" },
+        { text: "Hora", value: "time" }
       ],
-      eventos: [
-        {
-          name: "Evento 1",
-          lider: "Mauro Rubbens",
-          data: "22/01/2020",
-          hora: "19:00"
-        },
-        {
-          name: "Evento 2",
-          lider: "Lucas Leandro",
-          data: "30/07/2019",
-          hora: "19:00"
-        },
-        {
-          name: "Evento 3",
-          lider: "Mauro Rubbens",
-          data: "10/01/2020",
-          hora: "20:00"
-        },
-        {
-          name: "Evento 4",
-          lider: "Carla Nolasco",
-          data: "12/03/2020",
-          hora: "12:00"
-        },
-        {
-          name: "Evento 5",
-          lider: "Lucas Leandro",
-          data: "12/12/2019",
-          hora: "18:00"
-        },
-        {
-          name: "Evento 6",
-          lider: "Mauro Rubens",
-          data: "19/02/2020",
-          hora: "13:00"
-        }
-      ]
+      eventos: []
     };
   }
 };
