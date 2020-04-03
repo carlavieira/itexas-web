@@ -1,6 +1,6 @@
 export default {
-  getAllEvents(axios) {
-    let url = "http://itexas.pythonanywhere.com/event/";
+  getAllMeeting(axios) {
+    let url = "http://itexas.pythonanywhere.com/meeting/";
 
     const response = axios
       .get(url, {
