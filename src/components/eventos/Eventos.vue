@@ -1,11 +1,15 @@
-
-
 <template>
   <v-container>
     <v-row class="px-4">
       <h2>Eventos</h2>
       <v-spacer></v-spacer>
-      <v-btn @click="btnEvento = true" title="Marcar Evento" small color="secondary" fab>
+      <v-btn
+        @click="btnEvento = true"
+        title="Marcar Evento"
+        small
+        color="secondary"
+        fab
+      >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-row>
@@ -22,7 +26,13 @@
               hide-details
             ></v-text-field>
           </v-card-title>
-          <v-data-table no-data-text="Nenhum evento cadastrado" no-results-text="Nenhum evento encontrado" :headers="headersEvento" :items="evento" :search="search"></v-data-table>
+          <v-data-table
+            no-data-text="Nenhum evento cadastrado"
+            no-results-text="Nenhum evento encontrado"
+            :headers="headersEvento"
+            :items="eventos"
+            :search="search"
+          ></v-data-table>
         </v-card>
       </v-flex>
     </v-row>
@@ -32,26 +42,39 @@
 
 <script>
 import NovoEvento from "./CadastrarEvento.vue";
+import eventController from "../../controllers/EventController";
+/* Ajeitar futuramente para os imports irem no main.js */
+import axios from "axios";
+import Vue from "vue";
+
+Vue.prototype.$http = axios;
 
 export default {
   components: {
-      NovoEvento
+    NovoEvento
   },
+
+  async created() {
+    let res = await this.eventController.getAllEvents(axios);
+    this.eventos = res.data;
+  },
+
   data() {
     return {
       btnEvento: false,
       search: "",
+      eventController,
       headersEvento: [
         {
           text: "Nome",
           align: "start",
-          value: "name",
+          value: "name"
         },
         { text: "Lider", value: "lider" },
         { text: "Data", value: "data" },
-        { text: "Hora", value: "hora"}
+        { text: "Hora", value: "hora" }
       ],
-      evento: [
+      eventos: [
         {
           name: "Evento 1",
           lider: "Mauro Rubbens",
@@ -87,9 +110,9 @@ export default {
           lider: "Mauro Rubens",
           data: "19/02/2020",
           hora: "13:00"
-        },
+        }
       ]
-    }
+    };
   }
-}
+};
 </script>

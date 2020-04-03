@@ -43,7 +43,6 @@
 <script>
 import NovoMembro from "./CadastrarMembro.vue";
 import memberController from "../../controllers/MemberController";
-
 /* Ajeitar futuramente para os imports irem no main.js */
 import axios from "axios";
 import Vue from "vue";
@@ -57,7 +56,7 @@ export default {
 
   async created() {
     let res = await this.memberController.getAllMembers(axios);
-    this.membros = res;
+    this.membros = res.data;
   },
 
   data() {
