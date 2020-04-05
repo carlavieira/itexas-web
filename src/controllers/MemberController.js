@@ -1,16 +1,22 @@
 export default {
   getAllMembers(axios) {
     let url = "http://itexas.pythonanywhere.com/members/";
+    console.log(localStorage.getItem("access_token"));
 
-    return axios
-      .get(url)
-      .then(function(response) {
-        // handle success
-        return response;
+    const response = axios
+      .get(url, {
+        headers: {
+          Authorization: `JWT ${localStorage.getItem("access_token")}`,
+        },
       })
-      .catch(function(error) {
+      .then(function (response) {
+        // handle success
+        return response.data;
+      })
+      .catch(function (error) {
         // handle error
         console.log(error);
       });
+    return response;
   },
 };

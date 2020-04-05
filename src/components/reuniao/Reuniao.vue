@@ -18,7 +18,7 @@
         <v-card class="w-100">
           <v-card-title>
             <v-text-field
-              style="max-width: 300px"
+              style="max-width: 300px;"
               v-model="search"
               append-icon="mdi-magnify"
               label="Pesquisar"
@@ -42,7 +42,7 @@
 
 <script>
 import NovaReuniao from "./CadastrarReuniao.vue";
-import meetingController from "../../controllers/reuniao/MeetingController";
+import meetingController from "../../controllers/MeetingController";
 /* Ajeitar futuramente para os imports irem no main.js */
 import axios from "axios";
 import Vue from "vue";
@@ -51,7 +51,7 @@ Vue.prototype.$http = axios;
 
 export default {
   components: {
-    NovaReuniao
+    NovaReuniao,
   },
 
   async created() {
@@ -68,14 +68,14 @@ export default {
         {
           text: "Tipo",
           align: "start",
-          value: "type"
+          value: "type",
         },
         { text: "Líder", value: "member" },
         { text: "Data", value: "date" },
-        { text: "Hora", value: "time" }
+        { text: "Hora", value: "time" },
       ],
-      reunioes: []
+      reunioes: [],
     };
-  }
+  },
 };
 </script>
