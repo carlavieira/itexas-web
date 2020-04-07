@@ -19,4 +19,7 @@ export default {
       });
     return response;
   },
+  /*createMember(memberDetails){
+    
+  }*/
 };

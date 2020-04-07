@@ -14,6 +14,7 @@
               :counter="20"
               :rules="nameRules"
               label="Nome"
+              name="first-name"
               prepend-icon="mdi-card-account-details"
               required
               no-gutters
@@ -25,6 +26,7 @@
               :counter="40"
               :rules="nameRules"
               label="Sobrenome"
+              name="last-name"
               required
               no-gutters
             ></v-text-field>
@@ -34,6 +36,7 @@
             <v-text-field
               :counter="40"
               label="Apelido"
+              name="nick-name"
               prepend-icon="mdi-account-heart"
               no-gutters
             ></v-text-field>
@@ -41,28 +44,81 @@
 
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
+              v-model="email"
               :rules="emailRules"
               label="E-mail"
+              autocomplete="off"
+              name="email"
+              value=""
               prepend-icon="mdi-email"
               required
               no-gutters
             ></v-text-field>
           </v-col>
+
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-select label="Cargo" prepend-icon="mdi-briefcase" required></v-select>
+            <v-text-field
+              v-model="password"
+              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+              :rules="[rulesPassword.required, rulesPassword.min]"
+              :type="show1 ? 'text' : 'password'"
+              prepend-icon="mdi-key"
+              name="Senha"
+              label="Senha"
+              hint="At least 8 characters"
+              counter
+              @click:append="show1 = !show1"
+            ></v-text-field>
+          </v-col>
+
+          <v-col class="col-12" sm="6" md="6" lg="6">
+            <v-text-field
+              v-model="confirmaPassword"
+              :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+              prepend-icon="mdi-key"
+              :rules="[rulesPassword.required, passwordConfirmationRule]"
+              :type="show2 ? 'text' : 'password'"
+              name="Senha2"
+              label="Confirme a senha"
+              hint="At least 8 characters"
+              @click:append="show2 = !show2"
+            ></v-text-field>
+          </v-col>
+
+          <v-col class="col-12" sm="6" md="6" lg="6">
+            <v-select
+              label="Cargo"
+              name="post"
+              prepend-icon="mdi-briefcase"
+              required
+            ></v-select>
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-select label="Área" prepend-icon="mdi-border-none-variant" required></v-select>
+            <v-select
+              label="Área"
+              name="departament"
+              prepend-icon="mdi-border-none-variant"
+              required
+            ></v-select>
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-select label="Líder" prepend-icon="mdi-account-star"></v-select>
-          </v-col>
-          <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-text-field label="Slack" prepend-icon="mdi-slack" no-gutters></v-text-field>
+            <v-select
+              label="Líder"
+              name="leader"
+              prepend-icon="mdi-account-star"
+            ></v-select>
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
-              name="celular"
+              label="Slack"
+              name="slack"
+              prepend-icon="mdi-slack"
+              no-gutters
+            ></v-text-field>
+          </v-col>
+          <v-col class="col-12" sm="6" md="6" lg="6">
+            <v-text-field
+              name="phone"
               label="Celular (xx) xxxxx-xxxx"
               type="number"
               prepend-icon="mdi-cellphone-iphone"
@@ -71,6 +127,7 @@
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-file-input
+              name="profile-picture"
               accept="image/png, image/jpeg, image/bmp"
               placeholder="Selecionar Foto"
               prepend-icon="mdi-camera"
@@ -82,10 +139,20 @@
           <v-row justify="space-around">
             <span class="span-title">Data de entrada na AIESEC</span>
           </v-row>
-          <v-row style="margin-left: 2px" justify="space-around" class="col-12" sm="12" md="12" lg="12">
-            <v-date-picker color="red lighten-1" locale="pt-br" v-model="picker"></v-date-picker>
+          <v-row
+            style="margin-left: 2px;"
+            justify="space-around"
+            class="col-12"
+            sm="12"
+            md="12"
+            lg="12"
+          >
+            <v-date-picker
+              color="red lighten-1"
+              locale="pt-br"
+              v-model="picker"
+            ></v-date-picker>
           </v-row>
-
         </v-row>
         <v-row>
           <v-col
@@ -94,8 +161,16 @@
             md="4"
             lg="6"
           >
-            <v-btn class="ma-2" v-on:click.native="submit()" depressed color="success">Cadastrar</v-btn>
-            <v-btn class="ma-2" v-on:click.native="clear()" outlined>Limpar Campos</v-btn>
+            <v-btn
+              class="ma-2"
+              v-on:click.native="submit()"
+              depressed
+              color="success"
+              >Cadastrar</v-btn
+            >
+            <v-btn class="ma-2" v-on:click.native="clear()" outlined
+              >Limpar Campos</v-btn
+            >
           </v-col>
         </v-row>
       </v-form>
@@ -110,28 +185,37 @@ export default {
       name: "",
       valid: true,
       nameRules: [
-        v => !!v || "Campo obrigatório",
-        v => (v && v.length <= 10) || "Name must be less than 10 characters"
+        (v) => !!v || "Campo obrigatório",
+        (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
       ],
       email: "",
+      password: "",
+      confirmaPassword: "",
       emailRules: [
-        v => !!v || "E-mail is required",
-        v => /.+@.+\..+/.test(v) || "E-mail inválido"
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+\..+/.test(v) || "E-mail inválido",
       ],
+      rulesPassword: {
+        required: (value) => !!value || "Required.",
+        min: (v) => v.length >= 8 || "Min 8 characters",
+      },
+
       select: null,
       picker: new Date().toISOString().substr(0, 10),
       date: null,
       trip: {
-        name: '',
+        name: "",
         location: null,
         start: null,
         end: null,
       },
+      show1: false,
+      show2: false,
     };
   },
 
   props: {
-    show: Boolean
+    show: Boolean,
   },
 
   methods: {
@@ -140,9 +224,27 @@ export default {
       this.celular = "";
     },
     submit() {
-      //let request = new Object();
-    }
-  }
+      const memberDetails = new Object();
+
+      memberDetails.username = "";
+      memberDetails.email = this.email;
+      memberDetails.first_name = this.first - name;
+      memberDetails.last_name = this.last - name;
+      memberDetails.post = this.post;
+      memberDetails.departament = this.departament;
+      memberDetails.leader = this.leader;
+      memberDetails.slack = this.slack;
+      memberDetails.phone = this.phone;
+      memberDetails.photo = null;
+      memberDetails.date_joined = "2020-04-03T22:49:56.874Z";
+    },
+  },
+  computed: {
+    passwordConfirmationRule() {
+      return () =>
+        this.password === this.confirmaPassword || "Password must match";
+    },
+  },
 };
 </script>
 

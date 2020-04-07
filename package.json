@@ -12,6 +12,7 @@
     "core-js": "^3.6.4",
     "moment": "^2.24.0",
     "vue": "^2.6.11",
+    "vue-disable-autocomplete": "0.0.4",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.1.6",
     "vuetify": "^2.2.11"
