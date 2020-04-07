@@ -136,23 +136,39 @@
           </v-col>
 
           <!-- Data de Entrada (Calendário) -->
-          <v-row justify="space-around">
-            <span class="span-title">Data de entrada na AIESEC</span>
-          </v-row>
-          <v-row
-            style="margin-left: 2px;"
-            justify="space-around"
-            class="col-12"
-            sm="12"
-            md="12"
-            lg="12"
-          >
-            <v-date-picker
-              color="red lighten-1"
-              locale="pt-br"
-              v-model="picker"
-            ></v-date-picker>
-          </v-row>
+          <v-col md="6" offset-md="3">
+            <v-dialog
+              ref="dialog2"
+              v-model="modal1"
+              :return-value.sync="date"
+              persistent
+              width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="date"
+                  label="Data de entrada na AIESEC"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="date"
+                color="red lighten-1"
+                locale="pt-br"
+                scrollable
+              >
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="modal1 = false"
+                  >Voltar</v-btn
+                >
+                <v-btn text color="primary" @click="$refs.dialog2.save(date)"
+                  >OK</v-btn
+                >
+              </v-date-picker>
+            </v-dialog>
+          </v-col>
         </v-row>
         <v-row>
           <v-col
@@ -201,8 +217,8 @@ export default {
       },
 
       select: null,
-      picker: new Date().toISOString().substr(0, 10),
-      date: null,
+      date: new Date().toISOString().substr(0, 10),
+      modal1: false,
       trip: {
         name: "",
         location: null,
