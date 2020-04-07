@@ -7,38 +7,38 @@
           <v-icon color="grey">mdi-close</v-icon>
         </v-btn>
       </v-layout>
-      <v-form ref="form" v-model="valid" lazy-validation>
+      <v-form ref="form" autocomplete="off" v-model="valid" lazy-validation>
         <v-row>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
               :counter="20"
+              v-model="firstName"
               :rules="nameRules"
               label="Nome"
-              name="first-name"
+              name="firstName"
               prepend-icon="mdi-card-account-details"
               required
-              no-gutters
             ></v-text-field>
           </v-col>
 
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
+              v-model="lastName"
               :counter="40"
               :rules="nameRules"
               label="Sobrenome"
-              name="last-name"
+              name="lastName"
               required
-              no-gutters
             ></v-text-field>
           </v-col>
 
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
               :counter="40"
+              v-model="nickName"
               label="Apelido"
-              name="nick-name"
+              name="nickName"
               prepend-icon="mdi-account-heart"
-              no-gutters
             ></v-text-field>
           </v-col>
 
@@ -47,9 +47,7 @@
               v-model="email"
               :rules="emailRules"
               label="E-mail"
-              autocomplete="off"
               name="email"
-              value=""
               prepend-icon="mdi-email"
               required
               no-gutters
@@ -63,7 +61,7 @@
               :rules="[rulesPassword.required, rulesPassword.min]"
               :type="show1 ? 'text' : 'password'"
               prepend-icon="mdi-key"
-              name="Senha"
+              name="password"
               label="Senha"
               hint="At least 8 characters"
               counter
@@ -78,7 +76,7 @@
               prepend-icon="mdi-key"
               :rules="[rulesPassword.required, passwordConfirmationRule]"
               :type="show2 ? 'text' : 'password'"
-              name="Senha2"
+              name="password2"
               label="Confirme a senha"
               hint="At least 8 characters"
               @click:append="show2 = !show2"
@@ -110,6 +108,7 @@
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
+              v-model="slack"
               label="Slack"
               name="slack"
               prepend-icon="mdi-slack"
@@ -118,6 +117,7 @@
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
+              v-model="phone"
               name="phone"
               label="Celular (xx) xxxxx-xxxx"
               type="number"
@@ -195,10 +195,17 @@
 </template>
 
 <script>
+import memberController from "../../controllers/MemberController";
+import axios from "axios";
+import Vue from "vue";
+
+Vue.prototype.$http = axios;
+
 export default {
   data() {
     return {
       name: "",
+      memberController,
       valid: true,
       nameRules: [
         (v) => !!v || "Campo obrigatório",
@@ -207,6 +214,11 @@ export default {
       email: "",
       password: "",
       confirmaPassword: "",
+      firstName: "",
+      lastName: "",
+      nickName: "",
+      slack: "",
+      phone: "",
       emailRules: [
         (v) => !!v || "E-mail is required",
         (v) => /.+@.+\..+/.test(v) || "E-mail inválido",
@@ -239,20 +251,26 @@ export default {
       this.$refs.form.reset();
       this.celular = "";
     },
-    submit() {
+    async submit() {
       const memberDetails = new Object();
 
-      memberDetails.username = "";
+      //memberDetails.username = "";
       memberDetails.email = this.email;
-      memberDetails.first_name = this.first - name;
-      memberDetails.last_name = this.last - name;
-      memberDetails.post = this.post;
-      memberDetails.departament = this.departament;
-      memberDetails.leader = this.leader;
+      memberDetails.first_name = this.firstName;
+      memberDetails.last_name = this.lastName;
+      memberDetails.password1 = this.password;
+      memberDetails.password2 = this.confirmaPassword;
+      //memberDetails.nick_name = this.nickName;
+      //memberDetails.post = this.post;
+      //memberDetails.departament = this.departament;
+      //memberDetails.leader = this.leader;
       memberDetails.slack = this.slack;
       memberDetails.phone = this.phone;
-      memberDetails.photo = null;
+      //memberDetails.photo = null;
       memberDetails.date_joined = "2020-04-03T22:49:56.874Z";
+
+      console.log(memberDetails);
+      return await this.memberController.createMember(axios, memberDetails);
     },
   },
   computed: {

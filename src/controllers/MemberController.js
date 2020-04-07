@@ -19,7 +19,23 @@ export default {
       });
     return response;
   },
-  /*createMember(memberDetails){
-    
-  }*/
+  createMember(axios, memberDetails) {
+    let url = "http://itexas.pythonanywhere.com/rest-auth/registration/";
+
+    const response = axios
+      .post(url, memberDetails, {
+        headers: {
+          Authorization: `JWT ${localStorage.getItem("access_token")}`,
+        },
+      })
+      .then(function (response) {
+        // handle success
+        return response.data;
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+    return response;
+  },
 };
