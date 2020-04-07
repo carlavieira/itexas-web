@@ -10,16 +10,21 @@
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-row>
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-text-field
+            <v-select
+              v-model="type"
+              :items="types"
+              item-text="name"
+              item-value="value"
               label="Tipo da Reunião"
               prepend-icon="mdi-account-group"
               required
               no-gutters
-            ></v-text-field>
+            ></v-select>
           </v-col>
 
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-select
+              v-model="leader"
               label="Líder responsável"
               prepend-icon="mdi-account-star"
             ></v-select>
@@ -81,7 +86,7 @@
                   v-if="modal2"
                   v-model="time"
                   color="red lighten-1"
-                  format="24h"
+                  format="24hr"
                   full-width
                 >
                   <v-spacer></v-spacer>
@@ -119,22 +124,60 @@
 </template>
 
 <script>
+import meetingController from "../../controllers/MeetingController";
+import axios from "axios";
+import Vue from "vue";
+
+Vue.prototype.$http = axios;
 export default {
   data() {
     return {
+      meetingController,
       valid: true,
+      types: [
+        { name: "REB", value: "REB" },
+        { name: "Reunião de Área", value: "RA" },
+        { name: "Reunião de Time", value: "RT" },
+        { name: "Reunião de LR", value: "LR" },
+        { name: "Reunião de Corner", value: "CN" },
+      ],
       date: new Date().toISOString().substr(0, 10),
       modal1: false,
       modal2: false,
       time: null,
       e7: null,
-      select: null
+      select: null,
+      leader: "",
+      type: "",
     };
   },
 
+  methods: {
+    async submit() {
+      const meetingDetails = new Object();
+
+      let date = new Date(this.date);
+      date.setDate(date.getDate() + 1);
+
+      let time = this.time.split(":");
+
+      meetingDetails.date = date;
+      date.setHours(time[0], time[1]);
+      date.setHours(date.getHours() - 3);
+      meetingDetails.time = date;
+
+      meetingDetails.type = this.type;
+      meetingDetails.member = this.leader;
+
+      console.log(meetingDetails);
+
+      return await this.meetingController.createMeeting(axios, meetingDetails);
+    },
+  },
+
   props: {
-    show: Boolean
-  }
+    show: Boolean,
+  },
 };
 </script>
 
