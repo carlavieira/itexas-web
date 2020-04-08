@@ -32,7 +32,14 @@
             :headers="headersReuniao"
             :items="reunioes"
             :search="search"
-          ></v-data-table>
+          >
+            <template v-slot:item.date="{ item }">
+              <span>{{ formatDate(item.date) }}</span>
+            </template>
+            <template v-slot:item.time="{ item }">
+              <span>{{ formatTime(item.time) }}</span>
+            </template>
+          </v-data-table>
         </v-card>
       </v-flex>
     </v-row>
@@ -43,6 +50,7 @@
 <script>
 import NovaReuniao from "./CadastrarReuniao.vue";
 import meetingController from "../../controllers/MeetingController";
+import moment from "moment";
 
 export default {
   components: {
@@ -54,15 +62,25 @@ export default {
     this.reunioes = res.data;
   },
 
+  methods: {
+    formatDate(date) {
+      return moment(date).format("MM/DD/YYYY");
+    },
+    formatTime(time) {
+      return moment(time).format("HH:MM");
+    },
+  },
+
   data() {
     return {
       btnReuniao: false,
       search: "",
+      data: null,
       meetingController,
       headersReuniao: [
         {
           text: "Tipo",
-          align: "start",
+          align: "center",
           value: "type",
         },
         { text: "Líder", value: "member" },
