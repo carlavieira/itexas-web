@@ -43,11 +43,6 @@
 <script>
 import NovaReuniao from "./CadastrarReuniao.vue";
 import meetingController from "../../controllers/MeetingController";
-/* Ajeitar futuramente para os imports irem no main.js */
-import axios from "axios";
-import Vue from "vue";
-
-Vue.prototype.$http = axios;
 
 export default {
   components: {
@@ -55,7 +50,7 @@ export default {
   },
 
   async created() {
-    let res = await this.meetingController.getAllMeeting(axios);
+    let res = await this.meetingController.getAllMeeting(this.$axios);
     this.reunioes = res.data;
   },
 

@@ -125,10 +125,8 @@
 
 <script>
 import meetingController from "../../controllers/MeetingController";
-import axios from "axios";
-import Vue from "vue";
 
-Vue.prototype.$http = axios;
+
 export default {
   data() {
     return {
@@ -171,7 +169,7 @@ export default {
 
       console.log(meetingDetails);
 
-      return await this.meetingController.createMeeting(axios, meetingDetails);
+      return await this.meetingController.createMeeting(meetingDetails);
     },
   },
 

@@ -1,15 +1,11 @@
-let header = {
-  headers: {
-    Authorization: `JWT ${localStorage.getItem("access_token")}`,
-  },
-}
+let url = "meeting/";
+
 
 export default {
-  getAllMeeting() {
-    let url = "http://itexas.pythonanywhere.com/meeting/";
-
-    const response = this.axios
-      .get(url, header)
+  getAllMeeting(axios) {
+    console.log(axios)
+    const response = axios
+      .get(url)
       .then(function (response) {
         console.log(response);
         return response;
@@ -19,11 +15,11 @@ export default {
       });
     return response;
   },
-  createMeeting(axios, meetingDetails) {
-    let url = "http://itexas.pythonanywhere.com/meeting/";
 
-    const response = axios
-      .post(url, meetingDetails, header)
+  createMeeting(meetingDetails) {
+
+    const response = this.axios
+      .post(url, meetingDetails)
       .then(function (response) {
         // handle success
         return response.data;

@@ -212,6 +212,7 @@ export default {
         (v) => !!v || "Campo obrigatório",
         (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
       ],
+      
       email: "",
       password: "",
       confirmaPassword: "",
@@ -271,7 +272,7 @@ export default {
       memberDetails.date_joined = "2020-04-03T22:49:56.874Z";
 
       console.log(memberDetails);
-      return await this.memberController.createMember(axios, memberDetails);
+      return await this.memberController.createMember(this.$api, memberDetails);
     },
   },
   computed: {

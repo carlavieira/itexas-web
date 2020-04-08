@@ -55,12 +55,8 @@
 <script>
 import NovoMembro from "./CadastrarMembro.vue";
 import memberController from "../../controllers/MemberController";
-/* Ajeitar futuramente para os imports irem no main.js */
-import axios from "axios";
-import Vue from "vue";
 import modalDetail from "./ModalDetail.vue";
 
-Vue.prototype.$http = axios;
 
 export default {
   components: {
@@ -69,7 +65,7 @@ export default {
   },
 
   async created() {
-    let res = await this.memberController.getAllMembers(axios);
+    let res = await this.memberController.getAllMembers(this.$api);
     this.membros = res;
   },
 

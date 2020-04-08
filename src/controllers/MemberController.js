@@ -1,32 +1,21 @@
-let header = {
-  headers: {
-    Authorization: `JWT ${localStorage.getItem("access_token")}`,
-  },
-}
+
 
 export default {
-  getAllMembers() {
-    let url = "http://itexas.pythonanywhere.com/members/";
-    console.log(localStorage.getItem("access_token"));
-
-    const response = this.axios
-      .get(url, header)
+  getAllMembers(api) {
+    const response = api
+      .get("members/")
       .then(function (response) {
-        // handle success
         return response.data;
       })
       .catch(function (error) {
-        // handle error
         console.log(error);
       });
     return response;
   },
   
-  createMember(axios, memberDetails) {
-    let url = "http://itexas.pythonanywhere.com/rest-auth/registration/";
-
-    const response = axios
-      .post(url, memberDetails, header)
+  createMember(api, memberDetails) {
+    const response = api
+      .post("rest-auth/registration/", memberDetails)
       .then(function (response) {
         // handle success
         return response.data;
