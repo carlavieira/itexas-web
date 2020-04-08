@@ -1,14 +1,10 @@
 export default {
-  getAllMembers(axios) {
+  getAllMembers() {
     let url = "http://itexas.pythonanywhere.com/members/";
     console.log(localStorage.getItem("access_token"));
 
-    const response = axios
-      .get(url, {
-        headers: {
-          Authorization: `JWT ${localStorage.getItem("access_token")}`,
-        },
-      })
+    const response = this.axios
+      .get(url, )
       .then(function (response) {
         // handle success
         return response.data;

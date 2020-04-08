@@ -1,8 +1,8 @@
 export default {
-  getAllEvents(axios) {
+  getAllEvents() {
     let url = "http://itexas.pythonanywhere.com/event/";
 
-    const response = axios
+    const response = this.axios
       .get(url, {
         headers: {
           Authorization: `JWT ${localStorage.getItem("access_token")}`

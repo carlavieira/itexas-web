@@ -43,11 +43,7 @@
 <script>
 import NovoEvento from "./CadastrarEvento.vue";
 import eventController from "../../controllers/EventController";
-/* Ajeitar futuramente para os imports irem no main.js */
-import axios from "axios";
-import Vue from "vue";
 
-Vue.prototype.$http = axios;
 
 export default {
   components: {

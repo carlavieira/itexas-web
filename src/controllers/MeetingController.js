@@ -1,8 +1,10 @@
+
+
 export default {
-  getAllMeeting(axios) {
+  getAllMeeting() {
     let url = "http://itexas.pythonanywhere.com/meeting/";
 
-    const response = axios
+    const response = this.axios
       .get(url, {
         headers: {
           Authorization: `JWT ${localStorage.getItem("access_token")}`,
