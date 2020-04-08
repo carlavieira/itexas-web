@@ -82,7 +82,7 @@ export default {
           path: "/adm/membros"
         },
         {
-          text: "Reunião",
+          text: "Reuniões",
           icon: "mdi-calendar-month ",
           path: "/adm/reuniao"
         },
