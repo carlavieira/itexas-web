@@ -119,7 +119,7 @@
 
 <script>
 import eventController from "../../controllers/EventController";
-import moment from "moment";
+//import moment from "moment";
 
 export default {
   data() {
@@ -150,20 +150,12 @@ export default {
     async submit() {
       const eventDetails = new Object();
 
-      let data = new Date(this.date);
-      data.setDate(data.getDate() + 1);
-
-      let time = this.time.split(":");
-
-      data.setHours(time[0], time[1]);
-      data.setHours(data.getHours() - 3);
-      eventDetails.date = data;
-      eventDetails.time = moment(data).format("YYYY-MM-DD");
-
+      eventDetails.date = this.date;
+      eventDetails.time = this.time;
       eventDetails.type = this.type;
       eventDetails.member = this.leader;
 
-      //console.log(eventDetails);
+      console.log(eventDetails);
 
       return await this.eventController.createEvent(this.$api, eventDetails);
     },

@@ -73,9 +73,9 @@ export default {
           align: "center",
           value: "type",
         },
-        { text: "Lider", value: "member" },
-        { text: "Data", value: "date" },
-        { text: "Hora", value: "time" },
+        { text: "Lider", value: "member", align: "center" },
+        { text: "Data", value: "date", align: "center" },
+        { text: "Hora", value: "time", align: "center" },
       ],
       eventos: [],
     };
@@ -84,15 +84,9 @@ export default {
     formatDate(date) {
       return moment(date).format("DD/MM/YYYY");
     },
-    formatTime(timestamp) {
-      const date = new Date(timestamp);
-      date.setHours(date.getHours() + 3);
-      let hour = date.getHours();
-      hour = (hour < 10 ? "0" : "") + hour;
-      let minutes = date.getMinutes();
-      minutes = (minutes < 10 ? "0" : "") + minutes;
-
-      return `${hour}:${minutes}`;
+    formatTime(time) {
+      let hora = time.split(":");
+      return `${hora[0]}:${hora[1]}`;
     },
   },
 };

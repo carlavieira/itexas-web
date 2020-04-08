@@ -153,16 +153,8 @@ export default {
     async submit() {
       const meetingDetails = new Object();
 
-      let date = new Date(this.date);
-      date.setDate(date.getDate() + 1);
-
-      let time = this.time.split(":");
-
-      meetingDetails.date = date;
-      date.setHours(time[0], time[1]);
-      date.setHours(date.getHours() - 3);
-      meetingDetails.time = date;
-
+      meetingDetails.date = this.date;
+      meetingDetails.time = this.time;
       meetingDetails.type = this.type;
       meetingDetails.member = this.leader;
 
