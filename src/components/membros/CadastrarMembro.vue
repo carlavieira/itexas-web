@@ -14,7 +14,7 @@
               :counter="20"
               v-model="firstName"
               :rules="nameRules"
-              label="Nome"
+              label="Nome*"
               name="firstName"
               prepend-icon="mdi-card-account-details"
               required
@@ -26,7 +26,7 @@
               v-model="lastName"
               :counter="40"
               :rules="nameRules"
-              label="Sobrenome"
+              label="Sobrenome*"
               name="lastName"
               required
             ></v-text-field>
@@ -46,7 +46,7 @@
             <v-text-field
               v-model="email"
               :rules="emailRules"
-              label="E-mail"
+              label="E-mail*"
               name="email"
               prepend-icon="mdi-email"
               required
@@ -62,9 +62,10 @@
               :type="show1 ? 'text' : 'password'"
               prepend-icon="mdi-key"
               name="password"
-              label="Senha"
+              label="Senha*"
               hint="At least 8 characters"
               counter
+              required
               @click:append="show1 = !show1"
             ></v-text-field>
           </v-col>
@@ -79,6 +80,7 @@
               name="password2"
               label="Confirme a senha"
               hint="At least 8 characters"
+              required
               @click:append="show2 = !show2"
             ></v-text-field>
           </v-col>
@@ -125,6 +127,7 @@
               no-gutters
             ></v-text-field>
           </v-col>
+          <!--
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-file-input
               name="profile-picture"
@@ -134,9 +137,10 @@
               label="Avatar"
             ></v-file-input>
           </v-col>
+          -->
 
           <!-- Data de Entrada (Calendário) -->
-          <v-col md="6" offset-md="3">
+          <v-col class="col-12" sm="6" md="6" lg="6">
             <v-dialog
               ref="dialog2"
               v-model="modal1"
@@ -183,9 +187,6 @@
               depressed
               color="success"
               >Cadastrar</v-btn
-            >
-            <v-btn class="ma-2" v-on:click.native="clear()" outlined
-              >Limpar Campos</v-btn
             >
           </v-col>
         </v-row>

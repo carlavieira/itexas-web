@@ -4,7 +4,11 @@
       <v-col>
         <v-card flat color="branco" class="px-8 pt-5 pb-12 form mx-auto">
           <v-form ref="form">
-            <v-img src="../assets/rrrrr.png" width="100px" class="mt-3 mb-5 mx-auto" />
+            <v-img
+              src="../assets/rrrrr.png"
+              width="100px"
+              class="mt-3 mb-5 mx-auto"
+            />
             <v-form class="pt-6">
               <v-text-field
                 id="emailLogin"
@@ -23,7 +27,6 @@
                 name="senha"
                 v-model="senha"
                 required
-                :rules="validacaoSenha"
                 outlined
                 color="tertiary"
                 label="Senha"
@@ -51,7 +54,8 @@
             border="top"
             icon="mdi-alert"
             transition="scale-transition"
-          >{{ errorMessage }}</v-alert>
+            >{{ errorMessage }}</v-alert
+          >
         </v-card>
       </v-col>
     </v-row>
@@ -60,7 +64,7 @@
 
 <script>
 import routes from "../router/index.js";
-import authController from "../controllers/AuthController"
+import authController from "../controllers/AuthController";
 
 export default {
   name: "Login",
@@ -74,12 +78,12 @@ export default {
       routes,
       authController,
       validacaoEmail: [
-        v => !!v || "E-mail é obrigatório",
-        v => /.+@.+/.test(v) || "E-mail inválido"
+        (v) => !!v || "E-mail é obrigatório",
+        (v) => /.+@.+/.test(v) || "E-mail inválido",
       ],
       validacaoSenha: [
-        v => v.length >= 6 || "A senha precisa ter no mínimo 6 caracteres"
-      ]
+        (v) => v.length >= 6 || "A senha precisa ter no mínimo 6 caracteres",
+      ],
     };
   },
   methods: {
@@ -94,11 +98,15 @@ export default {
       return this.$refs.form.validate();
     },
 
-    async login(){
-      let res = await this.authController.login(this.$http, this.email, this.senha)
-      console.log(res)
-    }
-  }
+    async login() {
+      let res = await this.authController.login(
+        this.$http,
+        this.email,
+        this.senha
+      );
+      console.log(res);
+    },
+  },
 };
 </script>
 

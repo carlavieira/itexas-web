@@ -89,7 +89,28 @@ export default {
         { text: "Líder", value: "leader" },
         { text: "Detalhes", value: "actions", sortable: false },
       ],
-      membros: [],
+      membros: [
+        {
+          first_name: "Otavio",
+          post: "Leader",
+          leader: "Daniel",
+        },
+        {
+          first_name: "Otavio",
+          post: "Leader",
+          leader: "Daniel",
+        },
+        {
+          first_name: "Otavio",
+          post: "Leader",
+          leader: "Daniel",
+        },
+        {
+          first_name: "Otavio",
+          post: "Leader",
+          leader: "Daniel",
+        },
+      ],
       userDetail: null,
       showDetail: false,
     };

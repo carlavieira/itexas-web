@@ -4,7 +4,7 @@
       dark
       color="primary"
       class="px-2 hidden-lg-and-up"
-      style="max-height:56px"
+      style="max-height: 56px;"
     >
       <v-app-bar-nav-icon
         color="tertiary"
@@ -19,7 +19,7 @@
     </v-app-bar>
 
     <v-navigation-drawer app color="primary" v-model="drawer">
-      <v-list-item style="height:170px;" class="pa-5">
+      <v-list-item style="height: 170px;" class="pa-5">
         <v-list-item-content>
           <v-img
             max-width="75px"
@@ -69,32 +69,32 @@ export default {
         {
           text: "Dashboard",
           icon: "mdi-view-dashboard-outline",
-          path: "/dashboard"
+          path: "/dashboard",
         },
         {
           text: "Relatórios",
           icon: "mdi-clipboard-text-multiple",
-          path: "/"
+          path: "/",
         },
         {
           text: "Membros",
           icon: "mdi-account-multiple",
-          path: "/adm/membros"
+          path: "/adm/membros",
         },
         {
-          text: "Reuniões",
+          text: "Reunião",
           icon: "mdi-calendar-month ",
-          path: "/adm/reuniao"
+          path: "/adm/reuniao",
         },
         {
           text: "Evento",
           icon: "mdi-account-group",
-          path: "/adm/eventos"
-        }
+          path: "/adm/eventos",
+        },
       ],
-      drawer: true
+      drawer: true,
     };
-  }
+  },
 };
 </script>
 
