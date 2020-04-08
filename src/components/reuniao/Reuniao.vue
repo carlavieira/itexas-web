@@ -64,10 +64,17 @@ export default {
 
   methods: {
     formatDate(date) {
-      return moment(date).format("MM/DD/YYYY");
+      return moment(date).format("DD/MM/YYYY");
     },
-    formatTime(time) {
-      return moment(time).format("HH:MM");
+    formatTime(timestamp) {
+      const date = new Date(timestamp);
+      date.setHours(date.getHours() + 3);
+      let hour = date.getHours();
+      hour = (hour < 10 ? "0" : "") + hour;
+      let minutes = date.getMinutes();
+      minutes = (minutes < 10 ? "0" : "") + minutes;
+
+      return `${hour}:${minutes}`;
     },
   },
 

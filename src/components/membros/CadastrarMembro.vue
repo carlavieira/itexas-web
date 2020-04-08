@@ -174,14 +174,14 @@
           </v-col>
         </v-row>
         <v-layout row align-center justify-end>
-            <v-btn
-              class="ma-2"
-              @click="submit()"
-              depressed
-              :disabled="!valid"
-              color="success"
-              >Cadastrar</v-btn
-            >
+          <v-btn
+            class="ma-2"
+            @click="submit()"
+            depressed
+            :disabled="!valid"
+            color="success"
+            >Cadastrar</v-btn
+          >
         </v-layout>
       </v-form>
     </v-card>
@@ -229,7 +229,7 @@ export default {
         password2: null,
         slack: null,
         phone: null,
-        date_joined: "2020-04-03T22:49:56.874Z"
+        date_joined: "2020-04-03T22:49:56.874Z",
       },
     };
   },
@@ -245,28 +245,30 @@ export default {
     },
 
     async submit() {
-      await this.memberController.createMember(this.$api, this.memberDetails)
-      .then(res => {
-        console.log(res)
-        this.memberDetails = {}
-        this.$emit('close')
-        this.$emit('getMembers')
-      }).catch(err =>{
-        console.log(err)
-      })
+      await this.memberController
+        .createMember(this.$api, this.memberDetails)
+        .then((res) => {
+          console.log(res);
+          this.memberDetails = {};
+          this.$emit("close");
+          this.$emit("getMembers");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    
-    validate () {
-      this.$refs.form.validate()
-    }
-  },
 
+    validate() {
+      this.$refs.form.validate();
+    },
+  },
 
   computed: {
     passwordConfirmationRule() {
       return () =>
-        this.memberDetails.password1 === this.memberDetails.password2 || "As senhas devem coincidir";
-    }
+        this.memberDetails.password1 === this.memberDetails.password2 ||
+        "As senhas devem coincidir";
+    },
   },
 };
 </script>

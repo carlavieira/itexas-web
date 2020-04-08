@@ -15,6 +15,7 @@ export default {
   },
 
   createMeeting(api, meetingDetails) {
+    console.log(meetingDetails);
     const response = api
       .post(url, meetingDetails)
       .then(function (response) {

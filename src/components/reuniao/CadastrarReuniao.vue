@@ -168,7 +168,10 @@ export default {
 
       console.log(meetingDetails);
 
-      return await this.meetingController.createMeeting(this.$api);
+      return await this.meetingController.createMeeting(
+        this.$api,
+        meetingDetails
+      );
     },
   },
 

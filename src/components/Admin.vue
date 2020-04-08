@@ -55,7 +55,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <div class="pa-3">
+    <div class="pa-3" style="background-color: #f1f1f1; height: 100vh;">
       <router-view> </router-view>
     </div>
   </div>

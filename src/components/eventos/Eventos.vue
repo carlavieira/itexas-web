@@ -32,7 +32,14 @@
             :headers="headersEvento"
             :items="eventos"
             :search="search"
-          ></v-data-table>
+          >
+            <template v-slot:item.date="{ item }">
+              <span>{{ formatDate(item.date) }}</span>
+            </template>
+            <template v-slot:item.time="{ item }">
+              <span>{{ formatTime(item.time) }}</span>
+            </template>
+          </v-data-table>
         </v-card>
       </v-flex>
     </v-row>
@@ -43,6 +50,7 @@
 <script>
 import NovoEvento from "./CadastrarEvento.vue";
 import eventController from "../../controllers/EventController";
+import moment from "moment";
 
 export default {
   components: {
@@ -62,7 +70,7 @@ export default {
       headersEvento: [
         {
           text: "Nome",
-          align: "start",
+          align: "center",
           value: "type",
         },
         { text: "Lider", value: "member" },
@@ -71,6 +79,21 @@ export default {
       ],
       eventos: [],
     };
+  },
+  methods: {
+    formatDate(date) {
+      return moment(date).format("DD/MM/YYYY");
+    },
+    formatTime(timestamp) {
+      const date = new Date(timestamp);
+      date.setHours(date.getHours() + 3);
+      let hour = date.getHours();
+      hour = (hour < 10 ? "0" : "") + hour;
+      let minutes = date.getMinutes();
+      minutes = (minutes < 10 ? "0" : "") + minutes;
+
+      return `${hour}:${minutes}`;
+    },
   },
 };
 </script>

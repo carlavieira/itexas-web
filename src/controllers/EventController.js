@@ -13,4 +13,17 @@ export default {
       });
     return response;
   },
+  createEvent(api, eventDetails) {
+    const response = api
+      .post(url, eventDetails)
+      .then(function (response) {
+        // handle success
+        return response.data;
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+    return response;
+  },
 };
