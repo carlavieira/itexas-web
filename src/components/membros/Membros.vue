@@ -42,7 +42,7 @@
         </v-card>
       </v-flex>
     </v-row>
-    <NovoMembro :show="btnMembro" @close="btnMembro = false"></NovoMembro>
+    <NovoMembro :show="btnMembro" @close="btnMembro = false" @getMembers="getMembers()"></NovoMembro>
     <modalDetail
       v-if="showDetail"
       :show="showDetail"
@@ -63,9 +63,8 @@ export default {
     modalDetail,
   },
 
-  async created() {
-    let res = await this.memberController.getAllMembers(this.$api);
-    this.membros = res;
+  created() {
+    this.getMembers()
   },
 
   data() {
@@ -95,6 +94,10 @@ export default {
       this.userDetail = user;
       this.showDetail = true;
     },
+    async getMembers(){
+      let res = await this.memberController.getAllMembers(this.$api);
+      this.membros = res;
+    }
   },
 };
 </script>

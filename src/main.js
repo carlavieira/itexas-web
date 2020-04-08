@@ -7,6 +7,7 @@ import axios from "axios"
 
 Vue.use(VueResource);
 
+
 Vue.prototype.$api = axios.create({
   baseURL: 'http://itexas.pythonanywhere.com/',
   headers: {

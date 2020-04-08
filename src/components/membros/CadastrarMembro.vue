@@ -1,6 +1,6 @@
 <template>
   <v-dialog max-width="800px" persistent v-model="show">
-    <v-card class="pa-5">
+    <v-card class="pa-6">
       <v-layout row class="px-3" justify-space-between>
         <h2>Cadastro de Membro</h2>
         <v-btn @click="$emit('close')" title="Fechar" icon>
@@ -23,8 +23,8 @@
 
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
-              v-model="memberDetails.lastName"
-              :counter="40"
+              v-model="memberDetails.last_name"
+              :counter="20"
               :rules="nameRules"
               label="Sobrenome*"
               name="lastName"
@@ -35,7 +35,7 @@
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
               :counter="40"
-              v-model="memberDetails.nickName"
+              v-model="memberDetails.nickname"
               label="Apelido"
               name="nickName"
               prepend-icon="mdi-account-heart"
@@ -122,7 +122,6 @@
               v-model="memberDetails.phone"
               name="phone"
               label="Celular (xx) xxxxx-xxxx"
-              type="number"
               prepend-icon="mdi-cellphone-iphone"
               no-gutters
             ></v-text-field>
@@ -174,22 +173,16 @@
             </v-dialog>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col
-            class="col-12 offset-md-4 offset-lg-3 offset-sm-3 column-button"
-            sm="6"
-            md="4"
-            lg="6"
-          >
+        <v-layout row align-center justify-end>
             <v-btn
               class="ma-2"
-              v-on:click.native="submit()"
+              @click="submit()"
               depressed
+              :disabled="!valid"
               color="success"
               >Cadastrar</v-btn
             >
-          </v-col>
-        </v-row>
+        </v-layout>
       </v-form>
     </v-card>
   </v-dialog>
@@ -206,23 +199,15 @@ export default {
       valid: true,
       nameRules: [
         (v) => !!v || "Campo obrigatório",
-        (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
+        (v) => (v && v.length <= 20) || "Nome deve ter até 20 caracteres",
       ],
-      email: "",
-      password: "",
-      confirmaPassword: "",
-      firstName: "",
-      lastName: "",
-      nickName: "",
-      slack: "",
-      phone: "",
       emailRules: [
-        (v) => !!v || "E-mail is required",
+        (v) => !!v || "Campo Obrigatótio",
         (v) => /.+@.+\..+/.test(v) || "E-mail inválido",
       ],
       rulesPassword: {
-        required: (value) => !!value || "Required.",
-        min: (v) => v.length >= 8 || "Min 8 characters",
+        required: (value) => !!value || "Campo Obrigatório.",
+        min: (v) => (v && v.length >= 8) || "Mínimo 8 caracteres",
       },
       select: null,
       date: new Date().toISOString().substr(0, 10),
@@ -235,7 +220,17 @@ export default {
       },
       show1: false,
       show2: false,
-      memberDetails: {},
+      memberDetails: {
+        first_name: null,
+        last_name: null,
+        nickname: null,
+        email: null,
+        password1: null,
+        password2: null,
+        slack: null,
+        phone: null,
+        date_joined: "2020-04-03T22:49:56.874Z"
+      },
     };
   },
 
@@ -248,20 +243,30 @@ export default {
       this.$refs.form.reset();
       this.celular = "";
     },
+
     async submit() {
-      const memberDetails = new Object();
-
-      memberDetails.date_joined = "2020-04-03T22:49:56.874Z";
-
-      console.log(memberDetails);
-      return await this.memberController.createMember(this.$api, memberDetails);
+      await this.memberController.createMember(this.$api, this.memberDetails)
+      .then(res => {
+        console.log(res)
+        this.memberDetails = {}
+        this.$emit('close')
+        this.$emit('getMembers')
+      }).catch(err =>{
+        console.log(err)
+      })
     },
+    
+    validate () {
+      this.$refs.form.validate()
+    }
   },
+
+
   computed: {
     passwordConfirmationRule() {
       return () =>
-        this.password === this.confirmaPassword || "Password must match";
-    },
+        this.memberDetails.password1 === this.memberDetails.password2 || "As senhas devem coincidir";
+    }
   },
 };
 </script>

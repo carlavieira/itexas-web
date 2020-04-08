@@ -12,16 +12,9 @@ export default {
   },
 
   createMember(api, memberDetails) {
-    const response = api
+      return api
       .post("rest-auth/registration/", memberDetails)
-      .then(function (response) {
-        // handle success
-        return response.data;
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      });
-    return response;
-  },
-};
+      .then(res => res.data)
+      .catch(e => { throw e });
+  }
+}
