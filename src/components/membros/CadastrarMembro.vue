@@ -12,7 +12,7 @@
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
               :counter="20"
-              v-model="firstName"
+              v-model="memberDetails.first_name"
               :rules="nameRules"
               label="Nome*"
               name="firstName"
@@ -23,7 +23,7 @@
 
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
-              v-model="lastName"
+              v-model="memberDetails.lastName"
               :counter="40"
               :rules="nameRules"
               label="Sobrenome*"
@@ -35,7 +35,7 @@
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
               :counter="40"
-              v-model="nickName"
+              v-model="memberDetails.nickName"
               label="Apelido"
               name="nickName"
               prepend-icon="mdi-account-heart"
@@ -44,7 +44,7 @@
 
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
-              v-model="email"
+              v-model="memberDetails.email"
               :rules="emailRules"
               label="E-mail*"
               name="email"
@@ -56,7 +56,7 @@
 
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
-              v-model="password"
+              v-model="memberDetails.password1"
               :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
               :rules="[rulesPassword.required, rulesPassword.min]"
               :type="show1 ? 'text' : 'password'"
@@ -72,7 +72,7 @@
 
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
-              v-model="confirmaPassword"
+              v-model="memberDetails.password2"
               :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
               prepend-icon="mdi-key"
               :rules="[rulesPassword.required, passwordConfirmationRule]"
@@ -110,7 +110,7 @@
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
-              v-model="slack"
+              v-model="memberDetails.slack"
               label="Slack"
               name="slack"
               prepend-icon="mdi-slack"
@@ -119,7 +119,7 @@
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
-              v-model="phone"
+              v-model="memberDetails.phone"
               name="phone"
               label="Celular (xx) xxxxx-xxxx"
               type="number"
@@ -197,10 +197,6 @@
 
 <script>
 import memberController from "../../controllers/MemberController";
-import axios from "axios";
-import Vue from "vue";
-
-Vue.prototype.$http = axios;
 
 export default {
   data() {
@@ -212,7 +208,6 @@ export default {
         (v) => !!v || "Campo obrigatório",
         (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
       ],
-      
       email: "",
       password: "",
       confirmaPassword: "",
@@ -229,7 +224,6 @@ export default {
         required: (value) => !!value || "Required.",
         min: (v) => v.length >= 8 || "Min 8 characters",
       },
-
       select: null,
       date: new Date().toISOString().substr(0, 10),
       modal1: false,
@@ -241,6 +235,7 @@ export default {
       },
       show1: false,
       show2: false,
+      memberDetails: {},
     };
   },
 
@@ -256,19 +251,6 @@ export default {
     async submit() {
       const memberDetails = new Object();
 
-      //memberDetails.username = "";
-      memberDetails.email = this.email;
-      memberDetails.first_name = this.firstName;
-      memberDetails.last_name = this.lastName;
-      memberDetails.password1 = this.password;
-      memberDetails.password2 = this.confirmaPassword;
-      //memberDetails.nick_name = this.nickName;
-      //memberDetails.post = this.post;
-      //memberDetails.departament = this.departament;
-      //memberDetails.leader = this.leader;
-      memberDetails.slack = this.slack;
-      memberDetails.phone = this.phone;
-      //memberDetails.photo = null;
       memberDetails.date_joined = "2020-04-03T22:49:56.874Z";
 
       console.log(memberDetails);

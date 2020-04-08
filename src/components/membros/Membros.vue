@@ -57,7 +57,6 @@ import NovoMembro from "./CadastrarMembro.vue";
 import memberController from "../../controllers/MemberController";
 import modalDetail from "./ModalDetail.vue";
 
-
 export default {
   components: {
     NovoMembro,
@@ -85,28 +84,7 @@ export default {
         { text: "Líder", value: "leader" },
         { text: "Detalhes", value: "actions", sortable: false },
       ],
-      membros: [
-        {
-          first_name: "Otavio",
-          post: "Leader",
-          leader: "Daniel",
-        },
-        {
-          first_name: "Otavio",
-          post: "Leader",
-          leader: "Daniel",
-        },
-        {
-          first_name: "Otavio",
-          post: "Leader",
-          leader: "Daniel",
-        },
-        {
-          first_name: "Otavio",
-          post: "Leader",
-          leader: "Daniel",
-        },
-      ],
+      membros: [],
       userDetail: null,
       showDetail: false,
     };

@@ -126,7 +126,6 @@
 <script>
 import meetingController from "../../controllers/MeetingController";
 
-
 export default {
   data() {
     return {
@@ -169,7 +168,7 @@ export default {
 
       console.log(meetingDetails);
 
-      return await this.meetingController.createMeeting(meetingDetails);
+      return await this.meetingController.createMeeting(this.$api);
     },
   },
 

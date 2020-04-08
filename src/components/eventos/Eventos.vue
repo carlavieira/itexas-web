@@ -44,14 +44,13 @@
 import NovoEvento from "./CadastrarEvento.vue";
 import eventController from "../../controllers/EventController";
 
-
 export default {
   components: {
     NovoEvento,
   },
 
   async created() {
-    let res = await this.eventController.getAllEvents(axios);
+    let res = await this.eventController.getAllEvents(this.$api);
     this.eventos = res.data;
   },
 

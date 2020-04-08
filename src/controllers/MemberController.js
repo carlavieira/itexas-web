@@ -1,5 +1,3 @@
-
-
 export default {
   getAllMembers(api) {
     const response = api
@@ -12,7 +10,7 @@ export default {
       });
     return response;
   },
-  
+
   createMember(api, memberDetails) {
     const response = api
       .post("rest-auth/registration/", memberDetails)

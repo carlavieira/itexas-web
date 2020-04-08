@@ -1,10 +1,8 @@
 let url = "meeting/";
 
-
 export default {
-  getAllMeeting(axios) {
-    console.log(axios)
-    const response = axios
+  getAllMeeting(api) {
+    const response = api
       .get(url)
       .then(function (response) {
         console.log(response);
@@ -16,9 +14,8 @@ export default {
     return response;
   },
 
-  createMeeting(meetingDetails) {
-
-    const response = this.axios
+  createMeeting(api, meetingDetails) {
+    const response = api
       .post(url, meetingDetails)
       .then(function (response) {
         // handle success

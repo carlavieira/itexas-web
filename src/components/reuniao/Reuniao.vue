@@ -50,7 +50,7 @@ export default {
   },
 
   async created() {
-    let res = await this.meetingController.getAllMeeting(this.$axios);
+    let res = await this.meetingController.getAllMeeting(this.$api);
     this.reunioes = res.data;
   },
 
