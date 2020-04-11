@@ -2,7 +2,12 @@
   <v-dialog max-width="800px" persistent v-model="show">
     <v-card class="pa-5">
       <v-layout row class="px-3">
-        <v-btn v-if="!editMember" color="black" @click="editMember = true" title="Editar">
+        <v-btn
+          v-if="!editMember"
+          color="black"
+          @click="editMember = true"
+          title="Editar"
+        >
           <v-icon color="white">mdi-account-edit</v-icon>
         </v-btn>
         <v-btn color="red" class="ml-2" title="Excluir">
@@ -15,17 +20,18 @@
       </v-layout>
       <v-layout column mx-2 justify-center align-center>
         <v-avatar size="130px" class="avatar">
-          <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+          <img src="https://i.imgur.com/EvaCfem.png" alt="avatar" />
           <v-btn class="float" v-if="editMember">
             <v-icon>mdi-camera</v-icon>
           </v-btn>
         </v-avatar>
-        <span
-          v-if="!editMember"
-          class="title font-weight-medium mt-3"
-        >{{ member.first_name }} {{ member.last_name }}</span>
-        <span v-if="!editMember" class="subheading font-weight-regular">( {{ member.nickname }} )</span>
-        <v-layout row mt-3 justify-space-around style="width:100%">
+        <span v-if="!editMember" class="title font-weight-medium mt-3"
+          >{{ member.first_name }} {{ member.last_name }}</span
+        >
+        <span v-if="!editMember" class="subheading font-weight-regular"
+          >( {{ member.nickname }} )</span
+        >
+        <v-layout row mt-3 justify-space-around style="width: 100%;">
           <v-layout justify-left col-xs-12 col-sm-6 v-if="editMember">
             <v-text-field
               label="Nome"
@@ -93,6 +99,7 @@
             <v-text-field
               outlined
               prepend-inner-icon="mdi-account-star"
+              label="Líder"
               v-model="member.leader"
               :disabled="!editMember"
               hide-details
@@ -100,7 +107,9 @@
           </v-layout>
         </v-layout>
         <v-layout row align-center v-if="editMember">
-          <v-btn class="ma-2" @click="sendEdit()" depressed color="success">Salvar</v-btn>
+          <v-btn class="ma-2" @click="sendEdit()" depressed color="success"
+            >Salvar</v-btn
+          >
         </v-layout>
       </v-layout>
     </v-card>
@@ -117,13 +126,13 @@ export default {
 
   props: {
     show: Boolean,
-    member: Object
+    member: Object,
   },
 
   data() {
     return {
       data: null,
-      editMember: false
+      editMember: false,
     };
   },
 
@@ -131,10 +140,8 @@ export default {
     formatDate() {
       this.data = moment(this.member.date_joined).format("DD/MM/YYYY");
     },
-    sendEdit(){
-
-    }
-  }
+    sendEdit() {},
+  },
 };
 </script>
 

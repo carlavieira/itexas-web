@@ -23,11 +23,16 @@
           </v-col>
 
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-select
+            <v-text-field
+              :counter="40"
               v-model="leader"
               label="Líder responsável"
               prepend-icon="mdi-account-star"
-            ></v-select>
+            ></v-text-field>
+          </v-col>
+
+          <v-col class="col-12" sm="6" md="6" lg="6">
+            <v-text-field label="Outlined" height="60" outlined></v-text-field>
           </v-col>
 
           <v-row justify="space-around">

@@ -64,7 +64,7 @@ export default {
 
   methods: {
     formatDate(date) {
-      return moment(date).format("DD/MM/YYYY");
+      return moment(date).format("MM/DD/YYYY");
     },
     formatTime(time) {
       let hora = time.split(":");

@@ -33,7 +33,7 @@
               />
             </v-form>
             <v-row class="px-3">
-              <!-- <router-link class="font-weight-regular body-2" to="/login">Cadastre-se</router-link> -->
+              <a class="a-small">Esqueci minha senha</a>
               <v-btn
                 :loading="logando"
                 v-on:click="login()"
@@ -78,12 +78,12 @@ export default {
       routes,
       authController,
       validacaoEmail: [
-        (v) => !!v || "E-mail é obrigatório",
-        (v) => /.+@.+/.test(v) || "E-mail inválido",
+        v => !!v || "E-mail é obrigatório",
+        v => /.+@.+/.test(v) || "E-mail inválido"
       ],
       validacaoSenha: [
-        (v) => v.length >= 6 || "A senha precisa ter no mínimo 6 caracteres",
-      ],
+        v => v.length >= 6 || "A senha precisa ter no mínimo 6 caracteres"
+      ]
     };
   },
   methods: {
@@ -105,8 +105,8 @@ export default {
         this.senha
       );
       console.log(res);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -124,11 +124,14 @@ export default {
 }
 a {
   text-decoration: none;
-  color: white !important;
+  color: #ff3535 !important;
+  font-size: 13px;
 }
+
 a:hover {
-  color: tertiary !important;
+  color: #9c0f0c !important;
 }
+
 @media (max-width: 575px) {
   .form {
     width: 95%;
