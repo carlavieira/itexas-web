@@ -1,14 +1,14 @@
-let url = "meeting/";
+let url = "meetingsApi/";
 
 export default {
   getAllMeeting(api) {
     const response = api
       .get(url)
-      .then(function (response) {
+      .then(function(response) {
         console.log(response);
         return response;
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
     return response;
@@ -18,14 +18,14 @@ export default {
     console.log(meetingDetails);
     const response = api
       .post(url, meetingDetails)
-      .then(function (response) {
+      .then(function(response) {
         // handle success
         return response.data;
       })
-      .catch(function (error) {
+      .catch(function(error) {
         // handle error
         console.log(error);
       });
     return response;
-  },
+  }
 };

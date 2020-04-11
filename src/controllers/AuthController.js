@@ -15,7 +15,6 @@ export default {
       .then(res => {
         localStorage.setItem("access_token", res.data.token);
         localStorage.setItem("user_id", res.data.user.email);
-        console.log(this.axios)
         this.routerPath(res);
         return res;
       })

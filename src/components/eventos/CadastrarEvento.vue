@@ -31,10 +31,6 @@
             ></v-text-field>
           </v-col>
 
-          <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-text-field label="Outlined" height="60" outlined></v-text-field>
-          </v-col>
-
           <v-row justify="space-around">
             <v-col class="col-12" sm="6" md="6" lg="6">
               <v-dialog
@@ -143,12 +139,12 @@ export default {
         { name: "Reunião Geral", value: "RG" },
         { name: "Assembléia", value: "AS" },
         { name: "Conferência", value: "CF" },
-        { name: "Outros", value: "OU" },
-      ],
+        { name: "Outros", value: "OU" }
+      ]
     };
   },
   props: {
-    show: Boolean,
+    show: Boolean
   },
 
   methods: {
@@ -163,8 +159,8 @@ export default {
       console.log(eventDetails);
 
       return await this.eventController.createEvent(this.$api, eventDetails);
-    },
-  },
+    }
+  }
 };
 </script>
 

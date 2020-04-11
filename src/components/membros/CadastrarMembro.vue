@@ -37,7 +37,7 @@
               :counter="40"
               v-model="memberDetails.nickname"
               label="Apelido"
-              name="nickName"
+              name="nickname"
               prepend-icon="mdi-account-heart"
             ></v-text-field>
           </v-col>
@@ -198,16 +198,16 @@ export default {
       memberController,
       valid: true,
       nameRules: [
-        (v) => !!v || "Campo obrigatório",
-        (v) => (v && v.length <= 20) || "Nome deve ter até 20 caracteres",
+        v => !!v || "Campo obrigatório",
+        v => (v && v.length <= 20) || "Nome deve ter até 20 caracteres"
       ],
       emailRules: [
-        (v) => !!v || "Campo Obrigatótio",
-        (v) => /.+@.+\..+/.test(v) || "E-mail inválido",
+        v => !!v || "Campo Obrigatótio",
+        v => /.+@.+\..+/.test(v) || "E-mail inválido"
       ],
       rulesPassword: {
-        required: (value) => !!value || "Campo Obrigatório.",
-        min: (v) => (v && v.length >= 8) || "Mínimo 8 caracteres",
+        required: value => !!value || "Campo Obrigatório.",
+        min: v => (v && v.length >= 8) || "Mínimo 8 caracteres"
       },
       select: null,
       date: new Date().toISOString().substr(0, 10),
@@ -216,7 +216,7 @@ export default {
         name: "",
         location: null,
         start: null,
-        end: null,
+        end: null
       },
       show1: false,
       show2: false,
@@ -229,13 +229,13 @@ export default {
         password2: null,
         slack: null,
         phone: null,
-        date_joined: "2020-04-03T22:49:56.874Z",
-      },
+        date_joined: "2020-04-03T22:49:56.874Z"
+      }
     };
   },
 
   props: {
-    show: Boolean,
+    show: Boolean
   },
 
   methods: {
@@ -247,20 +247,20 @@ export default {
     async submit() {
       await this.memberController
         .createMember(this.$api, this.memberDetails)
-        .then((res) => {
+        .then(res => {
           console.log(res);
           this.memberDetails = {};
           this.$emit("close");
           this.$emit("getMembers");
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     },
 
     validate() {
       this.$refs.form.validate();
-    },
+    }
   },
 
   computed: {
@@ -268,8 +268,8 @@ export default {
       return () =>
         this.memberDetails.password1 === this.memberDetails.password2 ||
         "As senhas devem coincidir";
-    },
-  },
+    }
+  }
 };
 </script>
 
