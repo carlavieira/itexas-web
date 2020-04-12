@@ -29,5 +29,14 @@ export default {
       .catch(e => {
         throw e;
       });
+  },
+
+  deleteMember(api, memberDetails) {
+    return api
+      .delete(`members/${memberDetails.id}/`, memberDetails)
+      .then(res => res.data)
+      .catch(e => {
+        throw e;
+      });
   }
 };

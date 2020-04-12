@@ -10,9 +10,43 @@
         >
           <v-icon color="white">mdi-account-edit</v-icon>
         </v-btn>
-        <v-btn color="red" class="ml-2" title="Excluir">
+
+        <v-btn
+          color="red"
+          @click.stop="dialog = true"
+          class="ml-2"
+          title="Excluir"
+        >
           <v-icon color="white">mdi-delete</v-icon>
         </v-btn>
+
+        <v-dialog v-model="dialog" max-width="500" min-h>
+          <v-card>
+            <v-card-title style="font-size: 16px !important" class="headline"
+              >Deseja realmente deletar {{ member.first_name }}
+              {{ member.last_name }}?</v-card-title
+            >
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                color="green darken-1"
+                text
+                @click="
+                  dialog = false;
+                  deleteMember();
+                "
+              >
+                Sim
+              </v-btn>
+
+              <v-btn color="red darken-1" text @click="dialog = false">
+                Não
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
         <v-spacer></v-spacer>
         <v-btn @click="$emit('close')" title="Fechar" icon>
           <v-icon color="grey">mdi-close</v-icon>
@@ -47,6 +81,15 @@
               outlined
               prepend-inner-icon="mdi-alpha-s"
               v-model="member.last_name"
+              hide-details
+            ></v-text-field>
+          </v-layout>
+          <v-layout justify-left col-xs-12 col-sm-6 v-if="editMember">
+            <v-text-field
+              label="Apelido"
+              outlined
+              prepend-inner-icon="mdi-account-heart"
+              v-model="member.nickname"
               hide-details
             ></v-text-field>
           </v-layout>
@@ -109,38 +152,36 @@
           </v-layout>
 
           <v-layout justify-left col-xs-12 col-sm-6>
-            <v-col cols="12" lg="6">
-              <v-menu
-                ref="menu1"
-                v-model="menu1"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-              >
-                <template v-slot:activator="{ on }">
-                  <v-text-field
-                    v-model="dateFormatted"
-                    label="Data de entrada na AIESEC"
-                    persistent-hint
-                    prepend-inner-icon="mdi-calendar"
-                    v-on="on"
-                    outlined
-                    :disabled="!editMember"
-                    hide-details
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="date"
-                  no-title
-                  @input="menu1 = false"
-                ></v-date-picker>
-              </v-menu>
-              <!--
+            <v-menu
+              ref="menu1"
+              v-model="menu1"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="dateFormatted"
+                  label="Data de entrada na AIESEC"
+                  persistent-hint
+                  prepend-inner-icon="mdi-calendar"
+                  v-on="on"
+                  outlined
+                  :disabled="!editMember"
+                  hide-details
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="date"
+                no-title
+                @input="menu1 = false"
+              ></v-date-picker>
+            </v-menu>
+            <!--
               <p>
                 Date in ISO format: <strong>{{ date }}</strong>
               </p>
               -->
-            </v-col>
           </v-layout>
         </v-layout>
 
@@ -165,7 +206,8 @@ export default {
     menu1: false,
     menu2: false,
     editMember: false,
-    memberController
+    memberController,
+    dialog: false
   }),
 
   computed: {
@@ -196,7 +238,7 @@ export default {
       if (!date) return null;
 
       const [month, day, year] = date.split("/");
-      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+      return `${yeabr}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     },
     async sendEdit() {
       delete this.member.post;
@@ -208,6 +250,19 @@ export default {
 
       await this.memberController
         .editMember(this.$api, this.member)
+        .then(res => {
+          console.log(res);
+          this.member = {};
+          this.$emit("close");
+          this.$emit("getMembers");
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    async deleteMember() {
+      await this.memberController
+        .deleteMember(this.$api, this.member)
         .then(res => {
           console.log(res);
           this.member = {};
