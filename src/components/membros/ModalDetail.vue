@@ -83,6 +83,7 @@
               prepend-inner-icon="mdi-briefcase"
               v-model="member.post"
               :disabled="!editMember"
+              label="Cargo"
               hide-details
             ></v-text-field>
           </v-layout>
@@ -91,6 +92,7 @@
               outlined
               prepend-inner-icon="mdi-border-none-variant"
               v-model="member.area"
+              label="Area"
               :disabled="!editMember"
               hide-details
             ></v-text-field>
@@ -105,7 +107,43 @@
               hide-details
             ></v-text-field>
           </v-layout>
+
+          <v-layout justify-left col-xs-12 col-sm-6>
+            <v-col cols="12" lg="6">
+              <v-menu
+                ref="menu1"
+                v-model="menu1"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+              >
+                <template v-slot:activator="{ on }">
+                  <v-text-field
+                    v-model="dateFormatted"
+                    label="Data de entrada na AIESEC"
+                    persistent-hint
+                    prepend-inner-icon="mdi-calendar"
+                    v-on="on"
+                    outlined
+                    :disabled="!editMember"
+                    hide-details
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="date"
+                  no-title
+                  @input="menu1 = false"
+                ></v-date-picker>
+              </v-menu>
+              <!--
+              <p>
+                Date in ISO format: <strong>{{ date }}</strong>
+              </p>
+              -->
+            </v-col>
+          </v-layout>
         </v-layout>
+
         <v-layout row align-center v-if="editMember">
           <v-btn class="ma-2" @click="sendEdit()" depressed color="success"
             >Salvar</v-btn
@@ -116,32 +154,49 @@
   </v-dialog>
 </template>
 
-<script>
-import moment from "moment";
+<script></script>
 
+<script>
 export default {
-  created() {
-    this.formatDate();
+  data: vm => ({
+    date: new Date().toISOString().substr(0, 10),
+    dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+    menu1: false,
+    menu2: false,
+    editMember: false
+  }),
+
+  computed: {
+    computedDateFormatted() {
+      return this.formatDate(this.date);
+    }
   },
 
   props: {
     show: Boolean,
-    member: Object,
+    member: Object
   },
 
-  data() {
-    return {
-      data: null,
-      editMember: false,
-    };
+  watch: {
+    date(val) {
+      this.dateFormatted = this.formatDate(this.date);
+    }
   },
 
   methods: {
-    formatDate() {
-      this.data = moment(this.member.date_joined).format("DD/MM/YYYY");
+    formatDate(date) {
+      if (!date) return null;
+
+      const [year, month, day] = date.split("-");
+      return `${day}/${month}/${year}`;
     },
-    sendEdit() {},
-  },
+    parseDate(date) {
+      if (!date) return null;
+
+      const [month, day, year] = date.split("/");
+      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    }
+  }
 };
 </script>
 

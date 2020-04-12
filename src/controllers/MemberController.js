@@ -3,6 +3,7 @@ export default {
     const response = api
       .get("members/")
       .then(function(response) {
+        console.log(response.data);
         return response.data;
       })
       .catch(function(error) {
