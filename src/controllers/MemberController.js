@@ -20,5 +20,14 @@ export default {
       .catch(e => {
         throw e;
       });
+  },
+
+  editMember(api, memberDetails) {
+    return api
+      .put(`members/${memberDetails.id}/`, memberDetails)
+      .then(res => res.data)
+      .catch(e => {
+        throw e;
+      });
   }
 };

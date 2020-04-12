@@ -157,13 +157,15 @@
 <script></script>
 
 <script>
+import memberController from "../../controllers/MemberController";
 export default {
   data: vm => ({
     date: new Date().toISOString().substr(0, 10),
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     menu1: false,
     menu2: false,
-    editMember: false
+    editMember: false,
+    memberController
   }),
 
   computed: {
@@ -195,6 +197,26 @@ export default {
 
       const [month, day, year] = date.split("/");
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    },
+    async sendEdit() {
+      delete this.member.post;
+      delete this.member.department;
+      delete this.member.leader;
+      delete this.member.photo;
+
+      console.log(this.member);
+
+      await this.memberController
+        .editMember(this.$api, this.member)
+        .then(res => {
+          console.log(res);
+          this.member = {};
+          this.$emit("close");
+          this.$emit("getMembers");
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
