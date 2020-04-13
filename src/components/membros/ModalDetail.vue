@@ -54,10 +54,11 @@
       </v-layout>
       <v-layout column mx-2 justify-center align-center>
         <v-avatar size="130px" class="avatar">
-          <img src="https://i.imgur.com/EvaCfem.png" alt="avatar" />
-          <v-btn class="float" v-if="editMember">
-            <v-icon>mdi-camera</v-icon>
-          </v-btn>
+          <v-div size="130px" class="shadow-avatar" v-if="editMember">
+            <v-btn icon class="float" v-if="editMember">
+              <v-icon>mdi-camera</v-icon>
+            </v-btn>
+          </v-div>
         </v-avatar>
         <span v-if="!editMember" class="title font-weight-medium mt-3"
           >{{ member.first_name }} {{ member.last_name }}</span
@@ -278,12 +279,37 @@ export default {
 </script>
 
 <style scoped>
-.avatar {
-  position: relative;
+.float {
+  width: 130px;
+  height: 130px;
 }
 
-.float {
-  position: absolute;
-  top: 55px;
+.float:hover i.v-icon.v-icon {
+  color: white !important;
+}
+
+i.v-icon.v-icon {
+  color: transparent;
+}
+
+.avatar {
+  background-image: url(https://i.imgur.com/EvaCfem.png);
+  background-position: center center;
+  width: 130px;
+  height: 130px;
+  background-size: contain;
+}
+
+.shadow-avatar {
+  width: 130px;
+  height: 130px;
+}
+
+.shadow-avatar:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  -webkit-transition: background-color 300ms linear;
+  -ms-transition: background-color 200ms linear;
+  transition: background-color 200ms linear;
+  cursor: pointer;
 }
 </style>
