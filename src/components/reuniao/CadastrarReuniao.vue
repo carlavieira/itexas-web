@@ -1,6 +1,6 @@
 <template>
   <v-dialog max-width="800px" persistent v-model="show">
-    <v-card class="pa-5">
+    <v-card class="pa-5 modal">
       <v-layout row class="px-3" justify-space-between>
         <h2>Marcação de Reunião</h2>
         <v-btn @click="$emit('close')" title="Fechar" icon>
@@ -99,26 +99,19 @@
             </v-dialog>
           </v-col>
           <v-col style="justify-content: center ;display: flex">
-            <tabelaParticipante style="max-width: 450px"></tabelaParticipante>
-          </v-col>
-          <v-col
-            class="col-12 offset-md-4 offset-lg-4 offset-sm-3 column-button"
-            sm="6"
-            md="6"
-            lg="6"
-          >
-            <v-btn
-              class="ma-2"
-              v-on:click.native="submit()"
-              depressed
-              color="success"
-              >Cadastrar</v-btn
-            >
-            <v-btn class="ma-2" v-on:click.native="clear()" outlined
-              >Limpar Campos</v-btn
-            >
+            <tabelaParticipante style="max-width: 550px"></tabelaParticipante>
           </v-col>
         </v-row>
+        <v-layout row align-center justify-center>
+          <v-btn
+            class="ma-2"
+            style="float: left"
+            v-on:click.native="submit()"
+            depressed
+            color="success"
+            >Cadastrar</v-btn
+          >
+        </v-layout>
       </v-form>
     </v-card>
   </v-dialog>
@@ -180,6 +173,9 @@ export default {
 </script>
 
 <style scoped>
+.modal {
+  background-color: #f1f1f1;
+}
 .w-290 {
   max-width: 290px;
 }

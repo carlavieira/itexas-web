@@ -1,5 +1,8 @@
 <template>
-  <v-data-table :headers="headers" :items="desserts" class="elevation-1">
+  <v-data-table :headers="headers" :items="participantes" class="elevation-1">
+    <template v-slot:item.presente="{ item }">
+      <v-simple-checkbox v-model="item.presente" disabled></v-simple-checkbox>
+    </template>
     <template v-slot:top>
       <v-toolbar flat color="white">
         <v-toolbar-title>Participantes</v-toolbar-title>
@@ -7,7 +10,15 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
-            <v-btn class="mx-2" v-on="on" fab small dark color="red">
+            <v-btn
+              class="mx-2"
+              title="Adicionar Participante"
+              v-on="on"
+              fab
+              dark
+              x-small
+              color="success"
+            >
               <v-icon dark>mdi-plus</v-icon>
             </v-btn>
           </template>
@@ -16,47 +27,32 @@
               <span class="headline">{{ formTitle }}</span>
             </v-card-title>
 
-            <v-card-text>
-              <v-container>
+            <template>
+              <v-container px-6 style="height: 85px">
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" sm="9" md="9">
                     <v-text-field
                       v-model="editedItem.name"
-                      label="Dessert name"
+                      label="Participante"
+                      placeholder="Nome"
+                      outlined
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
-                    ></v-text-field>
+                  <v-col class="campo-presenca" cols="12" sm="3" md="3">
+                    <span>Presença</span>
+                    <v-simple-checkbox
+                      v-model="editedItem.presente"
+                      label="Presença"
+                    ></v-simple-checkbox>
                   </v-col>
                 </v-row>
               </v-container>
-            </v-card-text>
+            </template>
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+              <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+              <v-btn color="blue darken-1" text @click="save">Salvar</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -77,33 +73,37 @@
 </template>
 
 <script>
+import { Ripple } from "vuetify/lib/directives";
+
 export default {
   data: () => ({
     dialog: false,
     headers: [
       { text: "Participante", value: "name", align: "start" },
-      { text: "Presente", value: "presente", align: "center" }
+      { text: "Presente", value: "presente", align: "center" },
+      { value: "actions", sortable: false, align: "end" }
     ],
-    desserts: [],
+    participantes: [],
     editedIndex: -1,
     editedItem: {
       name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
+      presente: false
     },
     defaultItem: {
       name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0
+      presente: false
     }
   }),
+
+  directives: {
+    Ripple
+  },
+
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1
+        ? "Novo Participante"
+        : "Editar Participante";
     }
   },
   watch: {
@@ -116,22 +116,34 @@ export default {
   },
   methods: {
     initialize() {
-      this.desserts = [
+      this.participantes = [
         {
-          name: "Frozen Yogurt",
-          presente: "Sim"
+          name: "Marcos Henrique",
+          presente: true
+        },
+        {
+          name: "Mariana Veloso",
+          presente: false
+        },
+        {
+          name: "Pedro Henrique",
+          presente: false
+        },
+        {
+          name: "Igor Lopes",
+          presente: true
         }
       ];
     },
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.participantes.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
     deleteItem(item) {
-      const index = this.desserts.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
-        this.desserts.splice(index, 1);
+      const index = this.participantes.indexOf(item);
+      confirm("Você deseja realmente deletar este participante?") &&
+        this.participantes.splice(index, 1);
     },
     close() {
       this.dialog = false;
@@ -142,12 +154,20 @@ export default {
     },
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        Object.assign(this.participantes[this.editedIndex], this.editedItem);
       } else {
-        this.desserts.push(this.editedItem);
+        this.participantes.push(this.editedItem);
       }
       this.close();
     }
   }
 };
 </script>
+
+<style>
+.campo-presenca {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
