@@ -99,7 +99,10 @@
             </v-dialog>
           </v-col>
           <v-col style="justify-content: center ;display: flex">
-            <tabelaParticipante style="max-width: 550px"></tabelaParticipante>
+            <tabelaParticipante
+              v-on:enviarParticipantesCadastro="ListaParticipantes"
+              style="max-width: 550px"
+            ></tabelaParticipante>
           </v-col>
         </v-row>
         <v-layout row align-center justify-center>
@@ -140,7 +143,8 @@ export default {
       e7: null,
       select: null,
       leader: "",
-      type: ""
+      type: "",
+      participantes: []
     };
   },
 
@@ -156,6 +160,7 @@ export default {
       meetingDetails.time = this.time;
       meetingDetails.type = this.type;
       meetingDetails.member = this.leader;
+      meetingDetails.participantes = this.participantes;
 
       console.log(meetingDetails);
 
@@ -163,6 +168,10 @@ export default {
         this.$api,
         meetingDetails
       );
+    },
+
+    ListaParticipantes(participantes) {
+      this.participantes.push(participantes);
     }
   },
 

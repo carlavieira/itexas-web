@@ -52,7 +52,13 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Salvar</v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="save"
+                v-on:click="enviaParticipantesParaCadastro"
+                >Salvar</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -67,7 +73,7 @@
       </v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
+      <span>Não há participantes nesta reunião.</span>
     </template>
   </v-data-table>
 </template>
@@ -80,7 +86,7 @@ export default {
     dialog: false,
     headers: [
       { text: "Participante", value: "name", align: "start" },
-      { text: "Presente", value: "presente", align: "center" },
+      { text: "Presença", value: "presente", align: "center" },
       { value: "actions", sortable: false, align: "end" }
     ],
     participantes: [],
@@ -111,9 +117,11 @@ export default {
       val || this.close();
     }
   },
+
   created() {
     this.initialize();
   },
+
   methods: {
     initialize() {
       this.participantes = [
@@ -159,6 +167,12 @@ export default {
         this.participantes.push(this.editedItem);
       }
       this.close();
+    },
+    enviaParticipantesParaCadastro() {
+      this.$emit(
+        "enviarParticipantesCadastro",
+        JSON.parse(JSON.stringify(this.participantes))
+      );
     }
   }
 };
