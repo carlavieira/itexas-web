@@ -30,77 +30,77 @@
               prepend-icon="mdi-account-star"
             ></v-text-field>
           </v-col>
-
-          <v-row justify="space-around">
-            <v-col cols="11" sm="5">
-              <v-dialog
-                ref="dialog2"
-                v-model="modal1"
-                :return-value.sync="date"
-                persistent
-                width="290px"
-              >
-                <template v-slot:activator="{ on }">
-                  <v-text-field
-                    v-model="date"
-                    label="Data do Evento"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
+          <v-col class="col-12" sm="6" md="6" lg="6">
+            <v-dialog
+              ref="dialog2"
+              v-model="modal1"
+              :return-value.sync="date"
+              persistent
+              width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
                   v-model="date"
-                  color="red lighten-1"
-                  locale="pt-br"
-                  scrollable
-                >
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="modal1 = false"
-                    >Voltar</v-btn
-                  >
-                  <v-btn text color="primary" @click="$refs.dialog2.save(date)"
-                    >OK</v-btn
-                  >
-                </v-date-picker>
-              </v-dialog>
-            </v-col>
-
-            <v-col cols="11" sm="5">
-              <v-dialog
-                ref="dialog"
-                v-model="modal2"
-                :return-value.sync="time"
-                persistent
-                width="290px"
+                  label="Data do Evento"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="date"
+                color="red lighten-1"
+                locale="pt-br"
+                scrollable
               >
-                <template v-slot:activator="{ on }">
-                  <v-text-field
-                    v-model="time"
-                    label="Hora do Evento"
-                    prepend-icon="mdi-clock-outline"
-                    readonly
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-time-picker
-                  v-if="modal2"
-                  v-model="time"
-                  color="red lighten-1"
-                  format="24hr"
-                  full-width
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="modal1 = false"
+                  >Voltar</v-btn
                 >
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="modal2 = false"
-                    >Cancel</v-btn
-                  >
-                  <v-btn text color="primary" @click="$refs.dialog.save(time)"
-                    >OK</v-btn
-                  >
-                </v-time-picker>
-              </v-dialog>
-            </v-col>
-          </v-row>
+                <v-btn text color="primary" @click="$refs.dialog2.save(date)"
+                  >OK</v-btn
+                >
+              </v-date-picker>
+            </v-dialog>
+          </v-col>
+
+          <v-col class="col-12" sm="6" md="6" lg="6">
+            <v-dialog
+              ref="dialog"
+              v-model="modal2"
+              :return-value.sync="time"
+              persistent
+              width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="time"
+                  label="Hora do Evento"
+                  prepend-icon="mdi-clock-outline"
+                  readonly
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-time-picker
+                v-if="modal2"
+                v-model="time"
+                color="red lighten-1"
+                format="24hr"
+                full-width
+              >
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="modal2 = false"
+                  >Cancel</v-btn
+                >
+                <v-btn text color="primary" @click="$refs.dialog.save(time)"
+                  >OK</v-btn
+                >
+              </v-time-picker>
+            </v-dialog>
+          </v-col>
+          <v-col style="justify-content: center ;display: flex">
+            <tabelaParticipante style="max-width: 450px"></tabelaParticipante>
+          </v-col>
           <v-col
             class="col-12 offset-md-4 offset-lg-4 offset-sm-3 column-button"
             sm="6"
@@ -126,6 +126,7 @@
 
 <script>
 import meetingController from "../../controllers/MeetingController";
+import tabelaParticipante from "../tabelaParticipantes/TabelaDeParticipantes";
 
 export default {
   data() {
@@ -137,17 +138,21 @@ export default {
         { name: "Reunião de Área", value: "RA" },
         { name: "Reunião de Time", value: "RT" },
         { name: "Reunião de LR", value: "LR" },
-        { name: "Reunião de Corner", value: "CN" },
+        { name: "Reunião de Corner", value: "CN" }
       ],
       date: new Date().toISOString().substr(0, 10),
       modal1: false,
       modal2: false,
-      time: null,
+      time: "00:00",
       e7: null,
       select: null,
       leader: "",
-      type: "",
+      type: ""
     };
+  },
+
+  components: {
+    tabelaParticipante
   },
 
   methods: {
@@ -165,12 +170,12 @@ export default {
         this.$api,
         meetingDetails
       );
-    },
+    }
   },
 
   props: {
-    show: Boolean,
-  },
+    show: Boolean
+  }
 };
 </script>
 

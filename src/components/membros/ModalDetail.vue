@@ -54,11 +54,11 @@
       </v-layout>
       <v-layout column mx-2 justify-center align-center>
         <v-avatar size="130px" class="avatar">
-          <v-div size="130px" class="shadow-avatar" v-if="editMember">
+          <v-layout size="130px" class="shadow-avatar" v-if="editMember">
             <v-btn icon class="float" v-if="editMember">
               <v-icon>mdi-camera</v-icon>
             </v-btn>
-          </v-div>
+          </v-layout>
         </v-avatar>
         <span v-if="!editMember" class="title font-weight-medium mt-3"
           >{{ member.first_name }} {{ member.last_name }}</span
