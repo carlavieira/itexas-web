@@ -5,6 +5,7 @@ import app from "../components/Admin.vue";
 import members from "../components/membros/Membros.vue";
 import reuniao from "../components/reuniao/Reuniao.vue";
 import eventos from "../components/eventos/Eventos.vue";
+import calendario from "../components/calendario/Calendario.vue";
 
 Vue.use(VueRouter);
 
@@ -20,12 +21,13 @@ const routes = [
       { path: "/adm/membros", name: "members", component: members },
       { path: "/adm/reuniao", name: "reuniao", component: reuniao },
       { path: "/adm/eventos", name: "eventos", component: eventos },
-    ],
-  },
+      { path: "/adm/calendario", name: "calendario", component: calendario }
+    ]
+  }
 ];
 
 const router = new VueRouter({
-  routes,
+  routes
 });
 
 export default router;

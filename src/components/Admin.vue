@@ -69,32 +69,37 @@ export default {
         {
           text: "Dashboard",
           icon: "mdi-view-dashboard-outline",
-          path: "/dashboard",
+          path: "/dashboard"
         },
         {
           text: "Relatórios",
           icon: "mdi-clipboard-text-multiple",
-          path: "/",
+          path: "/"
         },
         {
           text: "Membros",
+          icon: "mdi-account",
+          path: "/adm/membros"
+        },
+        {
+          text: "Reuniões",
           icon: "mdi-account-multiple",
-          path: "/adm/membros",
+          path: "/adm/reuniao"
         },
         {
-          text: "Reunião",
-          icon: "mdi-calendar-month ",
-          path: "/adm/reuniao",
-        },
-        {
-          text: "Evento",
+          text: "Eventos",
           icon: "mdi-account-group",
-          path: "/adm/eventos",
+          path: "/adm/eventos"
         },
+        {
+          text: "Calendário",
+          icon: "mdi-calendar-month",
+          path: "/adm/calendario"
+        }
       ],
-      drawer: true,
+      drawer: true
     };
-  },
+  }
 };
 </script>
 
