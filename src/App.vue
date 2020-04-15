@@ -8,6 +8,7 @@
 
 <script>
 import routes from './router/index';
+
   export default {
     name: 'App',
 
@@ -15,7 +16,7 @@ import routes from './router/index';
       return {
         routes
       }
-    },
+    }
   }
 </script>
 

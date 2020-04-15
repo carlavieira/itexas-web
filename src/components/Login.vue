@@ -4,7 +4,11 @@
       <v-col>
         <v-card flat color="branco" class="px-8 pt-5 pb-12 form mx-auto">
           <v-form ref="form">
-            <v-img src="../assets/rrrrr.png" width="100px" class="mt-3 mb-5 mx-auto" />
+            <v-img
+              src="../assets/rrrrr.png"
+              width="100px"
+              class="mt-3 mb-5 mx-auto"
+            />
             <v-form class="pt-6">
               <v-text-field
                 id="emailLogin"
@@ -23,14 +27,13 @@
                 name="senha"
                 v-model="senha"
                 required
-                :rules="validacaoSenha"
                 outlined
                 color="tertiary"
                 label="Senha"
               />
             </v-form>
             <v-row class="px-3">
-              <!-- <router-link class="font-weight-regular body-2" to="/login">Cadastre-se</router-link> -->
+              <a class="a-small">Esqueci minha senha</a>
               <v-btn
                 :loading="logando"
                 v-on:click="login()"
@@ -51,7 +54,8 @@
             border="top"
             icon="mdi-alert"
             transition="scale-transition"
-          >{{ errorMessage }}</v-alert>
+            >{{ errorMessage }}</v-alert
+          >
         </v-card>
       </v-col>
     </v-row>
@@ -60,6 +64,7 @@
 
 <script>
 import routes from "../router/index.js";
+import authController from "../controllers/AuthController";
 
 export default {
   name: "Login",
@@ -71,6 +76,7 @@ export default {
       alertError: false,
       errorMessage: "",
       routes,
+      authController,
       validacaoEmail: [
         v => !!v || "E-mail é obrigatório",
         v => /.+@.+/.test(v) || "E-mail inválido"
@@ -91,28 +97,14 @@ export default {
     validarFormularioLogin() {
       return this.$refs.form.validate();
     },
-    login() {
-      let request = new Object();
 
-      request.username = "";
-      request.email = this.email;
-      request.password = this.senha;
-
-      console.log(request);
-      let url = "http://itexas.pythonanywhere.com/rest-auth/login/";
-
-      this.$http
-        .post(url, request)
-        .then(function(res) {
-          //let resultado = res.json();
-          alert("sucess");
-          console.log(res)
-          return res;
-        })
-        .catch(function(err) {
-          alert("fail");
-          return console.log(err);
-        });
+    async login() {
+      let res = await this.authController.login(
+        this.$http,
+        this.email,
+        this.senha
+      );
+      console.log(res);
     }
   }
 };
@@ -132,11 +124,14 @@ export default {
 }
 a {
   text-decoration: none;
-  color: white !important;
+  color: #ff3535 !important;
+  font-size: 13px;
 }
+
 a:hover {
-  color: tertiary !important;
+  color: #9c0f0c !important;
 }
+
 @media (max-width: 575px) {
   .form {
     width: 95%;

@@ -1,10 +1,15 @@
-/* eslint-disable no-undef */
 <template>
   <v-container>
     <v-row class="px-4">
       <h2>Membros</h2>
       <v-spacer></v-spacer>
-      <v-btn @click="btnMembro = true" title="Cadastrar novo membro" small color="secondary" fab>
+      <v-btn
+        @click="btnMembro = true"
+        title="Cadastrar novo membro"
+        small
+        color="secondary"
+        fab
+      >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-row>
@@ -13,7 +18,7 @@
         <v-card class="w-100">
           <v-card-title>
             <v-text-field
-              style="max-width: 300px"
+              style="max-width: 300px;"
               v-model="search"
               append-icon="mdi-magnify"
               label="Pesquisar"
@@ -21,107 +26,78 @@
               hide-details
             ></v-text-field>
           </v-card-title>
-          <v-data-table no-data-text="Nenhum membro cadastrado" no-results-text="Nenhum membro encontrado" :headers="headersMembros" :items="membros" :search="search"></v-data-table>
+          <v-data-table
+            no-data-text="Nenhum membro cadastrado"
+            no-results-text="Nenhum membro encontrado"
+            :headers="headersMembros"
+            :items="membros"
+            :search="search"
+          >
+            <template v-slot:item.actions="{ item }">
+              <v-icon small @click="memberShow(item)"
+                >mdi-account-details</v-icon
+              >
+            </template>
+          </v-data-table>
         </v-card>
       </v-flex>
     </v-row>
-    <NovoMembro :show="btnMembro" @close="btnMembro = false"></NovoMembro>
+    <NovoMembro :show="btnMembro" @close="btnMembro = false" @getMembers="getMembers()"></NovoMembro>
+    <modalDetail
+      v-if="showDetail"
+      :show="showDetail"
+      :member="userDetail"
+      @close="showDetail = false"
+    ></modalDetail>
   </v-container>
 </template>
 
 <script>
-  import NovoMembro from "./CadastrarMembro.vue";
-  export default {
-    components: {
-      NovoMembro
-    },
-    data() {
-      return {
-        btnMembro: false,
-        search: "",
-        headersMembros: [
-          {
-            text: "Nome",
-            align: "start",
-            value: "name"
-          },
-          { text: "Cargo", value: "cargo" },
-          { text: "Área", value: "area" },
-          { text: "Líder", value: "lider" },
-        ],
-        membros: [
-          {
-            name: "Pedro Machado",
-            cargo: "Team Leader",
-            area: "B2B",
-            lider: "Antônio"
-          },
-          {
-            name: "Alex Mascarenhas",
-            cargo: "Membro",
-            area: "oGT",
-            lider: "Pedro Rocha"
-          },
-          {
-            name: "Marina Figueiredo",
-            cargo: "Team Leader",
-            area: "iGT",
-            lider: "Pedro Rocha"
-          },
-          {
-            name: "Victoria Nunes",
-            cargo: "Membro",
-            area: "iGT",
-            lider: "Marina Figueiredo"
-          },
-          {
-            name: "Marlon Silva",
-            cargo: "Membro",
-            area: "F&L",
-            lider: "Pedro Rocha"
-          },
-          {
-            name: "Flávio Junior",
-            cargo: "Presidente",
-            area: "-",
-            lider: "-"
-          },
-          {
-            name: "Bruna Neves",
-            cargo: "Membro",
-            area: "B2B",
-            lider: "Marina Figueiredo"
-          },
-          {
-            name: "Lucas Pacheco",
-            cargo: "Membro",
-            area: "B2B",
-            lider: "Marina Figueiredo"
-          },
-        ]
-      };
-    },
-    methods: {
-      requestGetMembers() {
-        let url = "http://itexas.pythonanywhere.com/members/";
+import NovoMembro from "./CadastrarMembro.vue";
+import memberController from "../../controllers/MemberController";
+import modalDetail from "./ModalDetail.vue";
 
-        this.$http
-          .get(url)
-          .then(function(res) {
-            //let resultado = res.json();
-            alert("sucess");
-            console.log(res)
-            return res;
-          })
-          .catch(function(err) {
-            alert("fail");
-            return console.log(err);
-          });
-      }
+export default {
+  components: {
+    NovoMembro,
+    modalDetail,
+  },
+
+  created() {
+    this.getMembers()
+  },
+
+  data() {
+    return {
+      btnMembro: false,
+      memberController,
+      search: "",
+      headersMembros: [
+        {
+          text: "Nome",
+          align: "start",
+          value: "first_name",
+        },
+        { text: "Cargo", value: "post" },
+        { text: "Área", value: "department" },
+        { text: "Líder", value: "leader" },
+        { text: "Detalhes", value: "actions", sortable: false },
+      ],
+      membros: [],
+      userDetail: null,
+      showDetail: false,
+    };
+  },
+
+  methods: {
+    memberShow(user) {
+      this.userDetail = user;
+      this.showDetail = true;
     },
-    created: function(){
-      this.requestGetMembers();
-      console.log('Teste')
+    async getMembers(){
+      let res = await this.memberController.getAllMembers(this.$api);
+      this.membros = res;
     }
-  };
+  },
+};
 </script>

@@ -3,13 +3,23 @@ import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
 import VueResource from "vue-resource";
+import axios from "axios"
 
-Vue.config.productionTip = false;
 Vue.use(VueResource);
+
+
+Vue.prototype.$api = axios.create({
+  baseURL: 'http://itexas.pythonanywhere.com/',
+  headers: {
+    Authorization: `JWT ${localStorage.getItem("access_token")}`  
+  }
+})
 
 new Vue({
   router,
   vuetify,
   VueResource,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");
+
+
