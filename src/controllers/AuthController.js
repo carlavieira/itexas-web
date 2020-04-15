@@ -1,5 +1,6 @@
 import router from "../router/index";
 
+
 export default {
   login(http, email, senha) {
     let request = new Object();
@@ -14,7 +15,7 @@ export default {
       .post(url, request)
       .then(res => {
         localStorage.setItem("access_token", res.data.token);
-        localStorage.setItem("user_id", res.data.user.email);
+        localStorage.setItem("user_id", res.data.user.id);
         this.routerPath(res);
         return res;
       })

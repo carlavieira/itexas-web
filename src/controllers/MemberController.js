@@ -12,6 +12,17 @@ export default {
     return response;
   },
 
+  getMemberById(api){
+    return api
+      .get(`members/${localStorage.getItem("user_id")}`)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  },
+
   createMember(api, memberDetails) {
     console.log(memberDetails);
     return api

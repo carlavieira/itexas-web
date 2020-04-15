@@ -95,7 +95,13 @@ export default {
           text: "Calendário",
           icon: "mdi-calendar-month",
           path: "/adm/calendario"
-        }
+        },
+        {
+          text: "Perfil",
+          icon: "mdi-account-circle",
+          path: "/adm/perfil"
+        },
+
       ],
       drawer: true
     };
