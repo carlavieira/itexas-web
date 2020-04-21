@@ -1,9 +1,7 @@
 <template>
   <v-data-table :headers="headers" :items="participantes" class="elevation-1">
     <template v-slot:item.participante="{ item }">
-      <v-span v-model="item.first_name">{{
-        item.participante.first_name
-      }}</v-span>
+      <v-span v-model="item.first_name"> {{ item.first_name }}</v-span>
     </template>
 
     <template v-slot:item.presente="{ item }">
@@ -35,11 +33,14 @@
             </v-card-title>
 
             <template>
-              <v-container px-6 style="height: 85px">
+              <v-container px-6>
                 <v-row>
                   <v-col cols="12" sm="9" md="9">
                     <v-select
                       return-object
+                      multiple
+                      chips
+                      dense
                       v-model="editedItem.participante"
                       label="Participante"
                       :items="membros"
@@ -139,10 +140,10 @@ export default {
     async initialize() {
       let res = await this.memberController.getAllMembers(this.$api);
 
+      /* Lista os nomes em ordem crescente */
       res.sort(function(item1, item2) {
         return item1.first_name < item2.first_name ? -1 : 1;
       });
-      console.log(res);
       this.membros = res;
     },
     editItem(item) {
@@ -166,11 +167,22 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.participantes[this.editedIndex], this.editedItem);
       } else {
-        this.participantes.push(this.editedItem);
+        this.editedItem.participante.map((participante) => {
+          this.participantes.push(participante);
+        });
       }
+      console.log(this.participantes);
       this.close();
     },
     enviaParticipantesParaCadastro() {
+      /*
+      console.log(this.participantes);
+      console.error(this.editedItem.participante);
+      this.editedItem.participante.map((participante) => {
+        this.participantes.push(participante);
+      });
+      console.log(JSON.parse(JSON.stringify(this.participantes)));
+      */
       this.$emit(
         "enviarParticipantesCadastro",
         JSON.parse(JSON.stringify(this.participantes))
