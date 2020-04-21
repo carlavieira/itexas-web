@@ -3,7 +3,7 @@ export default {
     const response = api
       .get("members/")
       .then(function(response) {
-        console.log(response.data);
+        /* console.log(response.data); */
         return response.data;
       })
       .catch(function(error) {
@@ -12,9 +12,9 @@ export default {
     return response;
   },
 
-  getMemberById(api){
+  getMemberById(api, id) {
     return api
-      .get(`members/${localStorage.getItem("user_id")}`)
+      .get(`members/${id}`)
       .then(function(response) {
         return response.data;
       })
@@ -27,8 +27,8 @@ export default {
     console.log(memberDetails);
     return api
       .post("rest-auth/registration/", memberDetails)
-      .then(res => res.data)
-      .catch(e => {
+      .then((res) => res.data)
+      .catch((e) => {
         throw e;
       });
   },
@@ -36,8 +36,8 @@ export default {
   editMember(api, memberDetails) {
     return api
       .put(`members/${memberDetails.id}/`, memberDetails)
-      .then(res => res.data)
-      .catch(e => {
+      .then((res) => res.data)
+      .catch((e) => {
         throw e;
       });
   },
@@ -45,9 +45,9 @@ export default {
   deleteMember(api, memberDetails) {
     return api
       .delete(`members/${memberDetails.id}/`, memberDetails)
-      .then(res => res.data)
-      .catch(e => {
+      .then((res) => res.data)
+      .catch((e) => {
         throw e;
       });
-  }
+  },
 };
