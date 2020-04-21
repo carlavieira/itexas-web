@@ -155,16 +155,16 @@ export default {
   methods: {
     async submit() {
       const meetingDetails = new Object();
-
       meetingDetails.date = this.date;
       meetingDetails.time = this.time;
       meetingDetails.type = this.type;
       meetingDetails.member = this.leader;
+
       meetingDetails.participantes = JSON.parse(
         JSON.stringify(this.participantes)
       );
 
-      console.log(meetingDetails);
+      console.log(this.participantes);
       this.participantes = [];
 
       return await this.meetingController.createMeeting(

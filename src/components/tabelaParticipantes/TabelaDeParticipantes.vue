@@ -1,7 +1,9 @@
 <template>
   <v-data-table :headers="headers" :items="participantes" class="elevation-1">
-    <template v-slot:item.name="{ item }">
-      <v-span v-model="item.first_name">{{ item.name.first_name }}</v-span>
+    <template v-slot:item.participante="{ item }">
+      <v-span v-model="item.first_name">{{
+        item.participante.first_name
+      }}</v-span>
     </template>
 
     <template v-slot:item.presente="{ item }">
@@ -38,7 +40,7 @@
                   <v-col cols="12" sm="9" md="9">
                     <v-select
                       return-object
-                      v-model="editedItem.name"
+                      v-model="editedItem.participante"
                       label="Participante"
                       :items="membros"
                       item-text="first_name"
@@ -96,18 +98,18 @@ export default {
     membros: [],
     memberController,
     headers: [
-      { text: "Participante", value: "name", align: "start" },
+      { text: "Participante", value: "participante", align: "start" },
       { text: "Presença", value: "presente", align: "center" },
       { value: "actions", sortable: false, align: "end" },
     ],
     participantes: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
+      participante: "",
       presente: false,
     },
     defaultItem: {
-      name: "",
+      participante: "",
       presente: false,
     },
   }),
@@ -137,7 +139,6 @@ export default {
     async initialize() {
       let res = await this.memberController.getAllMembers(this.$api);
       this.membros = res;
-      console.log(this.membros);
     },
     editItem(item) {
       this.editedIndex = this.participantes.indexOf(item);

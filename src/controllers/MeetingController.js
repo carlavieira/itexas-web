@@ -1,4 +1,5 @@
 let url = "meetingsApi/";
+import participationController from "./ParticipationController";
 
 export default {
   getAllMeeting(api) {
@@ -16,10 +17,19 @@ export default {
 
   createMeeting(api, meetingDetails) {
     console.log(meetingDetails);
+
     const response = api
       .post(url, meetingDetails)
       .then(function(response) {
-        // handle success
+        meetingDetails.participantes.map((participante) => {
+          const part = new Object();
+          const { id } = participante.participante;
+          part.member = id;
+          part.attendance = participante.presente;
+          part.meeting = response.data.id;
+          participationController.createParticipationMeeting(api, part);
+        });
+        console.log(response.data);
         return response.data;
       })
       .catch(function(error) {
@@ -27,5 +37,5 @@ export default {
         console.log(error);
       });
     return response;
-  }
+  },
 };
