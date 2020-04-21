@@ -138,6 +138,11 @@ export default {
   methods: {
     async initialize() {
       let res = await this.memberController.getAllMembers(this.$api);
+
+      res.sort(function(item1, item2) {
+        return item1.first_name < item2.first_name ? -1 : 1;
+      });
+      console.log(res);
       this.membros = res;
     },
     editItem(item) {

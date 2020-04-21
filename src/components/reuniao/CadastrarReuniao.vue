@@ -175,7 +175,7 @@ export default {
 
     ListaParticipantes(participantes) {
       this.participantes = [];
-      this.participantes = participantes;
+      this.participantes = participantes.sort();
     },
   },
 
