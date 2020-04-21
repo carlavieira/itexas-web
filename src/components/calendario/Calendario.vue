@@ -106,7 +106,7 @@ export default {
       month: "Month",
       week: "Week",
       day: "Day",
-      "4day": "4 Days"
+      "4day": "4 Days",
     },
     start: null,
     end: null,
@@ -121,7 +121,7 @@ export default {
       "cyan",
       "green",
       "orange",
-      "grey darken-1"
+      "grey darken-1",
     ],
     names: [
       "Reunião LR",
@@ -129,8 +129,8 @@ export default {
       "Confererência",
       "Reunião Diretoria",
       "Evento",
-      "Happy Hour"
-    ]
+      "Happy Hour",
+    ],
   }),
   computed: {
     title() {
@@ -160,9 +160,9 @@ export default {
     monthFormatter() {
       return this.$refs.calendar.getFormatter({
         timeZone: "UTC",
-        month: "long"
+        month: "long",
       });
-    }
+    },
   },
   mounted() {
     this.$refs.calendar.checkChange();
@@ -205,7 +205,7 @@ export default {
       const days = (max.getTime() - min.getTime()) / 86400000;
       const eventCount = this.rnd(days, days + 20);
       console.log(eventCount);
-      const quantidadeEventos = 20;
+      const quantidadeEventos = 8;
       /* Definir o flag do for abaixo com a quantidade eventos */
       for (let i = 0; i < quantidadeEventos; i++) {
         const allDay = this.rnd(0, 3) === 0;
@@ -217,7 +217,7 @@ export default {
           name: this.names[this.rnd(0, this.names.length - 1)],
           start: this.formatDate(first, !allDay),
           end: this.formatDate(second, !allDay),
-          color: this.colors[this.rnd(0, this.colors.length - 1)]
+          color: this.colors[this.rnd(0, this.colors.length - 1)],
         });
         console.log(events);
       }
@@ -238,7 +238,7 @@ export default {
         ? `${a.getFullYear()}-${a.getMonth() +
             1}-${a.getDate()} ${a.getHours()}:${a.getMinutes()}`
         : `${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()}`;
-    }
-  }
+    },
+  },
 };
 </script>

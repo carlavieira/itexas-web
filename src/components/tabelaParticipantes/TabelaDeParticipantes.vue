@@ -1,8 +1,13 @@
 <template>
   <v-data-table :headers="headers" :items="participantes" class="elevation-1">
+    <template v-slot:item.name="{ item }">
+      <v-span v-model="item.first_name">{{ item.name.first_name }}</v-span>
+    </template>
+
     <template v-slot:item.presente="{ item }">
       <v-simple-checkbox v-model="item.presente" disabled></v-simple-checkbox>
     </template>
+
     <template v-slot:top>
       <v-toolbar flat color="white">
         <v-toolbar-title>Participantes</v-toolbar-title>
@@ -31,12 +36,15 @@
               <v-container px-6 style="height: 85px">
                 <v-row>
                   <v-col cols="12" sm="9" md="9">
-                    <v-text-field
+                    <v-select
+                      return-object
                       v-model="editedItem.name"
                       label="Participante"
+                      :items="membros"
+                      item-text="first_name"
                       placeholder="Nome"
                       outlined
-                    ></v-text-field>
+                    ></v-select>
                   </v-col>
                   <v-col class="campo-presenca" cols="12" sm="3" md="3">
                     <span>Presença</span>
@@ -80,29 +88,32 @@
 
 <script>
 import { Ripple } from "vuetify/lib/directives";
+import memberController from "../../controllers/MemberController";
 
 export default {
   data: () => ({
     dialog: false,
+    membros: [],
+    memberController,
     headers: [
       { text: "Participante", value: "name", align: "start" },
       { text: "Presença", value: "presente", align: "center" },
-      { value: "actions", sortable: false, align: "end" }
+      { value: "actions", sortable: false, align: "end" },
     ],
     participantes: [],
     editedIndex: -1,
     editedItem: {
       name: "",
-      presente: false
+      presente: false,
     },
     defaultItem: {
       name: "",
-      presente: false
-    }
+      presente: false,
+    },
   }),
 
   directives: {
-    Ripple
+    Ripple,
   },
 
   computed: {
@@ -110,12 +121,12 @@ export default {
       return this.editedIndex === -1
         ? "Novo Participante"
         : "Editar Participante";
-    }
+    },
   },
   watch: {
     dialog(val) {
       val || this.close();
-    }
+    },
   },
 
   created() {
@@ -123,25 +134,10 @@ export default {
   },
 
   methods: {
-    initialize() {
-      this.participantes = [
-        {
-          name: "Marcos Henrique",
-          presente: true
-        },
-        {
-          name: "Mariana Veloso",
-          presente: false
-        },
-        {
-          name: "Pedro Henrique",
-          presente: false
-        },
-        {
-          name: "Igor Lopes",
-          presente: true
-        }
-      ];
+    async initialize() {
+      let res = await this.memberController.getAllMembers(this.$api);
+      this.membros = res;
+      console.log(this.membros);
     },
     editItem(item) {
       this.editedIndex = this.participantes.indexOf(item);
@@ -173,8 +169,8 @@ export default {
         "enviarParticipantesCadastro",
         JSON.parse(JSON.stringify(this.participantes))
       );
-    }
-  }
+    },
+  },
 };
 </script>
 

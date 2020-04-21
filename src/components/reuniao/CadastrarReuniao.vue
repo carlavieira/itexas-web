@@ -134,7 +134,7 @@ export default {
         { name: "Reunião de Área", value: "RA" },
         { name: "Reunião de Time", value: "RT" },
         { name: "Reunião de LR", value: "LR" },
-        { name: "Reunião de Corner", value: "CN" }
+        { name: "Reunião de Corner", value: "CN" },
       ],
       date: new Date().toISOString().substr(0, 10),
       modal1: false,
@@ -144,12 +144,12 @@ export default {
       select: null,
       leader: "",
       type: "",
-      participantes: []
+      participantes: [],
     };
   },
 
   components: {
-    tabelaParticipante
+    tabelaParticipante,
   },
 
   methods: {
@@ -160,9 +160,12 @@ export default {
       meetingDetails.time = this.time;
       meetingDetails.type = this.type;
       meetingDetails.member = this.leader;
-      meetingDetails.participantes = this.participantes;
+      meetingDetails.participantes = JSON.parse(
+        JSON.stringify(this.participantes)
+      );
 
       console.log(meetingDetails);
+      this.participantes = [];
 
       return await this.meetingController.createMeeting(
         this.$api,
@@ -171,13 +174,14 @@ export default {
     },
 
     ListaParticipantes(participantes) {
-      this.participantes.push(participantes);
-    }
+      this.participantes = [];
+      this.participantes = participantes;
+    },
   },
 
   props: {
-    show: Boolean
-  }
+    show: Boolean,
+  },
 };
 </script>
 
