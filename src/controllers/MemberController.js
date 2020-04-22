@@ -50,4 +50,14 @@ export default {
         throw e;
       });
   },
+  getAllLiderandos(api, id) {
+    return api
+      .get(`members/?leader=${id}`)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  },
 };

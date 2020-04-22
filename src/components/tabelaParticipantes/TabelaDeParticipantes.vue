@@ -39,7 +39,7 @@
             <template>
               <v-container px-6>
                 <v-row>
-                  <v-col cols="12" sm="9" md="9">
+                  <v-col cols="12" sm="12" md="12">
                     <v-select
                       return-object
                       multiple
@@ -52,13 +52,6 @@
                       placeholder="Nome"
                       outlined
                     ></v-select>
-                  </v-col>
-                  <v-col class="campo-presenca" cols="12" sm="3" md="3">
-                    <span>Presença</span>
-                    <v-simple-checkbox
-                      v-model="editedItem.presente"
-                      label="Presença"
-                    ></v-simple-checkbox>
                   </v-col>
                 </v-row>
               </v-container>
@@ -74,9 +67,6 @@
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)">
-        mdi-pencil
-      </v-icon>
       <v-icon small @click="deleteItem(item)">
         mdi-delete
       </v-icon>
@@ -136,35 +126,21 @@ export default {
 
   methods: {
     async initialize() {
+      this.initializeMembersInput();
+      this.initializeLiderandosTable();
+    },
+    async initializeMembersInput() {
       let res = await this.memberController.getAllMembers(this.$api);
-
-      /* Lista os nomes em ordem crescente */
-      res.sort(function(item1, item2) {
+      this.membros = res.sort(function(item1, item2) {
         return item1.first_name < item2.first_name ? -1 : 1;
       });
-      this.membros = res;
     },
-    editItem(item) {
-      this.editedIndex = this.participantes.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
-    editCheckboxValue(item) {
-      console.log(!item.presente);
+    async initializeLiderandosTable() {
+      let res = await this.memberController.getAllLiderandos(this.$api, 8);
+      this.participantes = res.sort(function(item1, item2) {
+        return item1.first_name < item2.first_name ? -1 : 1;
+      });
       this.enviaParticipantesParaCadastro();
-
-      /* 
-      const index = this.participantes.indexOf(item);
-      console.log(index);
-      this.editedItem = Object.assign({}, item);
-      this.participantes[index] = this.editedItem; */
-    },
-    saveAfterChanges() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.participantes[this.editedIndex], this.editedItem);
-      } else {
-        this.participantes.push(this.editedItem);
-      }
     },
     deleteItem(item) {
       const index = this.participantes.indexOf(item);
@@ -179,18 +155,13 @@ export default {
       }, 300);
     },
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.participantes[this.editedIndex], this.editedItem);
-      } else {
-        console.log(this.editedItem);
-        this.editedItem.participante.map((participante) => {
-          if (!participante.presente) {
-            participante.presente = true;
-          }
-          this.participantes.push(participante);
-        });
-      }
-      console.log(this.participantes);
+      this.editedItem.participante.map((participante) => {
+        if (!participante.presente) {
+          participante.presente = true;
+        }
+        this.participantes.push(participante);
+      });
+      this.enviaParticipantesParaCadastro();
       this.close();
     },
     enviaParticipantesParaCadastro() {
@@ -210,5 +181,12 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  margin-top: -10;
+  margin-top: 7px;
+  margin-right: 12px;
 }
 </style>

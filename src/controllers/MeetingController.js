@@ -23,10 +23,11 @@ export default {
       .then(function(response) {
         meetingDetails.participantes.map((participante) => {
           const part = new Object();
-          const { id } = participante.participante;
+          const { id } = participante;
           part.member = id;
           part.attendance = participante.presente;
           part.meeting = response.data.id;
+          console.log(part);
           participationController.createParticipationMeeting(api, part);
         });
         console.log(response.data);
