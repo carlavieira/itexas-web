@@ -1,11 +1,15 @@
 <template>
   <v-data-table :headers="headers" :items="participantes" class="elevation-1">
     <template v-slot:item.participante="{ item }">
-      <v-span v-model="item.first_name"> {{ item.first_name }}</v-span>
+      <v-text v-model="item.first_name"> {{ item.first_name }}</v-text>
     </template>
 
     <template v-slot:item.presente="{ item }">
-      <v-simple-checkbox v-model="item.presente" disabled></v-simple-checkbox>
+      <input
+        type="checkbox"
+        @click="enviaParticipantesParaCadastro()"
+        v-model="item.presente"
+      />
     </template>
 
     <template v-slot:top>
@@ -63,13 +67,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="save"
-                v-on:click="enviaParticipantesParaCadastro"
-                >Salvar</v-btn
-              >
+              <v-btn color="blue darken-1" text @click="save">Salvar</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -151,6 +149,23 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
+    editCheckboxValue(item) {
+      console.log(!item.presente);
+      this.enviaParticipantesParaCadastro();
+
+      /* 
+      const index = this.participantes.indexOf(item);
+      console.log(index);
+      this.editedItem = Object.assign({}, item);
+      this.participantes[index] = this.editedItem; */
+    },
+    saveAfterChanges() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.participantes[this.editedIndex], this.editedItem);
+      } else {
+        this.participantes.push(this.editedItem);
+      }
+    },
     deleteItem(item) {
       const index = this.participantes.indexOf(item);
       confirm("Você deseja realmente deletar este participante?") &&
@@ -167,7 +182,11 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.participantes[this.editedIndex], this.editedItem);
       } else {
+        console.log(this.editedItem);
         this.editedItem.participante.map((participante) => {
+          if (!participante.presente) {
+            participante.presente = true;
+          }
           this.participantes.push(participante);
         });
       }
@@ -175,18 +194,12 @@ export default {
       this.close();
     },
     enviaParticipantesParaCadastro() {
-      /*
-      console.log(this.participantes);
-      console.error(this.editedItem.participante);
-      this.editedItem.participante.map((participante) => {
-        this.participantes.push(participante);
-      });
-      console.log(JSON.parse(JSON.stringify(this.participantes)));
-      */
-      this.$emit(
-        "enviarParticipantesCadastro",
-        JSON.parse(JSON.stringify(this.participantes))
-      );
+      setTimeout(() => {
+        this.$emit(
+          "enviarParticipantesCadastro",
+          JSON.parse(JSON.stringify(this.participantes))
+        );
+      }, 300);
     },
   },
 };

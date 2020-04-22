@@ -163,8 +163,6 @@ export default {
       meetingDetails.participantes = JSON.parse(
         JSON.stringify(this.participantes)
       );
-
-      console.log(this.participantes);
       this.participantes = [];
 
       return await this.meetingController.createMeeting(
