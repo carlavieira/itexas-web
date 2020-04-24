@@ -1,12 +1,13 @@
 <template>
-  <v-dialog max-width="800px" persistent v-model="show">
-    <v-card class="pa-5">
+  <v-dialog max-width="700px" persistent v-model="show">
+    <v-card class="pa-5 pl-10 modal">
       <v-layout row class="px-3">
         <v-btn
           v-if="!editMeeting"
           color="black"
           @click="editMeeting = true"
           title="Editar"
+          small
         >
           <v-icon color="white">mdi-account-edit</v-icon>
         </v-btn>
@@ -16,6 +17,7 @@
           @click.stop="dialog = true"
           class="ml-2"
           title="Excluir"
+          small
         >
           <v-icon color="white">mdi-delete</v-icon>
         </v-btn>
@@ -154,12 +156,23 @@
             </v-time-picker>
           </v-dialog>
         </v-layout>
+
+        <tabelaParticipante></tabelaParticipante>
+
+        <v-layout row justify-center v-if="editMeeting">
+          <v-btn class="ma-2 mt-5" @click="sendEdit()" depressed color="success"
+            >Salvar</v-btn
+          >
+        </v-layout>
       </v-layout>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import meetingController from "../../controllers/MeetingController";
+import tabelaParticipante from "../tabelaParticipantes/TabelaDeParticipantes";
+
 export default {
   data: (vm) => ({
     date: new Date().toISOString().substr(0, 10),
@@ -170,12 +183,17 @@ export default {
     time: "00:00",
     dialog: false,
     editMeeting: false,
+    meetingController,
   }),
 
   computed: {
     computedDateFormatted() {
       return this.formatDate(this.date);
     },
+  },
+
+  components: {
+    tabelaParticipante,
   },
 
   watch: {
@@ -213,3 +231,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.modal {
+  background-color: rgb(241, 241, 241);
+}
+</style>

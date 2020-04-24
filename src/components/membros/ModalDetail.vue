@@ -201,31 +201,31 @@
 <script>
 import memberController from "../../controllers/MemberController";
 export default {
-  data: vm => ({
+  data: (vm) => ({
     date: new Date().toISOString().substr(0, 10),
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     menu1: false,
     menu2: false,
     editMember: false,
     memberController,
-    dialog: false
+    dialog: false,
   }),
 
   computed: {
     computedDateFormatted() {
       return this.formatDate(this.date);
-    }
+    },
   },
 
   props: {
     show: Boolean,
-    member: Object
+    member: Object,
   },
 
   watch: {
     date(val) {
       this.dateFormatted = this.formatDate(this.date);
-    }
+    },
   },
 
   methods: {
@@ -239,7 +239,7 @@ export default {
       if (!date) return null;
 
       const [month, day, year] = date.split("/");
-      return `${yeabr}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     },
     async sendEdit() {
       delete this.member.post;
@@ -251,30 +251,30 @@ export default {
 
       await this.memberController
         .editMember(this.$api, this.member)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.member = {};
           this.$emit("close");
           this.$emit("getMembers");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
     async deleteMember() {
       await this.memberController
         .deleteMember(this.$api, this.member)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.member = {};
           this.$emit("close");
           this.$emit("getMembers");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
