@@ -1,9 +1,7 @@
 <template>
   <v-data-table :headers="headers" :items="participantes" class="elevation-1">
     <template v-slot:item.participante="{ item }">
-      <v-textfield v-model="item.first_name">
-        {{ item.first_name }}</v-textfield
-      >
+      {{ item.first_name }}
     </template>
 
     <template v-slot:item.presente="{ item }">

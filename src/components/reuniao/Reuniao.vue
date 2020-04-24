@@ -33,6 +33,13 @@
             :items="reunioes"
             :search="search"
           >
+            <template v-slot:item.type="{ item }">
+              <span>{{ formatTypeMeeting(item.type) }}</span>
+            </template>
+            <template v-slot:item.member="{ item }">
+              <!-- <span>{{ returnNameOfLeader(item.member) }}</span> -->
+              <span>{{ item.member }}</span>
+            </template>
             <template v-slot:item.date="{ item }">
               <span>{{ formatDate(item.date) }}</span>
             </template>
@@ -62,35 +69,11 @@
 <script>
 import NovaReuniao from "./CadastrarReuniao.vue";
 import meetingController from "../../controllers/MeetingController";
+import memberController from "../../controllers/MemberController";
 import modalDetail from "./ModalDetail.vue";
 import moment from "moment";
 
 export default {
-  components: {
-    NovaReuniao,
-    modalDetail,
-  },
-
-  async created() {
-    let res = await this.meetingController.getAllMeeting(this.$api);
-    this.reunioes = res.data;
-  },
-
-  methods: {
-    formatDate(date) {
-      return moment(date).format("MM/DD/YYYY");
-    },
-    formatTime(time) {
-      let hora = time.split(":");
-      return `${hora[0]}:${hora[1]}`;
-    },
-    meetingShow(meeting) {
-      console.log(meeting),
-        (this.meetingDetail = meeting),
-        (this.showDetail = true);
-    },
-  },
-
   data() {
     return {
       btnReuniao: false,
@@ -99,6 +82,8 @@ export default {
       meetingController,
       meetingDetail: null,
       showDetail: false,
+      memberController,
+      memberById: null,
       headersReuniao: [
         {
           text: "Tipo",
@@ -116,7 +101,48 @@ export default {
         },
       ],
       reunioes: [],
+      types: [
+        { text: "REB", value: "REB" },
+        { text: "Reunião de Área", value: "RA" },
+        { text: "Reunião de Time", value: "RT" },
+        { text: "Reunião de LR", value: "LR" },
+        { text: "Reunião de Corner", value: "CN" },
+      ],
     };
+  },
+
+  components: {
+    NovaReuniao,
+    modalDetail,
+  },
+
+  async created() {
+    let res = await this.meetingController.getAllMeeting(this.$api);
+    this.reunioes = res.data;
+  },
+
+  methods: {
+    formatDate(date) {
+      return moment(date).format("DD/MM/YYYY");
+    },
+    formatTypeMeeting(sigla) {
+      if (sigla == "REB") return "REB";
+      else if (sigla == "RA") return "Reunião de Área";
+      else if (sigla == "RT") return "Reunião de Time";
+      else if (sigla == "LR") return "Reunião de LR";
+      else if (sigla == "CN") return "Reunião de Corner";
+    },
+    formatTime(time) {
+      let hora = time.split(":");
+      return `${hora[0]}:${hora[1]}`;
+    },
+    meetingShow(meeting) {
+      (this.meetingDetail = meeting), (this.showDetail = true);
+    },
+    async returnNameOfLeader(id) {
+      const member = await this.memberController.getMemberById(this.$api, id);
+      return member.firstname;
+    },
   },
 };
 </script>

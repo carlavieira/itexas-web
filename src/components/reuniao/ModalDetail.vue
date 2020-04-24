@@ -60,20 +60,25 @@
         </span>
 
         <span v-if="!editMeeting" class="subheading font-weight-regular"
-          >(Responsável: {{ meeting.member }} )</span
+          >(Responsável:
+          {{ memberById.first_name + " " + memberById.last_name }} )</span
         >
       </v-layout>
 
       <v-layout row mt-3 justify-space-around style="width: 100%;">
         <v-layout justify-left col-xs-12 col-sm-6 v-if="editMeeting">
-          <v-text-field
-            label="Tipo da Reuniao"
+          <v-select
+            v-model="meeting.type"
+            :items="types"
+            item-text="name"
+            item-value="value"
+            label="Tipo da Reunião"
+            prepend-inner-icon="mdi-account-group"
+            required
+            no-gutters
             outlined
             dense
-            prepend-inner-icon="mdi-alpha-n"
-            v-model="meeting.type"
-            hide-details
-          ></v-text-field>
+          ></v-select>
         </v-layout>
 
         <v-layout justify-left col-xs-12 col-sm-6 v-if="editMeeting">
@@ -171,6 +176,7 @@
 
 <script>
 import meetingController from "../../controllers/MeetingController";
+import memberController from "../../controllers/MemberController";
 import tabelaParticipante from "../tabelaParticipantes/TabelaDeParticipantes";
 
 export default {
@@ -184,6 +190,15 @@ export default {
     dialog: false,
     editMeeting: false,
     meetingController,
+    memberController,
+    memberById: null,
+    types: [
+      { name: "REB", value: "REB" },
+      { name: "Reunião de Área", value: "RA" },
+      { name: "Reunião de Time", value: "RT" },
+      { name: "Reunião de LR", value: "LR" },
+      { name: "Reunião de Corner", value: "CN" },
+    ],
   }),
 
   computed: {
@@ -194,6 +209,10 @@ export default {
 
   components: {
     tabelaParticipante,
+  },
+
+  async created() {
+    this.getMemberById(this.meeting.member);
   },
 
   watch: {
@@ -228,12 +247,18 @@ export default {
     async sendEdit() {
       console.log("Fazer request edit");
     },
+    async getMemberById(idMember) {
+      this.memberById = await this.memberController.getMemberById(
+        this.$api,
+        idMember
+      );
+    },
   },
 };
 </script>
 
 <style scoped>
 .modal {
-  background-color: rgb(241, 241, 241);
+  background-color: rgb(248, 248, 248);
 }
 </style>
