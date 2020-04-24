@@ -1,7 +1,9 @@
 <template>
   <v-data-table :headers="headers" :items="participantes" class="elevation-1">
     <template v-slot:item.participante="{ item }">
-      <v-text v-model="item.first_name"> {{ item.first_name }}</v-text>
+      <v-textfield v-model="item.first_name">
+        {{ item.first_name }}</v-textfield
+      >
     </template>
 
     <template v-slot:item.presente="{ item }">
@@ -141,6 +143,18 @@ export default {
         return item1.first_name < item2.first_name ? -1 : 1;
       });
       this.enviaParticipantesParaCadastro();
+    },
+    editItem(item) {
+      this.editedIndex = this.participantes.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+    },
+    saveAfterChanges() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.participantes[this.editedIndex], this.editedItem);
+      } else {
+        this.participantes.push(this.editedItem);
+      }
     },
     deleteItem(item) {
       const index = this.participantes.indexOf(item);

@@ -39,22 +39,36 @@
             <template v-slot:item.time="{ item }">
               <span>{{ formatTime(item.time) }}</span>
             </template>
+            <template v-slot:item.actions="{ item }">
+              <v-icon small @click="meetingShow(item)"
+                >mdi-dots-horizontal</v-icon
+              >
+            </template>
           </v-data-table>
         </v-card>
       </v-flex>
     </v-row>
     <NovaReuniao :show="btnReuniao" @close="btnReuniao = false"></NovaReuniao>
+    <modalDetail
+      v-if="showDetail"
+      :show="showDetail"
+      :meeting="meetingDetail"
+      @close="showDetail = false"
+    >
+    </modalDetail>
   </v-container>
 </template>
 
 <script>
 import NovaReuniao from "./CadastrarReuniao.vue";
 import meetingController from "../../controllers/MeetingController";
+import modalDetail from "./ModalDetail.vue";
 import moment from "moment";
 
 export default {
   components: {
     NovaReuniao,
+    modalDetail,
   },
 
   async created() {
@@ -70,6 +84,11 @@ export default {
       let hora = time.split(":");
       return `${hora[0]}:${hora[1]}`;
     },
+    meetingShow(meeting) {
+      console.log(meeting),
+        (this.meetingDetail = meeting),
+        (this.showDetail = true);
+    },
   },
 
   data() {
@@ -78,6 +97,8 @@ export default {
       search: "",
       data: null,
       meetingController,
+      meetingDetail: null,
+      showDetail: false,
       headersReuniao: [
         {
           text: "Tipo",
@@ -87,6 +108,12 @@ export default {
         { text: "Líder", value: "member" },
         { text: "Data", value: "date" },
         { text: "Hora", value: "time" },
+        {
+          text: "Detalhes",
+          value: "actions",
+          sortable: false,
+          align: "center",
+        },
       ],
       reunioes: [],
     };
