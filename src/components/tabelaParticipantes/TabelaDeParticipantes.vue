@@ -103,6 +103,10 @@ export default {
     },
   }),
 
+  props:{
+    form: String
+  },
+
   directives: {
     Ripple,
   },
@@ -114,20 +118,24 @@ export default {
         : "Editar Participante";
     },
   },
+
   watch: {
     dialog(val) {
       val || this.close();
     },
   },
 
-  created() {
-    this.initialize();
+  async created() {
+    await this.initialize();
   },
 
   methods: {
     initialize() {
       this.initializeMembersInput();
-      this.initializeLiderandosTable();
+      if(this.form == 'create')
+        this.initializeLiderandosTable();
+      else  
+        console.log('edit')
     },
     async initializeMembersInput() {
       let res = await this.memberController.getAllMembers(this.$api);

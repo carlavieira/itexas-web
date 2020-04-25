@@ -60,8 +60,7 @@
         </span>
 
         <span v-if="!editMeeting" class="subheading font-weight-regular"
-          >(Responsável:
-          {{ memberById.first_name + " " + memberById.last_name }} )</span
+          >(Responsável: {{ hostName }} )</span
         >
       </v-layout>
 
@@ -162,7 +161,7 @@
           </v-dialog>
         </v-layout>
 
-        <tabelaParticipante></tabelaParticipante>
+        <tabelaParticipante :form="'edit'"></tabelaParticipante>
 
         <v-layout row justify-center v-if="editMeeting">
           <v-btn class="ma-2 mt-5" @click="sendEdit()" depressed color="success"
@@ -192,6 +191,7 @@ export default {
     meetingController,
     memberController,
     memberById: null,
+    hostName: "",
     types: [
       { name: "REB", value: "REB" },
       { name: "Reunião de Área", value: "RA" },
@@ -211,7 +211,7 @@ export default {
     tabelaParticipante,
   },
 
-  async created() {
+  created() {
     this.getMemberById(this.meeting.member);
   },
 
@@ -258,6 +258,8 @@ export default {
         this.$api,
         idMember
       );
+
+      this.hostName = this.memberById.first_name + " " +  this.memberById.last_name
     },
   },
 };

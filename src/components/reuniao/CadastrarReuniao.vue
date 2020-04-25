@@ -100,6 +100,7 @@
           </v-col>
           <v-col style="justify-content: center ;display: flex">
             <tabelaParticipante
+              :form="'create'"
               v-on:enviarParticipantesCadastro="ListaParticipantes"
               style="max-width: 550px"
             ></tabelaParticipante>
