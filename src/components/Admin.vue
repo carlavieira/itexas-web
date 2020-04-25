@@ -44,7 +44,7 @@
             <v-list-item-title>{{ item.text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link>
+        <v-list-item link @click="logout()">
           <v-list-item-icon>
             <v-icon>mdi-exit-to-app</v-icon>
           </v-list-item-icon>
@@ -62,9 +62,12 @@
 </template>
 
 <script>
+import authController from "../controllers/AuthController"
+
 export default {
   data() {
     return {
+      authController,
       items: [
         {
           text: "Dashboard",
@@ -105,6 +108,17 @@ export default {
       ],
       drawer: true
     };
+  },
+
+  methods:{
+    logout(){
+      this.authController.logout(this.$http)
+      .then(res => {
+        console.log(res)
+      }).catch(e => {
+        console.log(e)
+      })
+    }
   }
 };
 </script>

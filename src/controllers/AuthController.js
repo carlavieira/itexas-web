@@ -28,5 +28,21 @@ export default {
     res.data.user.is_staff
       ? router.push("/adm/membros")
       : router.push("/adm/eventos");
+  },
+
+  logout(http){
+    let url = "http://itexas.pythonanywhere.com/rest-auth/logout/";
+
+    return http
+      .post(url)
+      .then(res => {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user_id")
+        router.push("/login")
+        return res;
+      })
+      .catch(err => {
+        return err;
+      });
   }
 };
