@@ -125,7 +125,7 @@ export default {
   },
 
   methods: {
-    async initialize() {
+    initialize() {
       this.initializeMembersInput();
       this.initializeLiderandosTable();
     },

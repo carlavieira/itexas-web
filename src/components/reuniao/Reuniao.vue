@@ -37,7 +37,7 @@
               <span>{{ formatTypeMeeting(item.type) }}</span>
             </template>
             <template v-slot:item.member="{ item }">
-              <span> {{ item.leader.first_name }} </span>
+              <span v-if="item.leader"> {{ item.leader.first_name }} </span>
             </template>
             <template v-slot:item.date="{ item }">
               <span>{{ formatDate(item.date) }}</span>
@@ -119,6 +119,11 @@ export default {
     const meetings = await this.meetingController.getAllMeeting(this.$api);
     this.reunioes = meetings.data;
 
+    //console.log(meetings);
+    //console.log(this.memberController);
+    //meetings.data[41] = this.memberController;
+
+    console.log(meetings.data);
     this.reunioes.forEach(async (item) => {
       const idLeader = item.member;
       const leader = await this.memberController.getMemberById(
