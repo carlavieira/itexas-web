@@ -26,8 +26,8 @@ export default {
 
   routerPath(res) {
     res.data.user.is_staff
-      ? router.push("/adm/membros")
-      : router.push("/adm/eventos");
+      ? router.push("/adm/perfil")
+      : router.push("/member/perfil");
   },
 
   logout(http){
