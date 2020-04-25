@@ -1,15 +1,17 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import login from "../components/Login.vue";
+
 import admTemplate from "../components/Admin.vue";
 import members from "../components/membros/Membros.vue";
 import reuniao from "../components/reuniao/Reuniao.vue";
 import eventos from "../components/eventos/Eventos.vue";
 import calendario from "../components/calendario/Calendario.vue";
+
 import perfil from "../components/Perfil.vue"
+import officeHours from "../components/OfficeHours.vue"
 
 import memberTemplate from "../components/Member.vue";
-
 
 Vue.use(VueRouter);
 
@@ -28,7 +30,8 @@ const routes = [
       { path: "/adm/reuniao", name: "reuniao", component: reuniao },
       { path: "/adm/eventos", name: "eventos", component: eventos },
       { path: "/adm/calendario", name: "calendario", component: calendario },
-      { path: "/adm/perfil", name: "perfil", component: perfil }
+      { path: "/adm/perfil", name: "perfil", component: perfil },
+      { path: "/adm/officeHours", name: "officeHours", component: officeHours}
     ]
   },
 

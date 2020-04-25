@@ -75,6 +75,11 @@ export default {
           path: "/dashboard"
         },
         {
+          text: "Office Hours",
+          icon: "mdi-alarm-check",
+          path: "/adm/officeHours"
+        },
+        {
           text: "Relatórios",
           icon: "mdi-clipboard-text-multiple",
           path: "/"
