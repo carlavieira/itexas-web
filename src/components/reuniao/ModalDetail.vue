@@ -55,8 +55,8 @@
       </v-layout>
 
       <v-layout column mx-2 justify-center align-center>
-        <span v-if="!editMeeting" class="title font-weight-medium mt-3">
-          {{ meeting.type }}
+        <span v-if="!editMeeting" class="titulo font-weight-medium mt-3">
+          {{ this.formatTypeMeeting(meeting.type) }}
         </span>
 
         <span v-if="!editMeeting" class="subheading font-weight-regular"
@@ -240,7 +240,13 @@ export default {
       const [month, day, year] = date.split("/");
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     },
-
+    formatTypeMeeting(sigla) {
+      if (sigla == "REB") return "REB";
+      else if (sigla == "RA") return "Reunião de Área";
+      else if (sigla == "RT") return "Reunião de Time";
+      else if (sigla == "LR") return "Reunião de LR";
+      else if (sigla == "CN") return "Reunião de Corner";
+    },
     async deleteMeeting() {
       console.log("Fazer request delete");
     },
@@ -260,5 +266,8 @@ export default {
 <style scoped>
 .modal {
   background-color: rgb(248, 248, 248);
+}
+.titulo {
+  font-size: 1.85rem !important;
 }
 </style>

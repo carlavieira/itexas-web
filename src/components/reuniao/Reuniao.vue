@@ -37,8 +37,7 @@
               <span>{{ formatTypeMeeting(item.type) }}</span>
             </template>
             <template v-slot:item.member="{ item }">
-              <!-- <span>{{ returnNameOfLeader(item.member) }}</span> -->
-              <span>{{ item.member }}</span>
+              <span> {{ returnNameOfLeader(item) }} </span>
             </template>
             <template v-slot:item.date="{ item }">
               <span>{{ formatDate(item.date) }}</span>
@@ -83,7 +82,7 @@ export default {
       meetingDetail: null,
       showDetail: false,
       memberController,
-      memberById: null,
+      leaders: {},
       headersReuniao: [
         {
           text: "Tipo",
@@ -117,8 +116,20 @@ export default {
   },
 
   async created() {
-    let res = await this.meetingController.getAllMeeting(this.$api);
-    this.reunioes = res.data;
+    const meetings = await this.meetingController.getAllMeeting(this.$api);
+    this.reunioes = meetings.data;
+
+    console.log(meetings.data);
+    //console.log(this.memberController);
+    meetings.data[41] = this.memberController;
+
+    console.log(meetings.data);
+    this.reunioes.forEach(async function(item) {
+      const idLeader = item.member;
+      const leader = await meetings.data[41].getMemberById(this.$api, idLeader);
+      item.leader = leader;
+    });
+    console.log(meetings);
   },
 
   methods: {
@@ -140,8 +151,10 @@ export default {
       (this.meetingDetail = meeting), (this.showDetail = true);
     },
     async returnNameOfLeader(id) {
-      const member = await this.memberController.getMemberById(this.$api, id);
-      return member.firstname;
+      this.leaders[id] = await this.memberController.getMemberById(
+        this.$api,
+        id.member
+      );
     },
   },
 };
