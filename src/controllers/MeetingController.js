@@ -38,4 +38,22 @@ export default {
       });
     return response;
   },
+
+  editMeeting(api, meetingDetails) {
+    url = `meetingsApi/${meetingDetails.id}/`;
+    delete meetingDetails.id;
+    delete meetingDetails.leader;
+    delete meetingDetails.url;
+    console.log(meetingDetails);
+    const response = api
+      .put(url, meetingDetails)
+      .then(function(response) {
+        console.log(response);
+        return response;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    return response;
+  },
 };

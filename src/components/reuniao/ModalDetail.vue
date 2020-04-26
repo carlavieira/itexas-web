@@ -195,6 +195,7 @@ export default {
     time: "00:00",
     dialog: false,
     editMeeting: false,
+    meetingDetails: {},
     meetingController,
     memberController,
     memberById: null,
@@ -259,7 +260,10 @@ export default {
       console.log("Fazer request delete");
     },
     async sendEdit() {
-      console.log("Fazer request edit");
+      this.meeting.date = this.date;
+      this.meeting.time = this.time;
+
+      return await this.meetingController.editMeeting(this.$api, this.meeting);
     },
     async getMemberById(idMember) {
       this.memberById = await this.memberController.getMemberById(
