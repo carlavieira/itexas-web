@@ -162,7 +162,6 @@ export default {
       this.participantes = this.participantes.sort(function(item1, item2) {
         return item1.first_name < item2.first_name ? -1 : 1;
       });
-      console.log(this.participantes);
       this.enviaParticipantesParaCadastro();
     },
     editItem(item) {

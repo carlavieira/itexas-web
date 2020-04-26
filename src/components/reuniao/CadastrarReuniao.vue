@@ -101,7 +101,7 @@
           <v-col style="justify-content: center ;display: flex">
             <tabelaParticipante
               :form="'create'"
-              v-on:enviarParticipantesCadastro="ListaParticipantes"
+              v-on:enviarParticipantesPai="ListaParticipantes"
               style="max-width: 550px"
             ></tabelaParticipante>
           </v-col>
@@ -164,8 +164,6 @@ export default {
       meetingDetails.participantes = JSON.parse(
         JSON.stringify(this.participantes)
       );
-
-      //this.participantes = [];
 
       return await this.meetingController.createMeeting(
         this.$api,

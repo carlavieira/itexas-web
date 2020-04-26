@@ -11,7 +11,7 @@
     <template v-slot:item.attendance="{ item }">
       <input
         type="checkbox"
-        @click="enviaParticipantesParaCadastro()"
+        @click="enviaParticipantesParaPai()"
         v-model="item.attendance"
       />
     </template>
@@ -158,7 +158,7 @@ export default {
         return item1.first_name < item2.first_name ? -1 : 1;
       });
       this.participantesWithName = this.participantes;
-      this.enviaParticipantesParaCadastro();
+      this.enviaParticipantesParaPai();
     },
     async initializeAttendanceAlreadySent(meetingId) {
       this.participantes = await this.participationController.getParticipantsInMeeting(
@@ -179,14 +179,14 @@ export default {
       this.participantes = this.participantes.sort(function(item1, item2) {
         return item1.first_name < item2.first_name ? -1 : 1;
       });
-      console.log(this.participantes);
-      this.enviaParticipantesParaCadastro();
+      this.enviaParticipantesParaPai();
     },
     editItem(item) {
       this.editedIndex = this.participantes.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
+    editParticipations() {},
     saveAfterChanges() {
       if (this.editedIndex > -1) {
         Object.assign(this.participantes[this.editedIndex], this.editedItem);
@@ -195,9 +195,10 @@ export default {
       }
     },
     deleteItem(item) {
-      const index = this.participantes.indexOf(item);
+      const index = this.participantesWithName.indexOf(item);
       confirm("Você deseja realmente deletar este participante?") &&
-        this.participantes.splice(index, 1);
+        this.participantesWithName.splice(index, 1);
+      console.log(this.participantesWithName);
     },
     close() {
       this.dialog = false;
@@ -213,14 +214,16 @@ export default {
         }
         this.participantes.push(participante);
       });
-      this.enviaParticipantesParaCadastro();
+      this.participantesWithName = this.participantes;
+      this.enviaParticipantesParaPai();
+
       this.close();
     },
-    enviaParticipantesParaCadastro() {
+    enviaParticipantesParaPai() {
       setTimeout(() => {
         this.$emit(
-          "enviarParticipantesCadastro",
-          JSON.parse(JSON.stringify(this.participantes))
+          "enviarParticipantesPai",
+          JSON.parse(JSON.stringify(this.participantesWithName))
         );
       }, 300);
     },

@@ -41,10 +41,7 @@ export default {
 
   editMeeting(api, meetingDetails) {
     url = `meetingsApi/${meetingDetails.id}/`;
-    delete meetingDetails.id;
-    delete meetingDetails.leader;
-    delete meetingDetails.url;
-    console.log(meetingDetails);
+
     const response = api
       .put(url, meetingDetails)
       .then(function(response) {

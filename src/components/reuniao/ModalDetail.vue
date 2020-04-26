@@ -162,6 +162,7 @@
         </v-layout>
 
         <tabelaParticipante
+          v-on:enviarParticipantesPai="ListaParticipantes"
           :objForm="meeting"
           v-if="editMeeting"
         ></tabelaParticipante>
@@ -182,6 +183,7 @@
 <script>
 import meetingController from "../../controllers/MeetingController";
 import memberController from "../../controllers/MemberController";
+import participationController from "../../controllers/ParticipationController";
 import tabelaParticipante from "../tabelaParticipantes/TabelaDeParticipantes";
 import tabelaParticipanteView from "../tabelaParticipantes/TabelaDeParticipantesView";
 
@@ -198,7 +200,9 @@ export default {
     meetingDetails: {},
     meetingController,
     memberController,
+    participationController,
     memberById: null,
+    participantes: [],
     hostName: "",
     types: [
       { name: "REB", value: "REB" },
@@ -260,10 +264,29 @@ export default {
       console.log("Fazer request delete");
     },
     async sendEdit() {
+      /* Edit Meeting */
       this.meeting.date = this.date;
       this.meeting.time = this.time;
+      await this.meetingController.editMeeting(this.$api, this.meeting);
 
-      return await this.meetingController.editMeeting(this.$api, this.meeting);
+      /* Edit Participation*/
+      this.participantes.forEach(async (participante) => {
+        if (participante.is_active) {
+          let part = new Object();
+          part.meeting = this.meeting.id;
+          part.member = participante.id;
+          part.attendance = participante.attendance;
+          await this.participationController.createParticipationMeeting(
+            this.$api,
+            part
+          );
+        } else {
+          await this.participationController.editParticipationMeeting(
+            this.$api,
+            participante
+          );
+        }
+      });
     },
     async getMemberById(idMember) {
       this.memberById = await this.memberController.getMemberById(
@@ -273,6 +296,11 @@ export default {
 
       this.hostName =
         this.memberById.first_name + " " + this.memberById.last_name;
+    },
+    ListaParticipantes(participantes) {
+      this.participantes = [];
+      this.participantes = participantes;
+      console.log(this.participantes);
     },
   },
 };
