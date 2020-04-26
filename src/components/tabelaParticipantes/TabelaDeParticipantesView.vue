@@ -1,18 +1,14 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="participantesWithName"
-    class="elevation-1"
-  >
+  <v-data-table :headers="headers" :items="participantes" class="elevation-1">
     <template v-slot:item.participante="{ item }">
       {{ item.first_name }}
     </template>
 
-    <template v-slot:item.attendance="{ item }">
+    <template v-slot:item.presente="{ item }">
       <input
         type="checkbox"
         @click="enviaParticipantesParaCadastro()"
-        v-model="item.attendance"
+        v-model="item.presente"
       />
     </template>
 
@@ -84,35 +80,31 @@
 <script>
 import { Ripple } from "vuetify/lib/directives";
 import memberController from "../../controllers/MemberController";
-import participationController from "../../controllers/ParticipationController";
 
 export default {
   data: () => ({
     dialog: false,
     membros: [],
     memberController,
-    participationController,
     headers: [
       { text: "Participante", value: "participante", align: "start" },
-      { text: "Presença", value: "attendance", align: "center" },
+      { text: "Presença", value: "presente", align: "center" },
       { value: "actions", sortable: false, align: "end" },
     ],
     participantes: [],
-    participantesWithName: [],
     editedIndex: -1,
     editedItem: {
       participante: "",
-      attendance: false,
+      presente: false,
     },
     defaultItem: {
       participante: "",
-      attendance: false,
+      presente: false,
     },
   }),
 
   props: {
     form: String,
-    objForm: Object,
   },
 
   directives: {
@@ -141,9 +133,7 @@ export default {
     initialize() {
       this.initializeMembersInput();
       if (this.form == "create") this.initializeLiderandosTable();
-      else {
-        this.initializeAttendanceAlreadySent(this.objForm.id);
-      }
+      else console.log("edit");
     },
     async initializeMembersInput() {
       let res = await this.memberController.getAllMembers(this.$api);
@@ -152,34 +142,10 @@ export default {
       });
     },
     async initializeLiderandosTable() {
-      /* Ao invés de utilizar id 8, dar get no localstorage userID */
       let res = await this.memberController.getAllLiderandos(this.$api, 8);
       this.participantes = res.sort(function(item1, item2) {
         return item1.first_name < item2.first_name ? -1 : 1;
       });
-      this.participantesWithName = this.participantes;
-      this.enviaParticipantesParaCadastro();
-    },
-    async initializeAttendanceAlreadySent(meetingId) {
-      this.participantes = await this.participationController.getParticipantsInMeeting(
-        this.$api,
-        meetingId
-      );
-
-      this.participantes.forEach(async (item) => {
-        const member = await this.memberController.getMemberById(
-          this.$api,
-          item.member
-        );
-
-        item.first_name = member.first_name;
-        this.participantesWithName.push(item);
-      });
-
-      this.participantes = this.participantes.sort(function(item1, item2) {
-        return item1.first_name < item2.first_name ? -1 : 1;
-      });
-      console.log(this.participantes);
       this.enviaParticipantesParaCadastro();
     },
     editItem(item) {
@@ -208,8 +174,8 @@ export default {
     },
     save() {
       this.editedItem.participante.map((participante) => {
-        if (!participante.attendance) {
-          participante.attendance = true;
+        if (!participante.presente) {
+          participante.presente = true;
         }
         this.participantes.push(participante);
       });
