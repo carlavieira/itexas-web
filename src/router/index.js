@@ -9,7 +9,7 @@ import eventos from "../components/eventos/Eventos.vue";
 import calendario from "../components/calendario/Calendario.vue";
 
 import perfil from "../components/Perfil.vue"
-import officeHours from "../components/OfficeHours.vue"
+import officeHours from "../components/officeHours/OfficeHours.vue"
 
 import memberTemplate from "../components/Member.vue";
 
