@@ -1,14 +1,19 @@
 <template>
-  <v-data-table :headers="headers" :items="participantes" class="elevation-1">
+  <v-data-table
+    :headers="headers"
+    :items="participantesWithName"
+    class="elevation-1"
+  >
     <template v-slot:item.participante="{ item }">
       {{ item.first_name }}
     </template>
 
-    <template v-slot:item.presente="{ item }">
+    <template v-slot:item.attendance="{ item }">
       <input
+        :disabled="true"
         type="checkbox"
         @click="enviaParticipantesParaCadastro()"
-        v-model="item.presente"
+        v-model="item.attendance"
       />
     </template>
 
@@ -18,19 +23,6 @@
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on }">
-            <v-btn
-              class="mx-2"
-              title="Adicionar Participante"
-              v-on="on"
-              fab
-              dark
-              x-small
-              color="success"
-            >
-              <v-icon dark>mdi-plus</v-icon>
-            </v-btn>
-          </template>
           <v-card>
             <v-card-title>
               <span class="headline">{{ formTitle }}</span>
@@ -66,11 +58,6 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:item.actions="{ item }">
-      <v-icon small @click="deleteItem(item)">
-        mdi-delete
-      </v-icon>
-    </template>
     <template v-slot:no-data>
       <span>Não há participantes nesta reunião.</span>
     </template>
@@ -80,31 +67,35 @@
 <script>
 import { Ripple } from "vuetify/lib/directives";
 import memberController from "../../controllers/MemberController";
+import participationController from "../../controllers/ParticipationController";
 
 export default {
   data: () => ({
     dialog: false,
     membros: [],
     memberController,
+    participationController,
     headers: [
       { text: "Participante", value: "participante", align: "start" },
-      { text: "Presença", value: "presente", align: "center" },
+      { text: "Presença", value: "attendance", align: "center" },
       { value: "actions", sortable: false, align: "end" },
     ],
     participantes: [],
+    participantesWithName: [],
     editedIndex: -1,
     editedItem: {
       participante: "",
-      presente: false,
+      attendance: false,
     },
     defaultItem: {
       participante: "",
-      presente: false,
+      attendance: false,
     },
   }),
 
   props: {
     form: String,
+    objForm: Object,
   },
 
   directives: {
@@ -133,7 +124,9 @@ export default {
     initialize() {
       this.initializeMembersInput();
       if (this.form == "create") this.initializeLiderandosTable();
-      else console.log("edit");
+      else {
+        this.initializeAttendanceAlreadySent(this.objForm.id);
+      }
     },
     async initializeMembersInput() {
       let res = await this.memberController.getAllMembers(this.$api);
@@ -142,10 +135,34 @@ export default {
       });
     },
     async initializeLiderandosTable() {
+      /* Ao invés de utilizar id 8, dar get no localstorage userID */
       let res = await this.memberController.getAllLiderandos(this.$api, 8);
       this.participantes = res.sort(function(item1, item2) {
         return item1.first_name < item2.first_name ? -1 : 1;
       });
+      this.participantesWithName = this.participantes;
+      this.enviaParticipantesParaCadastro();
+    },
+    async initializeAttendanceAlreadySent(meetingId) {
+      this.participantes = await this.participationController.getParticipantsInMeeting(
+        this.$api,
+        meetingId
+      );
+
+      this.participantes.forEach(async (item) => {
+        const member = await this.memberController.getMemberById(
+          this.$api,
+          item.member
+        );
+
+        item.first_name = member.first_name;
+        this.participantesWithName.push(item);
+      });
+
+      this.participantes = this.participantes.sort(function(item1, item2) {
+        return item1.first_name < item2.first_name ? -1 : 1;
+      });
+      console.log(this.participantes);
       this.enviaParticipantesParaCadastro();
     },
     editItem(item) {
@@ -174,8 +191,8 @@ export default {
     },
     save() {
       this.editedItem.participante.map((participante) => {
-        if (!participante.presente) {
-          participante.presente = true;
+        if (!participante.attendance) {
+          participante.attendance = true;
         }
         this.participantes.push(participante);
       });
