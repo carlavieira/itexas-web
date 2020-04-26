@@ -5,7 +5,7 @@
         <h2>Marcação de Office Hours - </h2>
         <h2 v-if="type == 'add'">Novo</h2>
         <h2 v-if="type == 'edit'">Edição</h2>
-        <v-btn @click="$emit('close')" title="Fechar" icon>
+        <v-btn @click="$emit('close'), $emit('reload')" title="Fechar" icon>
           <v-icon color="grey">mdi-close</v-icon>
         </v-btn>
       </v-layout>

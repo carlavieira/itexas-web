@@ -9,6 +9,15 @@
     </v-row>
     <v-divider class="pb-3"></v-divider>
     <v-data-table no-data-text="Nan" no-results-text="Nan" :headers="header" :items="officeHours">
+      <template v-slot:item.date="{ item }">
+        {{ formatDate(item.date) }}
+      </template>
+      <template v-slot:item.checkin_time="{ item }">
+        {{ format(item.checkin_time) }}
+      </template>
+      <template v-slot:item.checkout_time="{ item }">
+        <span v-if="item.checkout_time">{{ format(item.checkout_time) }}</span>
+      </template>
       <template v-slot:item.actions="{ item }">
         <v-icon small @click="edit(item)">mdi-pencil</v-icon>
         <v-icon class="pl-3" small @click="deleteItem(item)">mdi-delete</v-icon>
@@ -23,6 +32,7 @@
 <script>
 import modalOfficeHours from "./ModalOfficeHours.vue";
 import officeHoursController from "../../controllers/OfficeHoursController"
+import moment from 'moment';
 
 export default {
   components: {
@@ -78,6 +88,14 @@ export default {
 
     deleteItem(item) {
       console.log(item);
+    },
+
+    format(item){
+      return moment(item).format('HH:mm:ss');
+    },
+
+    formatDate(item){
+      return moment(item).format('DD/MM/YYYY')
     }
   }
 };
