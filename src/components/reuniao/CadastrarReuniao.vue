@@ -165,8 +165,7 @@ export default {
         JSON.stringify(this.participantes)
       );
 
-      console.log(meetingDetails);
-      this.participantes = [];
+      //this.participantes = [];
 
       return await this.meetingController.createMeeting(
         this.$api,

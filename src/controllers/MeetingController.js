@@ -25,12 +25,11 @@ export default {
           const part = new Object();
           const { id } = participante;
           part.member = id;
-          part.attendance = participante.presente;
+          part.attendance = participante.attendance;
           part.meeting = response.data.id;
           console.log(part);
           participationController.createParticipationMeeting(api, part);
         });
-        console.log(response.data);
         return response.data;
       })
       .catch(function(error) {
