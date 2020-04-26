@@ -13,4 +13,15 @@ export default {
       });
     return response;
   },
+  getParticipantsInMeeting(api, meetingId) {
+    const response = api
+      .get(`meeting_participation/?meeting=${meetingId}`)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    return response;
+  },
 };

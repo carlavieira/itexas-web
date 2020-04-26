@@ -161,10 +161,9 @@
           </v-dialog>
         </v-layout>
 
-        <tabelaParticipante :form="'edit'"></tabelaParticipante>
-
-        <v-layout row justify-center v-if="editMeeting">
-          <v-btn class="ma-2 mt-5" @click="sendEdit()" depressed color="success"
+        <tabelaParticipante :objForm="meeting"></tabelaParticipante>
+        <v-layout col-xs-12 col-sm-6 row justify-center v-if="editMeeting">
+          <v-btn class="ma-2 mt-4" @click="sendEdit()" depressed color="success"
             >Salvar</v-btn
           >
         </v-layout>
@@ -259,7 +258,8 @@ export default {
         idMember
       );
 
-      this.hostName = this.memberById.first_name + " " +  this.memberById.last_name
+      this.hostName =
+        this.memberById.first_name + " " + this.memberById.last_name;
     },
   },
 };
