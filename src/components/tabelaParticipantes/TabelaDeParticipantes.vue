@@ -220,9 +220,8 @@ export default {
         if (!participante.attendance) {
           participante.attendance = true;
         }
-        this.participantes.push(participante);
+        this.participantesWithName.push(participante);
       });
-      this.participantesWithName = this.participantes;
       this.enviaParticipantesParaPai();
 
       this.close();
