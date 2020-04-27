@@ -37,4 +37,17 @@ export default {
       });
     return response;
   },
+  deleteParticipationMeeting(api, participationID) {
+    let url = `meeting_participation/${participationID}/`;
+    const response = api
+      .delete(url)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        // handle error
+        console.log(error);
+      });
+    return response;
+  },
 };

@@ -203,6 +203,7 @@ export default {
     participationController,
     memberById: null,
     participantes: [],
+    participantesToDelete: [],
     hostName: "",
     types: [
       { name: "REB", value: "REB" },
@@ -264,12 +265,14 @@ export default {
       console.log("Fazer request delete");
     },
     async sendEdit() {
+      console.log(this.participantesToDelete);
+
       /* Edit Meeting */
       this.meeting.date = this.date;
       this.meeting.time = this.time;
       await this.meetingController.editMeeting(this.$api, this.meeting);
 
-      /* Edit Participation*/
+      /* Edit Participation */
       this.participantes.forEach(async (participante) => {
         if (participante.is_active) {
           let part = new Object();
@@ -287,6 +290,16 @@ export default {
           );
         }
       });
+
+      /* Delete Participation */
+      if (this.participantesToDelete.length !== 0) {
+        this.participantesToDelete.forEach(async (participante) => {
+          await this.participationController.deleteParticipationMeeting(
+            this.$api,
+            participante.id
+          );
+        });
+      }
     },
     async getMemberById(idMember) {
       this.memberById = await this.memberController.getMemberById(
@@ -298,9 +311,10 @@ export default {
         this.memberById.first_name + " " + this.memberById.last_name;
     },
     ListaParticipantes(participantes) {
+      console.log(participantes);
       this.participantes = [];
-      this.participantes = participantes;
-      console.log(this.participantes);
+      this.participantes = participantes.participantesWithName;
+      this.participantesToDelete = participantes.participantesDeleted;
     },
   },
 };

@@ -99,6 +99,8 @@ export default {
     ],
     participantes: [],
     participantesWithName: [],
+    participantesDeleted: [],
+    participantesForSend: {},
     editedIndex: -1,
     editedItem: {
       participante: "",
@@ -186,7 +188,6 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-    editParticipations() {},
     saveAfterChanges() {
       if (this.editedIndex > -1) {
         Object.assign(this.participantes[this.editedIndex], this.editedItem);
@@ -196,9 +197,16 @@ export default {
     },
     deleteItem(item) {
       const index = this.participantesWithName.indexOf(item);
+      let checkItem = (item) => {
+        if (!item.email) {
+          this.participantesDeleted.push(item);
+          this.enviaParticipantesParaPai();
+        }
+      };
       confirm("Você deseja realmente deletar este participante?") &&
-        this.participantesWithName.splice(index, 1);
-      console.log(this.participantesWithName);
+        this.participantesWithName.splice(index, 1) &&
+        checkItem(item) &&
+        this.enviaParticipantesParaPai();
     },
     close() {
       this.dialog = false;
@@ -220,10 +228,12 @@ export default {
       this.close();
     },
     enviaParticipantesParaPai() {
+      this.participantesForSend.participantesWithName = this.participantesWithName;
+      this.participantesForSend.participantesDeleted = this.participantesDeleted;
       setTimeout(() => {
         this.$emit(
           "enviarParticipantesPai",
-          JSON.parse(JSON.stringify(this.participantesWithName))
+          JSON.parse(JSON.stringify(this.participantesForSend))
         );
       }, 300);
     },
