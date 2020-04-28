@@ -81,14 +81,17 @@
         </v-layout>
 
         <v-layout justify-left col-xs-12 col-sm-6 v-if="editMeeting">
-          <v-text-field
+          <v-select
             label="Líder"
             outlined
             dense
             prepend-inner-icon="mdi-account-star"
             v-model="meeting.member"
+            :items="leaders"
+            item-text="full_name"
+            item-value="id"
             hide-details
-          ></v-text-field>
+          ></v-select>
         </v-layout>
 
         <v-layout justify-left col-xs-12 col-sm-6>
@@ -203,6 +206,8 @@ export default {
     participationController,
     memberById: null,
     participantes: [],
+    leader: "",
+    leaders: [],
     participantesToDelete: [],
     hostName: "",
     types: [
@@ -226,6 +231,7 @@ export default {
   },
 
   created() {
+    this.populaSelectLider();
     this.getMemberById(this.meeting.member);
     this.date = this.meeting.date;
     this.time = this.meeting.time;
@@ -263,8 +269,35 @@ export default {
       else if (sigla == "LR") return "Reunião de LR";
       else if (sigla == "CN") return "Reunião de Corner";
     },
-    async deleteMeeting() {
-      console.log("Fazer request delete");
+
+    async populaSelectLider() {
+      this.leaders = await this.memberController.getAllMembers(this.$api);
+      this.leaders = this.ordenaOrdemCrescente(
+        await this.memberController.getAllMembers(this.$api)
+      );
+      this.leaders = this.setFullName(this.leaders);
+      console.log(this.leaders);
+    },
+
+    setFullName(array) {
+      const newArray = new Array();
+      array.map((item) => {
+        item.full_name = `${item.first_name} ${item.last_name}`;
+        newArray.push(item);
+      });
+
+      return newArray;
+    },
+
+    ordenaOrdemCrescente(array) {
+      array.sort(function(item1, item2) {
+        if (item1.first_name && item2.first_name) {
+          return item1.first_name < item2.first_name ? -1 : 1;
+        } else {
+          return item1.full_name < item2.full_name ? -1 : 1;
+        }
+      });
+      return array;
     },
     async sendEdit() {
       console.log(this.participantesToDelete);
