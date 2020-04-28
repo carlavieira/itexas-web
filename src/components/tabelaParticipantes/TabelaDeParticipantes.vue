@@ -147,19 +147,25 @@ export default {
         this.initializeAttendanceAlreadySent(this.objForm.id);
       }
     },
-    async initializeMembersInput() {
-      let res = await this.memberController.getAllMembers(this.$api);
-      this.membros = res.sort(function(item1, item2) {
+    ordenaOrdemCrescente(array) {
+      array.sort(function(item1, item2) {
         return item1.first_name < item2.first_name ? -1 : 1;
       });
+      return array;
+    },
+    async initializeMembersInput() {
+      this.membros = await this.memberController.getAllMembers(this.$api);
+      this.membros = this.ordenaOrdemCrescente(this.membros);
     },
     async initializeLiderandosTable() {
       /* Ao invés de utilizar id 8, dar get no localstorage userID */
-      let res = await this.memberController.getAllLiderandos(this.$api, 8);
-      this.participantes = res.sort(function(item1, item2) {
-        return item1.first_name < item2.first_name ? -1 : 1;
-      });
-      this.participantesWithName = this.participantes;
+      this.participantes = await this.memberController.getAllLiderandos(
+        this.$api,
+        8
+      );
+      this.participantesWithName = this.ordenaOrdemCrescente(
+        this.participantes
+      );
       this.enviaParticipantesParaPai();
     },
     async initializeAttendanceAlreadySent(meetingId) {
@@ -178,9 +184,7 @@ export default {
         this.participantesWithName.push(item);
       });
 
-      this.participantes = this.participantes.sort(function(item1, item2) {
-        return item1.first_name < item2.first_name ? -1 : 1;
-      });
+      this.participantes = this.ordenaOrdemCrescente(this.participantes);
       this.enviaParticipantesParaPai();
     },
     editItem(item) {
@@ -223,6 +227,10 @@ export default {
         this.participantesWithName.push(participante);
       });
       this.enviaParticipantesParaPai();
+      this.participantesWithName = this.ordenaOrdemCrescente(
+        this.participantesWithName
+      );
+      console.log(this.participantesWithName);
 
       this.close();
     },
