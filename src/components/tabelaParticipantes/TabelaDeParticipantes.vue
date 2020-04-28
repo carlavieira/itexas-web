@@ -5,7 +5,7 @@
     class="elevation-1"
   >
     <template v-slot:item.participante="{ item }">
-      {{ item.first_name }}
+      {{ item.first_name }} {{ item.last_name }}
     </template>
 
     <template v-slot:item.attendance="{ item }">
@@ -51,8 +51,8 @@
                       dense
                       v-model="editedItem.participante"
                       label="Participante"
-                      :items="membros"
-                      item-text="first_name"
+                      :items="membrosFullName"
+                      item-text="full_name"
                       placeholder="Nome"
                       outlined
                     ></v-select>
@@ -90,6 +90,7 @@ export default {
   data: () => ({
     dialog: false,
     membros: [],
+    membrosFullName: [],
     memberController,
     participationController,
     headers: [
@@ -155,7 +156,12 @@ export default {
     },
     async initializeMembersInput() {
       this.membros = await this.memberController.getAllMembers(this.$api);
-      this.membros = this.ordenaOrdemCrescente(this.membros);
+
+      this.membros.forEach((membro) => {
+        membro.full_name = `${membro.first_name} ${membro.last_name}`;
+        this.membrosFullName.push(membro);
+      });
+      this.membrosFullName = this.ordenaOrdemCrescente(this.membrosFullName);
     },
     async initializeLiderandosTable() {
       /* Ao invés de utilizar id 8, dar get no localstorage userID */
@@ -230,8 +236,6 @@ export default {
       this.participantesWithName = this.ordenaOrdemCrescente(
         this.participantesWithName
       );
-      console.log(this.participantesWithName);
-
       this.close();
     },
     enviaParticipantesParaPai() {
