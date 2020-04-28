@@ -160,7 +160,11 @@ export default {
     },
     ordenaOrdemCrescente(array) {
       array.sort(function(item1, item2) {
-        return item1.first_name < item2.first_name ? -1 : 1;
+        if (item1.first_name && item2.first_name) {
+          return item1.first_name < item2.first_name ? -1 : 1;
+        } else {
+          return item1.full_name < item2.full_name ? -1 : 1;
+        }
       });
       return array;
     },
