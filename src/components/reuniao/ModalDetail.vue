@@ -102,7 +102,7 @@
             <template v-slot:activator="{ on }">
               <v-text-field
                 v-model="dateFormatted"
-                label="Data de entrada na AIESEC"
+                label="Data da Reunião"
                 persistent-hint
                 prepend-inner-icon="mdi-calendar"
                 v-on="on"
@@ -136,7 +136,7 @@
             <template v-slot:activator="{ on }">
               <v-text-field
                 v-model="time"
-                label="Hora do Evento"
+                label="Hora da Reunião"
                 prepend-inner-icon="mdi-clock-outline"
                 readonly
                 outlined

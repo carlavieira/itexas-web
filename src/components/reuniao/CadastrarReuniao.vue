@@ -8,7 +8,7 @@
         </v-btn>
       </v-layout>
       <v-form ref="form" v-model="valid" lazy-validation>
-        <v-row>
+        <v-row class="mt-6">
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-select
               v-model="type"
@@ -17,7 +17,9 @@
               item-value="value"
               :rules="rules.type"
               label="Tipo da Reunião"
-              prepend-icon="mdi-account-group"
+              prepend-inner-icon="mdi-account-group"
+              outlined
+              dense
               required
               no-gutters
             ></v-select>
@@ -28,7 +30,10 @@
               :counter="40"
               v-model="leader"
               label="Líder responsável"
-              prepend-icon="mdi-account-star"
+              prepend-inner-icon="mdi-account-star"
+              :rules="rules.leader"
+              outlined
+              dense
               required
             ></v-text-field>
           </v-col>
@@ -44,7 +49,9 @@
                 <v-text-field
                   v-model="date"
                   label="Data do Evento"
-                  prepend-icon="mdi-calendar"
+                  prepend-inner-icon="mdi-calendar"
+                  outlined
+                  dense
                   readonly
                   v-on="on"
                 ></v-text-field>
@@ -78,7 +85,9 @@
                 <v-text-field
                   v-model="time"
                   label="Hora do Evento"
-                  prepend-icon="mdi-clock-outline"
+                  prepend-inner-icon="mdi-clock-outline"
+                  dense
+                  outlined
                   readonly
                   v-on="on"
                 ></v-text-field>
@@ -140,10 +149,8 @@ export default {
         { name: "Reunião de Corner", value: "CN" },
       ],
       rules: {
-        type: [
-          (v) => !!v || "Campo obrigatório",
-          (v) => (v && v.length <= 0) || "Nome deve ter até 20 caracteres",
-        ],
+        type: [(v) => !!v || "Selecione um tipo de reunião"],
+        leader: [(v) => !!v || "Selecione o líder na reunião."],
       },
       date: new Date().toISOString().substr(0, 10),
       modal1: false,
@@ -173,14 +180,16 @@ export default {
         JSON.stringify(this.participantes)
       );
 
-      return await this.meetingController.createMeeting(
-        this.$api,
-        meetingDetails
-      );
+      if (this.validate()) {
+        return await this.meetingController.createMeeting(
+          this.$api,
+          meetingDetails
+        );
+      }
     },
 
     validate() {
-      this.$refs.form.validate();
+      return this.$refs.form.validate();
     },
 
     ListaParticipantes(participantes) {
