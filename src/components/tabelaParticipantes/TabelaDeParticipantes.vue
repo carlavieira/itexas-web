@@ -56,7 +56,7 @@
                       item-value="select_box"
                       placeholder="Nome"
                       outlined
-                      hint="Será mostrado apenas participantes que já não fazem parte da reunião"
+                      hint="Será mostrado apenas participantes que já não fazem parte da reunião."
                       persistent-hint
                     >
                       <template v-slot:no-data>
@@ -172,12 +172,12 @@ export default {
     },
     async initializeMembersInput() {
       this.membros = await this.memberController.getAllMembers(this.$api);
-
+      this.participantesDiferent = [];
       this.membros.forEach((item) => {
         this.participantesDiferent.push(item);
       });
-      this.setFullName(this.participantesWithName);
       this.setFullName(this.membros);
+
       setTimeout(() => {
         for (let key1 in this.participantesWithName) {
           for (let key2 in this.membros) {
@@ -226,6 +226,8 @@ export default {
       this.participantesWithName = this.ordenaOrdemCrescente(
         this.participantes
       );
+
+      this.setFullName(this.participantesWithName);
       this.enviaParticipantesParaPai();
     },
     async initializeAttendanceAlreadySent(meetingId) {
@@ -242,9 +244,11 @@ export default {
         item.full_name = member.first_name + " " + member.last_name;
         this.participantesWithName.push(item);
       });
+      console.log(this.participantesWithName);
       this.participantesWithName = this.ordenaOrdemCrescente(
         this.participantesWithName
       );
+      console.log(this.participantesWithName);
 
       this.enviaParticipantesParaPai();
     },
@@ -287,10 +291,11 @@ export default {
         }
         this.participantesWithName.push(participante);
       });
-      this.enviaParticipantesParaPai();
       this.participantesWithName = this.ordenaOrdemCrescente(
         this.participantesWithName
       );
+      this.enviaParticipantesParaPai();
+      this.initializeMembersInput();
       this.close();
     },
     enviaParticipantesParaPai() {
