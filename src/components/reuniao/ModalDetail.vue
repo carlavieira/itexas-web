@@ -227,6 +227,8 @@ export default {
 
   created() {
     this.getMemberById(this.meeting.member);
+    this.date = this.meeting.date;
+    this.time = this.meeting.time;
   },
 
   watch: {
@@ -311,7 +313,6 @@ export default {
         this.memberById.first_name + " " + this.memberById.last_name;
     },
     ListaParticipantes(participantes) {
-      console.log(participantes);
       this.participantes = [];
       this.participantes = participantes.participantesWithName;
       this.participantesToDelete = participantes.participantesDeleted;
