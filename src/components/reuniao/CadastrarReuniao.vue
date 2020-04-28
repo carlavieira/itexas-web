@@ -26,16 +26,18 @@
           </v-col>
 
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-text-field
-              :counter="40"
+            <v-select
               v-model="leader"
+              :items="leaders"
+              item-text="full_name"
+              item-value="id"
               label="Líder responsável"
               prepend-inner-icon="mdi-account-star"
               :rules="rules.leader"
               outlined
               dense
               required
-            ></v-text-field>
+            ></v-select>
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-dialog
@@ -135,6 +137,7 @@
 <script>
 import meetingController from "../../controllers/MeetingController";
 import tabelaParticipante from "../tabelaParticipantes/TabelaDeParticipantes";
+import memberController from "../../controllers/MemberController";
 
 export default {
   data() {
@@ -159,6 +162,8 @@ export default {
       e7: null,
       select: null,
       leader: "",
+      leaders: [],
+      memberController,
       type: "",
       participantes: [],
     };
@@ -166,6 +171,10 @@ export default {
 
   components: {
     tabelaParticipante,
+  },
+
+  async created() {
+    await this.populaSelectLider();
   },
 
   methods: {
@@ -188,8 +197,37 @@ export default {
       }
     },
 
+    setFullName(array) {
+      const newArray = new Array();
+      array.map((item) => {
+        item.full_name = `${item.first_name} ${item.last_name}`;
+        newArray.push(item);
+      });
+
+      return newArray;
+    },
+
+    ordenaOrdemCrescente(array) {
+      array.sort(function(item1, item2) {
+        if (item1.first_name && item2.first_name) {
+          return item1.first_name < item2.first_name ? -1 : 1;
+        } else {
+          return item1.full_name < item2.full_name ? -1 : 1;
+        }
+      });
+      return array;
+    },
+
     validate() {
       return this.$refs.form.validate();
+    },
+
+    async populaSelectLider() {
+      this.leaders = await this.memberController.getAllMembers(this.$api);
+      this.leaders = this.ordenaOrdemCrescente(
+        await this.memberController.getAllMembers(this.$api)
+      );
+      this.leaders = this.setFullName(this.leaders);
     },
 
     ListaParticipantes(participantes) {
