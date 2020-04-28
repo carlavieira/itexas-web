@@ -175,6 +175,7 @@ export default {
       return -1;
     },
     async initializeMembersInput() {
+      console.log("Ok");
       this.membros = await this.memberController.getAllMembers(this.$api);
       this.participantesDiferent = [];
       this.membros.forEach((item) => {
@@ -248,11 +249,9 @@ export default {
         item.full_name = member.first_name + " " + member.last_name;
         this.participantesWithName.push(item);
       });
-      console.log(this.participantesWithName);
       this.participantesWithName = this.ordenaOrdemCrescente(
         this.participantesWithName
       );
-      console.log(this.participantesWithName);
 
       this.enviaParticipantesParaPai();
     },
@@ -280,6 +279,8 @@ export default {
         this.participantesWithName.splice(index, 1) &&
         checkItem(item) &&
         this.enviaParticipantesParaPai();
+
+      this.initializeMembersInput();
     },
     close() {
       this.dialog = false;

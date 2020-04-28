@@ -15,6 +15,7 @@
               :items="types"
               item-text="name"
               item-value="value"
+              :rules="rules.type"
               label="Tipo da Reunião"
               prepend-icon="mdi-account-group"
               required
@@ -28,6 +29,7 @@
               v-model="leader"
               label="Líder responsável"
               prepend-icon="mdi-account-star"
+              required
             ></v-text-field>
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
@@ -137,6 +139,12 @@ export default {
         { name: "Reunião de LR", value: "LR" },
         { name: "Reunião de Corner", value: "CN" },
       ],
+      rules: {
+        type: [
+          (v) => !!v || "Campo obrigatório",
+          (v) => (v && v.length <= 0) || "Nome deve ter até 20 caracteres",
+        ],
+      },
       date: new Date().toISOString().substr(0, 10),
       modal1: false,
       modal2: false,
@@ -169,6 +177,10 @@ export default {
         this.$api,
         meetingDetails
       );
+    },
+
+    validate() {
+      this.$refs.form.validate();
     },
 
     ListaParticipantes(participantes) {
