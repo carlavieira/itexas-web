@@ -5,7 +5,7 @@
     class="elevation-1"
   >
     <template v-slot:item.participante="{ item }">
-      {{ item.first_name }} {{ item.last_name }}
+      {{ item.full_name }}
     </template>
 
     <template v-slot:item.attendance="{ item }">
@@ -51,11 +51,20 @@
                       dense
                       v-model="editedItem.participante"
                       label="Participante"
-                      :items="membrosFullName"
+                      :items="participantesDiferent"
                       item-text="full_name"
+                      item-value="select_box"
                       placeholder="Nome"
                       outlined
-                    ></v-select>
+                      hint="Será mostrado apenas participantes que já não fazem parte da reunião"
+                      persistent-hint
+                    >
+                      <template v-slot:no-data>
+                        <span pa-2
+                          >Todos os participantes já estão na reunião</span
+                        >
+                      </template></v-select
+                    >
                   </v-col>
                 </v-row>
               </v-container>
@@ -102,6 +111,7 @@ export default {
     participantesWithName: [],
     participantesDeleted: [],
     participantesForSend: {},
+    participantesDiferent: [],
     editedIndex: -1,
     editedItem: {
       participante: "",
@@ -142,11 +152,11 @@ export default {
 
   methods: {
     initialize() {
-      this.initializeMembersInput();
       if (this.form == "create") this.initializeLiderandosTable();
       else {
         this.initializeAttendanceAlreadySent(this.objForm.id);
       }
+      this.initializeMembersInput();
     },
     ordenaOrdemCrescente(array) {
       array.sort(function(item1, item2) {
@@ -154,14 +164,58 @@ export default {
       });
       return array;
     },
+    findWithAttr(array, attr, value) {
+      for (var i = 0; i < array.length; i += 1) {
+        if (array[i][attr] === value) return i;
+      }
+      return -1;
+    },
     async initializeMembersInput() {
       this.membros = await this.memberController.getAllMembers(this.$api);
 
-      this.membros.forEach((membro) => {
-        membro.full_name = `${membro.first_name} ${membro.last_name}`;
-        this.membrosFullName.push(membro);
+      this.membros.forEach((item) => {
+        this.participantesDiferent.push(item);
       });
-      this.membrosFullName = this.ordenaOrdemCrescente(this.membrosFullName);
+      this.setFullName(this.participantesWithName);
+      this.setFullName(this.membros);
+      setTimeout(() => {
+        for (let key1 in this.participantesWithName) {
+          for (let key2 in this.membros) {
+            if (
+              this.participantesWithName[key1].full_name ==
+              this.membros[key2].full_name
+            ) {
+              /* Caso nomes iguais, pega o index do obj em r2 que possui o nome */
+              const indexOfSameNames = this.findWithAttr(
+                this.membros,
+                "full_name",
+                this.membros[key2].full_name
+              );
+              /* Se nome iguais, então != -1. Então, "substitui" aquele obj de r3 para 'null' */
+              if (indexOfSameNames != -1) {
+                this.participantesDiferent.splice(indexOfSameNames, 1, null);
+              }
+            }
+          }
+        }
+        this.participantesDiferent = this.participantesDiferent.filter(function(
+          val
+        ) {
+          return val != null;
+        });
+        this.participantesDiferent = this.ordenaOrdemCrescente(
+          this.participantesDiferent
+        );
+      }, 1000);
+    },
+    setFullName(array) {
+      const newArray = new Array();
+      array.map((item) => {
+        item.full_name = `${item.first_name} ${item.last_name}`;
+        newArray.push(item);
+      });
+
+      return newArray;
     },
     async initializeLiderandosTable() {
       /* Ao invés de utilizar id 8, dar get no localstorage userID */
@@ -185,12 +239,13 @@ export default {
           this.$api,
           item.member
         );
-
-        item.first_name = member.first_name;
+        item.full_name = member.first_name + " " + member.last_name;
         this.participantesWithName.push(item);
       });
+      this.participantesWithName = this.ordenaOrdemCrescente(
+        this.participantesWithName
+      );
 
-      this.participantes = this.ordenaOrdemCrescente(this.participantes);
       this.enviaParticipantesParaPai();
     },
     editItem(item) {

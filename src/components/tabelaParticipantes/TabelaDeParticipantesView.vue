@@ -5,7 +5,7 @@
     class="elevation-1"
   >
     <template v-slot:item.participante="{ item }">
-      {{ item.first_name }}
+      {{ item.full_name }}
     </template>
 
     <template v-slot:item.attendance="{ item }">
@@ -39,8 +39,8 @@
                       dense
                       v-model="editedItem.participante"
                       label="Participante"
-                      :items="membros"
-                      item-text="first_name"
+                      :items="participantesWithName"
+                      item-text="full_name"
                       placeholder="Nome"
                       outlined
                     ></v-select>
@@ -143,6 +143,12 @@ export default {
       this.participantesWithName = this.participantes;
       this.enviaParticipantesParaCadastro();
     },
+    ordenaOrdemCrescente(array) {
+      array.sort(function(item1, item2) {
+        return item1.first_name < item2.first_name ? -1 : 1;
+      });
+      return array;
+    },
     async initializeAttendanceAlreadySent(meetingId) {
       this.participantes = await this.participationController.getParticipantsInMeeting(
         this.$api,
@@ -154,15 +160,13 @@ export default {
           this.$api,
           item.member
         );
-
-        item.first_name = member.first_name;
+        item.full_name = member.first_name + " " + member.last_name;
         this.participantesWithName.push(item);
       });
-
-      this.participantes = this.participantes.sort(function(item1, item2) {
-        return item1.first_name < item2.first_name ? -1 : 1;
-      });
-      this.enviaParticipantesParaCadastro();
+      this.participantesWithName = this.ordenaOrdemCrescente(
+        this.participantesWithName
+      );
+      console.log;
     },
     editItem(item) {
       this.editedIndex = this.participantes.indexOf(item);
