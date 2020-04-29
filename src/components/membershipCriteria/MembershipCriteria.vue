@@ -30,6 +30,7 @@ import MembershipCriteriaController from "../../controllers/MembershipCriteriaCo
 // import memberController from "../../controllers/MemberController";
 
 export default {
+
   data() {
     return {
       MembershipCriteriaController,
@@ -38,6 +39,7 @@ export default {
         { text: "Office Hours", value: "officeHoursCriteria" },
         { text: "Reuniões", value: "meetingsCriteria" },
         { text: "Eventos", value: "eventsCriteria" },
+        { text: "Status", value: "status" }
       ],
       membresia: [],
       type: null,
