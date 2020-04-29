@@ -121,11 +121,6 @@
               @input="menu1 = false"
             ></v-date-picker>
           </v-menu>
-          <!--
-              <p>
-                Date in ISO format: <strong>{{ date }}</strong>
-              </p>
-              -->
         </v-layout>
 
         <v-layout justify-left col-xs-12 col-sm-6>
@@ -276,7 +271,6 @@ export default {
         await this.memberController.getAllMembers(this.$api)
       );
       this.leaders = this.setFullName(this.leaders);
-      console.log(this.leaders);
     },
 
     setFullName(array) {
@@ -300,8 +294,6 @@ export default {
       return array;
     },
     async sendEdit() {
-      console.log(this.participantesToDelete);
-
       /* Edit Meeting */
       this.meeting.date = this.date;
       this.meeting.time = this.time;

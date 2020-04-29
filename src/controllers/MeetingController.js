@@ -16,6 +16,7 @@ export default {
   },
 
   createMeeting(api, meetingDetails) {
+    let url = "meetingsApi/";
     console.log(meetingDetails);
 
     const response = api

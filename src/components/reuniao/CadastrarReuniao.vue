@@ -49,7 +49,7 @@
             >
               <template v-slot:activator="{ on }">
                 <v-text-field
-                  v-model="date"
+                  v-model="dateFormatted"
                   label="Data do Evento"
                   prepend-inner-icon="mdi-calendar"
                   outlined
@@ -140,34 +140,33 @@ import tabelaParticipante from "../tabelaParticipantes/TabelaDeParticipantes";
 import memberController from "../../controllers/MemberController";
 
 export default {
-  data() {
-    return {
-      meetingController,
-      valid: true,
-      types: [
-        { name: "REB", value: "REB" },
-        { name: "Reunião de Área", value: "RA" },
-        { name: "Reunião de Time", value: "RT" },
-        { name: "Reunião de LR", value: "LR" },
-        { name: "Reunião de Corner", value: "CN" },
-      ],
-      rules: {
-        type: [(v) => !!v || "Selecione um tipo de reunião"],
-        leader: [(v) => !!v || "Selecione o líder na reunião."],
-      },
-      date: new Date().toISOString().substr(0, 10),
-      modal1: false,
-      modal2: false,
-      time: "00:00",
-      e7: null,
-      select: null,
-      leader: "",
-      leaders: [],
-      memberController,
-      type: "",
-      participantes: [],
-    };
-  },
+  data: (vm) => ({
+    meetingController,
+    valid: true,
+    types: [
+      { name: "REB", value: "REB" },
+      { name: "Reunião de Área", value: "RA" },
+      { name: "Reunião de Time", value: "RT" },
+      { name: "Reunião de LR", value: "LR" },
+      { name: "Reunião de Corner", value: "CN" },
+    ],
+    rules: {
+      type: [(v) => !!v || "Selecione um tipo de reunião"],
+      leader: [(v) => !!v || "Selecione o líder na reunião."],
+    },
+    date: new Date().toISOString().substr(0, 10),
+    dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+    modal1: false,
+    modal2: false,
+    time: "00:00",
+    e7: null,
+    select: null,
+    leader: "",
+    leaders: [],
+    memberController,
+    type: "",
+    participantes: [],
+  }),
 
   components: {
     tabelaParticipante,
@@ -177,7 +176,32 @@ export default {
     await this.populaSelectLider();
   },
 
+  computed: {
+    computedDateFormatted() {
+      return this.formatDate(this.date);
+    },
+  },
+
+  watch: {
+    /* caso de erro, colocar o parametro date(val) */
+    date() {
+      this.dateFormatted = this.formatDate(this.date);
+    },
+  },
+
   methods: {
+    formatDate(date) {
+      if (!date) return null;
+
+      const [year, month, day] = date.split("-");
+      return `${day}/${month}/${year}`;
+    },
+    parseDate(date) {
+      if (!date) return null;
+
+      const [month, day, year] = date.split("/");
+      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    },
     async submit() {
       const meetingDetails = new Object();
       meetingDetails.date = this.date;
