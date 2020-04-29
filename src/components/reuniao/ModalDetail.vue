@@ -121,11 +121,6 @@
               @input="menu1 = false"
             ></v-date-picker>
           </v-menu>
-          <!--
-              <p>
-                Date in ISO format: <strong>{{ date }}</strong>
-              </p>
-              -->
         </v-layout>
 
         <v-layout justify-left col-xs-12 col-sm-6>
@@ -208,6 +203,10 @@ export default {
     participantes: [],
     leader: "",
     leaders: [],
+    snackbarDetail: {
+      color: "warning",
+      text: "Reunião Atualizada com sucesso",
+    },
     participantesToDelete: [],
     hostName: "",
     types: [
@@ -276,7 +275,6 @@ export default {
         await this.memberController.getAllMembers(this.$api)
       );
       this.leaders = this.setFullName(this.leaders);
-      console.log(this.leaders);
     },
 
     setFullName(array) {
@@ -300,12 +298,20 @@ export default {
       return array;
     },
     async sendEdit() {
-      console.log(this.participantesToDelete);
-
       /* Edit Meeting */
       this.meeting.date = this.date;
       this.meeting.time = this.time;
-      await this.meetingController.editMeeting(this.$api, this.meeting);
+      await this.meetingController
+        .editMeeting(this.$api, this.meeting)
+        .then((res) => {
+          console.log(res);
+          this.$emit("getAllMeeting");
+
+          setTimeout(() => {
+            this.$emit("close");
+            this.$emit("showSnackbar", this.snackbarDetail);
+          }, 1000);
+        });
 
       /* Edit Participation */
       this.participantes.forEach(async (participante) => {

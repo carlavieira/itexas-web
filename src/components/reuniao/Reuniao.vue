@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">
+      {{ text }}</v-snackbar
+    >
     <v-row class="px-4">
       <h2>Reuniões</h2>
       <v-spacer></v-spacer>
@@ -54,12 +57,18 @@
         </v-card>
       </v-flex>
     </v-row>
-    <NovaReuniao :show="btnReuniao" @close="btnReuniao = false"></NovaReuniao>
+    <NovaReuniao
+      :show="btnReuniao"
+      @close="btnReuniao = false"
+      @getAllMeeting="getAllMeeting()"
+      v-on:showSnackbar="showSnackbar"
+    ></NovaReuniao>
     <modalDetail
       v-if="showDetail"
       :show="showDetail"
       :meeting="meetingDetail"
       @close="showDetail = false"
+      v-on:showSnackbar="showSnackbar"
     >
     </modalDetail>
   </v-container>
@@ -83,6 +92,10 @@ export default {
       showDetail: false,
       memberController,
       leaders: {},
+      snackbar: false,
+      text: "",
+      timeout: 3000,
+      color: "",
       headersReuniao: [
         {
           text: "Tipo",
@@ -116,22 +129,7 @@ export default {
   },
 
   async created() {
-    const meetings = await this.meetingController.getAllMeeting(this.$api);
-    this.reunioes = meetings.data;
-
-    //console.log(meetings);
-    //console.log(this.memberController);
-    //meetings.data[41] = this.memberController;
-
-    console.log(meetings.data);
-    this.reunioes.forEach(async (item) => {
-      const idLeader = item.member;
-      const leader = await this.memberController.getMemberById(
-        this.$api,
-        idLeader
-      );
-      item.leader = leader;
-    });
+    this.getAllMeeting();
   },
 
   methods: {
@@ -158,6 +156,35 @@ export default {
         id.member
       );
     },
+    async getAllMeeting() {
+      this.reunioes = [];
+      const meetings = await this.meetingController.getAllMeeting(this.$api);
+      this.reunioes = meetings.data;
+      console.log(this.reunioes);
+
+      this.reunioes.forEach(async (item) => {
+        const idLeader = item.member;
+        const leader = await this.memberController.getMemberById(
+          this.$api,
+          idLeader
+        );
+        item.leader = leader;
+      });
+    },
+
+    showSnackbar(snackbarDetails) {
+      console.log(snackbarDetails);
+      this.snackbar = true;
+      this.text = snackbarDetails.text;
+      this.color = snackbarDetails.color;
+    },
   },
 };
 </script>
+
+<style>
+v-snackbar {
+  display: flex;
+  text-align: center;
+}
+</style>
