@@ -82,7 +82,7 @@ export default {
         {
           text: "Relatórios",
           icon: "mdi-clipboard-text-multiple",
-          path: "/"
+          path: "/adm/membresia"
         },
         {
           text: "Membros",
