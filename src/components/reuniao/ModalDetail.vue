@@ -203,6 +203,10 @@ export default {
     participantes: [],
     leader: "",
     leaders: [],
+    snackbarDetail: {
+      color: "warning",
+      text: "Reunião Atualizada com sucesso",
+    },
     participantesToDelete: [],
     hostName: "",
     types: [
@@ -297,7 +301,17 @@ export default {
       /* Edit Meeting */
       this.meeting.date = this.date;
       this.meeting.time = this.time;
-      await this.meetingController.editMeeting(this.$api, this.meeting);
+      await this.meetingController
+        .editMeeting(this.$api, this.meeting)
+        .then((res) => {
+          console.log(res);
+          this.$emit("getAllMeeting");
+
+          setTimeout(() => {
+            this.$emit("close");
+            this.$emit("showSnackbar", this.snackbarDetail);
+          }, 1000);
+        });
 
       /* Edit Participation */
       this.participantes.forEach(async (participante) => {

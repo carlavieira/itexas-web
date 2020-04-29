@@ -164,6 +164,10 @@ export default {
     leader: "",
     leaders: [],
     memberController,
+    snackbarDetail: {
+      color: "success",
+      text: "Reunião cadastrada com sucesso",
+    },
     type: "",
     participantes: [],
   }),
@@ -214,10 +218,20 @@ export default {
       );
 
       if (this.validate()) {
-        return await this.meetingController.createMeeting(
-          this.$api,
-          meetingDetails
-        );
+        return await this.meetingController
+          .createMeeting(this.$api, meetingDetails)
+          .then((res) => {
+            console.log(res);
+            this.$emit("getAllMeeting");
+
+            setTimeout(() => {
+              this.$emit("close");
+              this.$emit("showSnackbar", this.snackbarDetail);
+            }, 1000);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
 
