@@ -3,14 +3,14 @@ const url = "membershipCriteria/";
 export default {
     listMembershipCriteria(api) {
         const response = api
-      .get(url)
-      .then(function(response) {
+        .get(url)
+        .then(function(response) {
         console.log(response);
         return response;
-      })
-      .catch(function(error) {
+        })
+        .catch(function(error) {
         console.log(error);
-      });
-      return response;
+        });
+        return response;
     },
 }
