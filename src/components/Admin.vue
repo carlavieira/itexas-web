@@ -74,20 +74,16 @@ export default {
           icon: "mdi-view-dashboard-outline",
           path: "/dashboard"
         },
-        {
-          text: "Office Hours",
-          icon: "mdi-alarm-check",
-          path: "/adm/officeHours"
-        },
-        {
-          text: "Relatórios",
-          icon: "mdi-clipboard-text-multiple",
-          path: "/adm/membresia"
-        },
+        //Admin
         {
           text: "Membros",
           icon: "mdi-account",
           path: "/adm/membros"
+        },
+        {
+          text: "Office Hours",
+          icon: "mdi-alarm-check",
+          path: "/adm/officeHours"
         },
         {
           text: "Reuniões",
@@ -100,15 +96,52 @@ export default {
           path: "/adm/eventos"
         },
         {
+          text: "Relatórios",
+          icon: "mdi-clipboard-text-multiple",
+          path: "/adm/membresia"
+        },
+        //Members
+        {
+          text: "Check-in/Check-out",
+          icon: "mdi-view-dashboard-outline",
+          path: "/dashboard"
+        },
+        {
+          text: "Meu Perfil",
+          icon: "mdi-account-circle",
+          path: "/adm/perfil"
+        },
+        {
+          text: "Minhas Office Hours",
+          icon: "mdi-alarm-check",
+          path: "/adm/officeHours"
+        },
+        {
+          text: "Minhas Reuniões",
+          icon: "mdi-account-multiple",
+          path: "/adm/reuniao"
+        },
+        {
+          text: "Meus Eventos",
+          icon: "mdi-account-group",
+          path: "/adm/eventos"
+        },
+        {
+          text: "Meu Critério",
+          icon: "mdi-clipboard-text-multiple",
+          path: "/adm/membresia"
+        },
+        {
           text: "Calendário",
           icon: "mdi-calendar-month",
           path: "/adm/calendario"
         },
         {
-          text: "Perfil",
-          icon: "mdi-account-circle",
-          path: "/adm/perfil"
+          text: "Contact List",
+          icon: "mdi-account",
+          path: "/adm/membros"
         },
+
 
       ],
       drawer: true
