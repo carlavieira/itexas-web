@@ -8,27 +8,36 @@
         </v-btn>
       </v-layout>
       <v-form ref="form" v-model="valid" lazy-validation>
-        <v-row>
+        <v-row class="mt-6">
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-select
               v-model="type"
               :items="types"
               item-text="name"
               item-value="value"
+              :rules="rules.type"
               label="Tipo da Reunião"
-              prepend-icon="mdi-account-group"
+              prepend-inner-icon="mdi-account-group"
+              outlined
+              dense
               required
               no-gutters
             ></v-select>
           </v-col>
 
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-text-field
-              :counter="40"
+            <v-select
               v-model="leader"
+              :items="leaders"
+              item-text="full_name"
+              item-value="id"
               label="Líder responsável"
-              prepend-icon="mdi-account-star"
-            ></v-text-field>
+              prepend-inner-icon="mdi-account-star"
+              :rules="rules.leader"
+              outlined
+              dense
+              required
+            ></v-select>
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-dialog
@@ -40,9 +49,11 @@
             >
               <template v-slot:activator="{ on }">
                 <v-text-field
-                  v-model="date"
+                  v-model="dateFormatted"
                   label="Data do Evento"
-                  prepend-icon="mdi-calendar"
+                  prepend-inner-icon="mdi-calendar"
+                  outlined
+                  dense
                   readonly
                   v-on="on"
                 ></v-text-field>
@@ -76,7 +87,9 @@
                 <v-text-field
                   v-model="time"
                   label="Hora do Evento"
-                  prepend-icon="mdi-clock-outline"
+                  prepend-inner-icon="mdi-clock-outline"
+                  dense
+                  outlined
                   readonly
                   v-on="on"
                 ></v-text-field>
@@ -100,7 +113,8 @@
           </v-col>
           <v-col style="justify-content: center ;display: flex">
             <tabelaParticipante
-              v-on:enviarParticipantesCadastro="ListaParticipantes"
+              :form="'create'"
+              v-on:enviarParticipantesPai="ListaParticipantes"
               style="max-width: 550px"
             ></tabelaParticipante>
           </v-col>
@@ -123,61 +137,146 @@
 <script>
 import meetingController from "../../controllers/MeetingController";
 import tabelaParticipante from "../tabelaParticipantes/TabelaDeParticipantes";
+import memberController from "../../controllers/MemberController";
 
 export default {
-  data() {
-    return {
-      meetingController,
-      valid: true,
-      types: [
-        { name: "REB", value: "REB" },
-        { name: "Reunião de Área", value: "RA" },
-        { name: "Reunião de Time", value: "RT" },
-        { name: "Reunião de LR", value: "LR" },
-        { name: "Reunião de Corner", value: "CN" }
-      ],
-      date: new Date().toISOString().substr(0, 10),
-      modal1: false,
-      modal2: false,
-      time: "00:00",
-      e7: null,
-      select: null,
-      leader: "",
-      type: "",
-      participantes: []
-    };
-  },
+  data: (vm) => ({
+    meetingController,
+    valid: true,
+    types: [
+      { name: "REB", value: "REB" },
+      { name: "Reunião de Área", value: "RA" },
+      { name: "Reunião de Time", value: "RT" },
+      { name: "Reunião de LR", value: "LR" },
+      { name: "Reunião de Corner", value: "CN" },
+    ],
+    rules: {
+      type: [(v) => !!v || "Selecione um tipo de reunião"],
+      leader: [(v) => !!v || "Selecione o líder na reunião."],
+    },
+    date: new Date().toISOString().substr(0, 10),
+    dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+    modal1: false,
+    modal2: false,
+    time: "00:00",
+    e7: null,
+    select: null,
+    leader: "",
+    leaders: [],
+    memberController,
+    snackbarDetail: {
+      color: "success",
+      text: "Reunião cadastrada com sucesso",
+    },
+    type: "",
+    participantes: [],
+  }),
 
   components: {
-    tabelaParticipante
+    tabelaParticipante,
+  },
+
+  async created() {
+    await this.populaSelectLider();
+  },
+
+  computed: {
+    computedDateFormatted() {
+      return this.formatDate(this.date);
+    },
+  },
+
+  watch: {
+    /* caso de erro, colocar o parametro date(val) */
+    date() {
+      this.dateFormatted = this.formatDate(this.date);
+    },
   },
 
   methods: {
+    formatDate(date) {
+      if (!date) return null;
+
+      const [year, month, day] = date.split("-");
+      return `${day}/${month}/${year}`;
+    },
+    parseDate(date) {
+      if (!date) return null;
+
+      const [month, day, year] = date.split("/");
+      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    },
     async submit() {
       const meetingDetails = new Object();
-
       meetingDetails.date = this.date;
       meetingDetails.time = this.time;
       meetingDetails.type = this.type;
       meetingDetails.member = this.leader;
-      meetingDetails.participantes = this.participantes;
 
-      console.log(meetingDetails);
-
-      return await this.meetingController.createMeeting(
-        this.$api,
-        meetingDetails
+      meetingDetails.participantes = JSON.parse(
+        JSON.stringify(this.participantes)
       );
+
+      if (this.validate()) {
+        return await this.meetingController
+          .createMeeting(this.$api, meetingDetails)
+          .then((res) => {
+            console.log(res);
+            this.$emit("getAllMeeting");
+
+            setTimeout(() => {
+              this.$emit("close");
+              this.$emit("showSnackbar", this.snackbarDetail);
+            }, 1000);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
+
+    setFullName(array) {
+      const newArray = new Array();
+      array.map((item) => {
+        item.full_name = `${item.first_name} ${item.last_name}`;
+        newArray.push(item);
+      });
+
+      return newArray;
+    },
+
+    ordenaOrdemCrescente(array) {
+      array.sort(function(item1, item2) {
+        if (item1.first_name && item2.first_name) {
+          return item1.first_name < item2.first_name ? -1 : 1;
+        } else {
+          return item1.full_name < item2.full_name ? -1 : 1;
+        }
+      });
+      return array;
+    },
+
+    validate() {
+      return this.$refs.form.validate();
+    },
+
+    async populaSelectLider() {
+      this.leaders = await this.memberController.getAllMembers(this.$api);
+      this.leaders = this.ordenaOrdemCrescente(
+        await this.memberController.getAllMembers(this.$api)
+      );
+      this.leaders = this.setFullName(this.leaders);
     },
 
     ListaParticipantes(participantes) {
-      this.participantes.push(participantes);
-    }
+      this.participantes = [];
+      this.participantes = participantes;
+    },
   },
 
   props: {
-    show: Boolean
-  }
+    show: Boolean,
+  },
 };
 </script>
 

@@ -10,8 +10,9 @@
 
     <template v-slot:item.attendance="{ item }">
       <input
+        :disabled="true"
         type="checkbox"
-        @click="enviaParticipantesParaPai()"
+        @click="enviaParticipantesParaCadastro()"
         v-model="item.attendance"
       />
     </template>
@@ -22,19 +23,6 @@
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on }">
-            <v-btn
-              class="mx-2"
-              title="Adicionar Participante"
-              v-on="on"
-              fab
-              dark
-              x-small
-              color="success"
-            >
-              <v-icon dark>mdi-plus</v-icon>
-            </v-btn>
-          </template>
           <v-card>
             <v-card-title>
               <span class="headline">{{ formTitle }}</span>
@@ -51,20 +39,11 @@
                       dense
                       v-model="editedItem.participante"
                       label="Participante"
-                      :items="participantesDiferent"
+                      :items="participantesWithName"
                       item-text="full_name"
-                      item-value="select_box"
                       placeholder="Nome"
                       outlined
-                      hint="Será mostrado apenas participantes que já não fazem parte da reunião."
-                      persistent-hint
-                    >
-                      <template v-slot:no-data>
-                        <span pa-2
-                          >Todos os participantes já estão na reunião</span
-                        >
-                      </template></v-select
-                    >
+                    ></v-select>
                   </v-col>
                 </v-row>
               </v-container>
@@ -78,11 +57,6 @@
           </v-card>
         </v-dialog>
       </v-toolbar>
-    </template>
-    <template v-slot:item.actions="{ item }">
-      <v-icon small @click="deleteItem(item)">
-        mdi-delete
-      </v-icon>
     </template>
     <template v-slot:no-data>
       <span>Não há participantes nesta reunião.</span>
@@ -99,7 +73,6 @@ export default {
   data: () => ({
     dialog: false,
     membros: [],
-    membrosFullName: [],
     memberController,
     participationController,
     headers: [
@@ -109,9 +82,6 @@ export default {
     ],
     participantes: [],
     participantesWithName: [],
-    participantesDeleted: [],
-    participantesForSend: {},
-    participantesDiferent: [],
     editedIndex: -1,
     editedItem: {
       participante: "",
@@ -152,87 +122,32 @@ export default {
 
   methods: {
     initialize() {
+      this.initializeMembersInput();
       if (this.form == "create") this.initializeLiderandosTable();
       else {
         this.initializeAttendanceAlreadySent(this.objForm.id);
       }
-      this.initializeMembersInput();
+    },
+    async initializeMembersInput() {
+      let res = await this.memberController.getAllMembers(this.$api);
+      this.membros = res.sort(function(item1, item2) {
+        return item1.first_name < item2.first_name ? -1 : 1;
+      });
+    },
+    async initializeLiderandosTable() {
+      /* Ao invés de utilizar id 8, dar get no localstorage userID */
+      let res = await this.memberController.getAllLiderandos(this.$api, 8);
+      this.participantes = res.sort(function(item1, item2) {
+        return item1.first_name < item2.first_name ? -1 : 1;
+      });
+      this.participantesWithName = this.participantes;
+      this.enviaParticipantesParaCadastro();
     },
     ordenaOrdemCrescente(array) {
       array.sort(function(item1, item2) {
-        if (item1.first_name && item2.first_name) {
-          return item1.first_name < item2.first_name ? -1 : 1;
-        } else {
-          return item1.full_name < item2.full_name ? -1 : 1;
-        }
+        return item1.first_name < item2.first_name ? -1 : 1;
       });
       return array;
-    },
-    findWithAttr(array, attr, value) {
-      for (var i = 0; i < array.length; i += 1) {
-        if (array[i][attr] === value) return i;
-      }
-      return -1;
-    },
-    async initializeMembersInput() {
-      console.log("Ok");
-      this.membros = await this.memberController.getAllMembers(this.$api);
-      this.participantesDiferent = [];
-      this.membros.forEach((item) => {
-        this.participantesDiferent.push(item);
-      });
-      this.setFullName(this.membros);
-
-      setTimeout(() => {
-        for (let key1 in this.participantesWithName) {
-          for (let key2 in this.membros) {
-            if (
-              this.participantesWithName[key1].full_name ==
-              this.membros[key2].full_name
-            ) {
-              /* Caso nomes iguais, pega o index do obj em r2 que possui o nome */
-              const indexOfSameNames = this.findWithAttr(
-                this.membros,
-                "full_name",
-                this.membros[key2].full_name
-              );
-              /* Se nome iguais, então != -1. Então, "substitui" aquele obj de r3 para 'null' */
-              if (indexOfSameNames != -1) {
-                this.participantesDiferent.splice(indexOfSameNames, 1, null);
-              }
-            }
-          }
-        }
-        this.participantesDiferent = this.participantesDiferent.filter(function(
-          val
-        ) {
-          return val != null;
-        });
-        this.participantesDiferent = this.ordenaOrdemCrescente(
-          this.participantesDiferent
-        );
-      }, 1000);
-    },
-    setFullName(array) {
-      const newArray = new Array();
-      array.map((item) => {
-        item.full_name = `${item.first_name} ${item.last_name}`;
-        newArray.push(item);
-      });
-
-      return newArray;
-    },
-    async initializeLiderandosTable() {
-      this.participantes = await this.memberController.getAllLiderandos(
-        this.$api,
-        localStorage.getItem("user_id")
-      );
-      this.participantesWithName = this.ordenaOrdemCrescente(
-        this.participantes
-      );
-
-      this.setFullName(this.participantesWithName);
-      this.enviaParticipantesParaPai();
     },
     async initializeAttendanceAlreadySent(meetingId) {
       this.participantes = await this.participationController.getParticipantsInMeeting(
@@ -251,8 +166,7 @@ export default {
       this.participantesWithName = this.ordenaOrdemCrescente(
         this.participantesWithName
       );
-
-      this.enviaParticipantesParaPai();
+      console.log;
     },
     editItem(item) {
       this.editedIndex = this.participantes.indexOf(item);
@@ -267,19 +181,9 @@ export default {
       }
     },
     deleteItem(item) {
-      const index = this.participantesWithName.indexOf(item);
-      let checkItem = (item) => {
-        if (!item.email) {
-          this.participantesDeleted.push(item);
-          this.enviaParticipantesParaPai();
-        }
-      };
+      const index = this.participantes.indexOf(item);
       confirm("Você deseja realmente deletar este participante?") &&
-        this.participantesWithName.splice(index, 1) &&
-        checkItem(item) &&
-        this.enviaParticipantesParaPai();
-
-      this.initializeMembersInput();
+        this.participantes.splice(index, 1);
     },
     close() {
       this.dialog = false;
@@ -293,22 +197,16 @@ export default {
         if (!participante.attendance) {
           participante.attendance = true;
         }
-        this.participantesWithName.push(participante);
+        this.participantes.push(participante);
       });
-      this.participantesWithName = this.ordenaOrdemCrescente(
-        this.participantesWithName
-      );
-      this.enviaParticipantesParaPai();
-      this.initializeMembersInput();
+      this.enviaParticipantesParaCadastro();
       this.close();
     },
-    enviaParticipantesParaPai() {
-      this.participantesForSend.participantesWithName = this.participantesWithName;
-      this.participantesForSend.participantesDeleted = this.participantesDeleted;
+    enviaParticipantesParaCadastro() {
       setTimeout(() => {
         this.$emit(
-          "enviarParticipantesPai",
-          JSON.parse(JSON.stringify(this.participantesForSend))
+          "enviarParticipantesCadastro",
+          JSON.parse(JSON.stringify(this.participantes))
         );
       }, 300);
     },

@@ -1,3 +1,5 @@
+
+
 <template>
   <div>
     <v-app-bar
@@ -70,46 +72,10 @@ export default {
       authController,
       items: [
         {
-          text: "Dashboard",
-          icon: "mdi-view-dashboard-outline",
-          path: "/dashboard"
-        },
-        {
-          text: "Office Hours",
-          icon: "mdi-alarm-check",
-          path: "/adm/officeHours"
-        },
-        {
-          text: "Relatórios",
-          icon: "mdi-clipboard-text-multiple",
-          path: "/adm/membresia"
-        },
-        {
-          text: "Membros",
-          icon: "mdi-account",
-          path: "/adm/membros"
-        },
-        {
-          text: "Reuniões",
-          icon: "mdi-account-multiple",
-          path: "/adm/reuniao"
-        },
-        {
-          text: "Eventos",
-          icon: "mdi-account-group",
-          path: "/adm/eventos"
-        },
-        {
-          text: "Calendário",
-          icon: "mdi-calendar-month",
-          path: "/adm/calendario"
-        },
-        {
           text: "Perfil",
           icon: "mdi-account-circle",
-          path: "/adm/perfil"
+          path: "/member/perfil"
         },
-
       ],
       drawer: true
     };
