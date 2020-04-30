@@ -223,10 +223,9 @@ export default {
       return newArray;
     },
     async initializeLiderandosTable() {
-      /* Ao invés de utilizar id 8, dar get no localstorage userID */
       this.participantes = await this.memberController.getAllLiderandos(
         this.$api,
-        8
+        localStorage.getItem("user_id")
       );
       this.participantesWithName = this.ordenaOrdemCrescente(
         this.participantes
