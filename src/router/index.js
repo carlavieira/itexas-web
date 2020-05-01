@@ -9,7 +9,6 @@ import reuniao from "../components/reuniao/Reuniao.vue";
 import eventos from "../components/eventos/Eventos.vue";
 import calendario from "../components/calendario/Calendario.vue";
 import membershipCriteria from "../components/membershipCriteria/MembershipCriteria.vue";
-
 import perfil from "../components/Perfil.vue"
 import officeHours from "../components/officeHours/OfficeHours.vue"
 
@@ -28,7 +27,7 @@ const routes = [
     name: "admTemplate",
     component: admTemplate,
     children: [
-      { path: "/adm/dashboard", name: "dashboard", component: dashboard},
+      { path: "/adm/dashboard", name: "dashboard", component: dashboard },
       { path: "/adm/membros", name: "members", component: members },
       { path: "/adm/reuniao", name: "reuniao", component: reuniao },
       { path: "/adm/eventos", name: "eventos", component: eventos },
