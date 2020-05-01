@@ -72,7 +72,7 @@ export default {
         {
           text: "Dashboard",
           icon: "mdi-view-dashboard-outline",
-          path: "/dashboard"
+          path: "/adm/dashboard"
         },
         //Admin
         {

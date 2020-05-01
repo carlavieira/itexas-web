@@ -4,11 +4,7 @@
       <v-col>
         <v-card flat color="branco" class="px-8 pt-5 pb-12 form mx-auto">
           <v-form ref="form">
-            <v-img
-              src="../assets/rrrrr.png"
-              width="100px"
-              class="mt-3 mb-5 mx-auto"
-            />
+            <v-img src="../assets/rrrrr.png" width="100px" class="mt-3 mb-5 mx-auto" />
             <v-form class="pt-6">
               <v-text-field
                 id="emailLogin"
@@ -54,8 +50,7 @@
             border="top"
             icon="mdi-alert"
             transition="scale-transition"
-            >{{ errorMessage }}</v-alert
-          >
+          >{{ errorMessage }}</v-alert>
         </v-card>
       </v-col>
     </v-row>

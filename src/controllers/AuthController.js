@@ -26,7 +26,7 @@ export default {
 
   routerPath(res) {
     res.data.user.is_staff
-      ? router.push("/adm/perfil")
+      ? router.push("/adm/dashboard")
       : router.push("/member/perfil");
   },
 

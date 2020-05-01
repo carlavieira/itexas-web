@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import login from "../components/Login.vue";
 
 import admTemplate from "../components/Admin.vue";
+import dashboard from "../components/Dashboard.vue"
 import members from "../components/membros/Membros.vue";
 import reuniao from "../components/reuniao/Reuniao.vue";
 import eventos from "../components/eventos/Eventos.vue";
@@ -27,6 +28,7 @@ const routes = [
     name: "admTemplate",
     component: admTemplate,
     children: [
+      { path: "/adm/dashboard", name: "dashboard", component: dashboard},
       { path: "/adm/membros", name: "members", component: members },
       { path: "/adm/reuniao", name: "reuniao", component: reuniao },
       { path: "/adm/eventos", name: "eventos", component: eventos },
