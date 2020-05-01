@@ -207,8 +207,8 @@ export default {
       color: "warning",
       text: "Reunião Atualizada com sucesso",
     },
-    participantesToDelete: [],
     hostName: "",
+    participantesToDelete: [],
     types: [
       { name: "REB", value: "REB" },
       { name: "Reunião de Área", value: "RA" },
@@ -231,13 +231,12 @@ export default {
 
   created() {
     this.populaSelectLider();
-    this.getMemberById(this.meeting.member);
     this.date = this.meeting.date;
     this.time = this.meeting.time;
+    this.hostName = this.meeting.member.first_name + " " + this.meeting.member.last_name;
   },
 
   watch: {
-    /* caso de erro, colocar o parametro date(val) */
     date() {
       this.dateFormatted = this.formatDate(this.date);
     },
@@ -270,7 +269,6 @@ export default {
     },
 
     async populaSelectLider() {
-      this.leaders = await this.memberController.getAllMembers(this.$api);
       this.leaders = this.ordenaOrdemCrescente(
         await this.memberController.getAllMembers(this.$api)
       );
@@ -342,21 +340,24 @@ export default {
         });
       }
     },
-    async getMemberById(idMember) {
-      this.memberById = await this.memberController.getMemberById(
-        this.$api,
-        idMember
-      );
-
-      this.hostName =
-        this.memberById.first_name + " " + this.memberById.last_name;
-    },
     ListaParticipantes(participantes) {
       this.participantes = [];
       this.participantes = participantes.participantesWithName;
       this.participantesToDelete = participantes.participantesDeleted;
     },
-  },
+    async deleteMeeting(){
+      return await this.meetingController.deleteMeeting(this.$api, this.meeting.id)
+      .then((res) => {
+        console.log(res);
+        this.$emit("getAllMeeting");
+
+        setTimeout(() => {
+          this.$emit("close");
+          this.$emit("showSnackbar", this.snackbarDetail);
+        }, 1000);
+      })
+    }
+  }
 };
 </script>
 

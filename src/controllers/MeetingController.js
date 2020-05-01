@@ -1,13 +1,14 @@
-let url = "meetingsApi/";
+let url = "list-meetings/";
 import participationController from "./ParticipationController";
 
 export default {
   getAllMeeting(api) {
+    url= "list-meetings/"
     const response = api
       .get(url)
       .then(function(response) {
-        console.log(response);
-        return response;
+        console.log(response.data);
+        return response.data;
       })
       .catch(function(error) {
         console.log(error);
@@ -16,7 +17,7 @@ export default {
   },
 
   createMeeting(api, meetingDetails) {
-    let url = "meetingsApi/";
+    let url = "manage-meetings/";
     console.log(meetingDetails);
 
     const response = api
@@ -43,7 +44,7 @@ export default {
   },
 
   editMeeting(api, meetingDetails) {
-    url = `meetingsApi/${meetingDetails.id}/`;
+    url = `manage-meetings/${meetingDetails.id}/`;
 
     const response = api
       .put(url, meetingDetails)
@@ -56,4 +57,19 @@ export default {
       });
     return response;
   },
+
+  deleteMeeting(api, meetingId) {
+    url = `manage-meetings/${meetingId}/`;
+    const response = api
+      .delete(url)
+      .then(function(response) {
+        return response;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    return response;
+  },
+
+
 };

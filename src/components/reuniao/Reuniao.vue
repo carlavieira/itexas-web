@@ -40,7 +40,7 @@
               <span>{{ formatTypeMeeting(item.type) }}</span>
             </template>
             <template v-slot:item.member="{ item }">
-              <span v-if="item.leader"> {{ item.leader.first_name }} </span>
+              <span> {{ item.member.first_name }} </span>
             </template>
             <template v-slot:item.date="{ item }">
               <span>{{ formatDate(item.date) }}</span>
@@ -69,6 +69,7 @@
       :meeting="meetingDetail"
       @close="showDetail = false"
       v-on:showSnackbar="showSnackbar"
+      @getAllMeeting="getAllMeeting()"
     >
     </modalDetail>
   </v-container>
@@ -77,7 +78,6 @@
 <script>
 import NovaReuniao from "./CadastrarReuniao.vue";
 import meetingController from "../../controllers/MeetingController";
-import memberController from "../../controllers/MemberController";
 import modalDetail from "./ModalDetail.vue";
 import moment from "moment";
 
@@ -90,7 +90,6 @@ export default {
       meetingController,
       meetingDetail: null,
       showDetail: false,
-      memberController,
       leaders: {},
       snackbar: false,
       text: "",
@@ -150,26 +149,10 @@ export default {
     meetingShow(meeting) {
       (this.meetingDetail = meeting), (this.showDetail = true);
     },
-    async returnNameOfLeader(id) {
-      this.leaders[id] = await this.memberController.getMemberById(
-        this.$api,
-        id.member
-      );
-    },
-    async getAllMeeting() {
-      this.reunioes = [];
-      const meetings = await this.meetingController.getAllMeeting(this.$api);
-      this.reunioes = meetings.data;
-      console.log(this.reunioes);
 
-      this.reunioes.forEach(async (item) => {
-        const idLeader = item.member;
-        const leader = await this.memberController.getMemberById(
-          this.$api,
-          idLeader
-        );
-        item.leader = leader;
-      });
+    async getAllMeeting() {
+      console.log('deletou')
+      this.reunioes = await this.meetingController.getAllMeeting(this.$api);
     },
 
     showSnackbar(snackbarDetails) {
