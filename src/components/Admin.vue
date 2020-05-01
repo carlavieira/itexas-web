@@ -36,6 +36,7 @@
           :key="item.text"
           router
           :to="item.path"
+          v-bind:class="{'admin-item':(item.adminItem == true)}"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -44,6 +45,7 @@
             <v-list-item-title>{{ item.text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
         <v-list-item link @click="logout()">
           <v-list-item-icon>
             <v-icon>mdi-exit-to-app</v-icon>
@@ -72,39 +74,46 @@ export default {
         {
           text: "Dashboard",
           icon: "mdi-view-dashboard-outline",
-          path: "/adm/dashboard"
+          path: "/adm/dashboard",
         },
         //Admin
         {
           text: "Membros",
           icon: "mdi-account",
-          path: "/adm/membros"
+          path: "/adm/membros",
+          adminItem: true,
+
         },
         {
           text: "Office Hours",
           icon: "mdi-alarm-check",
-          path: "/adm/officeHours"
+          path: "/adm/officeHours",
+          adminItem: true,
         },
         {
           text: "Reuniões",
           icon: "mdi-account-multiple",
-          path: "/adm/reuniao"
+          path: "/adm/reuniao",
+          adminItem: true,
         },
         {
           text: "Eventos",
           icon: "mdi-account-group",
-          path: "/adm/eventos"
+          path: "/adm/eventos",
+          adminItem: true,
         },
         {
           text: "Relatórios",
           icon: "mdi-clipboard-text-multiple",
-          path: "/adm/membresia"
+          path: "/adm/membresia",
+          adminItem: true,
         },
         //Members
         {
           text: "Check-in/Check-out",
           icon: "mdi-view-dashboard-outline",
-          path: "/dashboard"
+          path: "/dashboard",
+          adminItem: true,
         },
         {
           text: "Meu Perfil",
@@ -141,8 +150,6 @@ export default {
           icon: "mdi-account",
           path: "/adm/membros"
         },
-
-
       ],
       drawer: true
     };
@@ -164,5 +171,8 @@ export default {
 <style scoped>
 .radius {
   border-radius: 6px !important;
+}
+.admin-item {
+  background-color: #2f2f2f;
 }
 </style>
