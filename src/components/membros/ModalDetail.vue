@@ -125,7 +125,7 @@
             <v-text-field
               outlined
               prepend-inner-icon="mdi-briefcase"
-              v-model="member.post"
+              v-model="member.post.name"
               :disabled="!editMember"
               label="Cargo"
               hide-details
@@ -146,7 +146,7 @@
               outlined
               prepend-inner-icon="mdi-account-star"
               label="Líder"
-              v-model="member.leader"
+              v-model="member.leader.first_name"
               :disabled="!editMember"
               hide-details
             ></v-text-field>
