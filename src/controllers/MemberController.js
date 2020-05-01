@@ -1,9 +1,9 @@
 export default {
   getAllMembers(api) {
     const response = api
-      .get("members/")
+      .get("list-members/")
       .then(function(response) {
-        /* console.log(response.data); */
+        console.log(response.data)
         return response.data;
       })
       .catch(function(error) {
@@ -14,7 +14,7 @@ export default {
 
   getMemberById(api, id) {
     return api
-      .get(`members/${id}`)
+      .get(`list-members//${id}`)
       .then(function(response) {
         return response.data;
       })
@@ -35,7 +35,7 @@ export default {
 
   editMember(api, memberDetails) {
     return api
-      .put(`members/${memberDetails.id}/`, memberDetails)
+      .put(`manage-member/${memberDetails.id}/`, memberDetails)
       .then((res) => res.data)
       .catch((e) => {
         throw e;
@@ -44,7 +44,7 @@ export default {
 
   deleteMember(api, memberDetails) {
     return api
-      .delete(`members/${memberDetails.id}/`, memberDetails)
+      .delete(`manage-member/${memberDetails.id}/`, memberDetails)
       .then((res) => res.data)
       .catch((e) => {
         throw e;

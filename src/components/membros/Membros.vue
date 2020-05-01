@@ -29,8 +29,11 @@
             :sort-by="'full_name'"
             :sort-desc="false"
           >
-            <template v-slot:item.participante="{ item }">{{ item.full_name }}</template>
-
+            <template v-slot:item.member="{ item }">{{ item.full_name }}</template>
+            <template v-slot:item.leader="{ item }">
+              <span v-if="item.leader"> {{ item.leader.first_name }} </span>
+              <span v-else> - </span>
+            </template>
             <template v-slot:item.actions="{ item }">
               <v-icon small @click="memberShow(item)">mdi-account-details</v-icon>
             </template>
@@ -76,8 +79,8 @@ export default {
           align: "start",
           value: "full_name"
         },
-        { text: "Cargo", value: "post" },
-        { text: "Área", value: "department" },
+        { text: "Cargo", value: "post.name" },
+        { text: "Área", value: "department.name" },
         { text: "Líder", value: "leader" },
         { text: "Detalhes", value: "actions", sortable: false }
       ],
