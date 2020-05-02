@@ -1,9 +1,8 @@
-let url = "meeting_participation/";
 
 export default {
   createParticipationMeeting(api, participationDetails) {
     const response = api
-      .post(url, participationDetails)
+      .post("manage-meeting-participation/", participationDetails)
       .then(function(response) {
         return response.data;
       })
@@ -15,7 +14,7 @@ export default {
   },
   getParticipantsInMeeting(api, meetingId) {
     const response = api
-      .get(`meeting_participation/?meeting=${meetingId}`)
+      .get(`list-meeting-participation/?meeting=${meetingId}`)
       .then(function(response) {
         return response.data;
       })
@@ -25,7 +24,7 @@ export default {
     return response;
   },
   editParticipationMeeting(api, participationDetails) {
-    let url = `meeting_participation/${participationDetails.id}/`;
+    let url = `manage-meeting-participation/${participationDetails.id}/`;
     const response = api
       .put(url, participationDetails)
       .then(function(response) {
@@ -38,7 +37,7 @@ export default {
     return response;
   },
   deleteParticipationMeeting(api, participationID) {
-    let url = `meeting_participation/${participationID}/`;
+    let url = `manage-meeting-participation/${participationID}/`;
     const response = api
       .delete(url)
       .then(function(response) {

@@ -151,12 +151,10 @@ export default {
     },
 
     async getAllMeeting() {
-      console.log('deletou')
       this.reunioes = await this.meetingController.getAllMeeting(this.$api);
     },
 
     showSnackbar(snackbarDetails) {
-      console.log(snackbarDetails);
       this.snackbar = true;
       this.text = snackbarDetails.text;
       this.color = snackbarDetails.color;

@@ -3,7 +3,6 @@ export default {
     const response = api
       .get("list-members/")
       .then(function(response) {
-        console.log(response.data)
         return response.data;
       })
       .catch(function(error) {
@@ -14,7 +13,7 @@ export default {
 
   getMemberById(api, id) {
     return api
-      .get(`list-members//${id}`)
+      .get(`list-members/${id}/`)
       .then(function(response) {
         return response.data;
       })
@@ -24,7 +23,6 @@ export default {
   },
 
   createMember(api, memberDetails) {
-    console.log(memberDetails);
     return api
       .post("rest-auth/registration/", memberDetails)
       .then((res) => res.data)
@@ -52,7 +50,7 @@ export default {
   },
   getAllLiderandos(api, id) {
     return api
-      .get(`members/?leader=${id}`)
+      .get(`members/?leader=${id}/`)
       .then(function(response) {
         return response.data;
       })

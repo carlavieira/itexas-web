@@ -226,10 +226,12 @@ export default {
         meetingId
       );
 
+
+      /* REMOVER ESSE GETMEMBERBY ID */
       this.participantes.forEach(async item => {
         const member = await this.memberController.getMemberById(
           this.$api,
-          item.member
+          item.member.id
         );
         item.full_name = member.first_name + " " + member.last_name;
         this.participantesWithName.push(item);

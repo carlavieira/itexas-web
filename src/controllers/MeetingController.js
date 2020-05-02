@@ -7,7 +7,6 @@ export default {
     const response = api
       .get(url)
       .then(function(response) {
-        console.log(response.data);
         return response.data;
       })
       .catch(function(error) {
@@ -44,6 +43,7 @@ export default {
   },
 
   editMeeting(api, meetingDetails) {
+    meetingDetails.member = meetingDetails.member.id
     url = `manage-meetings/${meetingDetails.id}/`;
 
     const response = api

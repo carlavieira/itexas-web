@@ -323,6 +323,10 @@ export default {
             part
           );
         } else {
+          participante.meeting = participante.meeting.id;
+          console.log(participante)
+          participante.member = participante.member.id
+          console.log(participante)
           await this.participationController.editParticipationMeeting(
             this.$api,
             participante
