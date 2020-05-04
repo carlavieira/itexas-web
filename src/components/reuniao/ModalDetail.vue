@@ -233,7 +233,8 @@ export default {
     this.populaSelectLider();
     this.date = this.meeting.date;
     this.time = this.meeting.time;
-    this.hostName = this.meeting.member.first_name + " " + this.meeting.member.last_name;
+    this.hostName =
+      this.meeting.member.first_name + " " + this.meeting.member.last_name;
   },
 
   watch: {
@@ -273,6 +274,7 @@ export default {
         await this.memberController.getAllMembers(this.$api)
       );
       this.leaders = this.setFullName(this.leaders);
+      console.log(this.leaders);
     },
 
     setFullName(array) {
@@ -299,6 +301,7 @@ export default {
       /* Edit Meeting */
       this.meeting.date = this.date;
       this.meeting.time = this.time;
+      console.log(this.meeting);
       await this.meetingController
         .editMeeting(this.$api, this.meeting)
         .then((res) => {
@@ -309,6 +312,9 @@ export default {
             this.$emit("close");
             this.$emit("showSnackbar", this.snackbarDetail);
           }, 1000);
+        })
+        .catch(function(error) {
+          console.log(error);
         });
 
       /* Edit Participation */
@@ -324,9 +330,7 @@ export default {
           );
         } else {
           participante.meeting = participante.meeting.id;
-          console.log(participante)
-          participante.member = participante.member.id
-          console.log(participante)
+          participante.member = participante.member.id;
           await this.participationController.editParticipationMeeting(
             this.$api,
             participante
@@ -349,19 +353,20 @@ export default {
       this.participantes = participantes.participantesWithName;
       this.participantesToDelete = participantes.participantesDeleted;
     },
-    async deleteMeeting(){
-      return await this.meetingController.deleteMeeting(this.$api, this.meeting.id)
-      .then((res) => {
-        console.log(res);
-        this.$emit("getAllMeeting");
+    async deleteMeeting() {
+      return await this.meetingController
+        .deleteMeeting(this.$api, this.meeting.id)
+        .then((res) => {
+          console.log(res);
+          this.$emit("getAllMeeting");
 
-        setTimeout(() => {
-          this.$emit("close");
-          this.$emit("showSnackbar", this.snackbarDetail);
-        }, 1000);
-      })
-    }
-  }
+          setTimeout(() => {
+            this.$emit("close");
+            this.$emit("showSnackbar", this.snackbarDetail);
+          }, 1000);
+        });
+    },
+  },
 };
 </script>
 

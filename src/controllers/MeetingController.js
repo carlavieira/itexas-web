@@ -3,7 +3,7 @@ import participationController from "./ParticipationController";
 
 export default {
   getAllMeeting(api) {
-    url= "list-meetings/"
+    url = "list-meetings/";
     const response = api
       .get(url)
       .then(function(response) {
@@ -43,7 +43,7 @@ export default {
   },
 
   editMeeting(api, meetingDetails) {
-    meetingDetails.member = meetingDetails.member.id
+    console.log(meetingDetails);
     url = `manage-meetings/${meetingDetails.id}/`;
 
     const response = api
@@ -70,6 +70,4 @@ export default {
       });
     return response;
   },
-
-
 };
