@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">
+      {{ text }}</v-snackbar
+    >
     <v-row class="px-4">
       <h2>Eventos</h2>
       <v-spacer></v-spacer>
@@ -58,6 +61,8 @@
       :show="showDetail"
       @close="showDetail = false"
       :event="eventDetail"
+      v-on:showSnackbar="showSnackbar"
+      @getAllEvents="getAllEvents()"
     >
     </modalDetail>
   </v-container>
@@ -87,6 +92,10 @@ export default {
       eventController,
       eventDetail: null,
       showDetail: false,
+      snackbar: false,
+      text: "",
+      timeout: 3000,
+      color: "",
       headersEvento: [
         {
           text: "Nome",
@@ -111,8 +120,19 @@ export default {
     },
     eventShow(event) {
       this.eventDetail = event;
-      console.log(this.eventDetail);
       this.showDetail = true;
+    },
+    showSnackbar(snackbarDetails) {
+      this.snackbar = true;
+      this.text = snackbarDetails.text;
+      this.color = snackbarDetails.color;
+    },
+    async getAllEvents() {
+      let res = await this.eventController.getAllEvents(this.$api);
+      this.eventos = res.data;
+    },
+    async deleteEvent() {
+      await this.eventController.deleteEvent(this.$api, this.event);
     },
   },
 };

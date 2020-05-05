@@ -60,7 +60,8 @@
         </span>
 
         <span v-if="!editEvent" class="subheading font-weight-regular"
-          >(Responsável: {{ this.hostName }} )</span
+          >(Responsável: {{ this.event.member.first_name }}
+          {{ this.event.member.last_name }} )</span
         >
       </v-layout>
 
@@ -172,10 +173,12 @@
 
 <script>
 import memberController from "../../controllers/MemberController";
+import eventController from "../../controllers/EventController";
 export default {
   data: (vm) => ({
     editEvent: false,
     memberController,
+    eventController,
     eventDetails: {},
     hostName: "-",
     dialog: false,
@@ -193,6 +196,10 @@ export default {
       { name: "Conferência", value: "CF" },
       { name: "Outros", value: "OU" },
     ],
+    snackbarDetail: {
+      color: "warning",
+      text: "Reunião Atualizada com sucesso",
+    },
   }),
 
   created() {
@@ -212,11 +219,41 @@ export default {
   },
 
   methods: {
-    sendEdit() {
-      console.log("editado");
+    async sendEdit() {
+      await this.eventController
+        .editEvent(this.$api, this.event)
+        .then((res) => {
+          console.log(res);
+          this.$emit("getAllEvents");
+
+          this.snackbarDetail.text = "Evento editado com sucesso";
+          this.snackbarDetail.color = "warning";
+          setTimeout(() => {
+            this.$emit("close");
+            this.$emit("showSnackbar", this.snackbarDetail);
+          }, 1000);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
-    deleteEvent() {
-      console.log("deleteado");
+    async deleteEvent() {
+      await this.eventController
+        .deleteEvent(this.$api, this.event)
+        .then((res) => {
+          console.log(res);
+          this.$emit("getAllEvents");
+
+          this.snackbarDetail.text = "Evento deletado com sucesso";
+          this.snackbarDetail.color = "error";
+          setTimeout(() => {
+            this.$emit("close");
+            this.$emit("showSnackbar", this.snackbarDetail);
+          }, 1000);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
 
     formatDate(date) {
