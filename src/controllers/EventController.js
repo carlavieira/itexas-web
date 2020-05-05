@@ -1,4 +1,4 @@
-const url = "eventsApi/";
+const url = "list-events/";
 
 export default {
   getAllEvents(api) {
@@ -13,9 +13,10 @@ export default {
       });
     return response;
   },
+
   createEvent(api, eventDetails) {
     const response = api
-      .post(url, eventDetails)
+      .post("manage-event/", eventDetails)
       .then(function(response) {
         // handle success
         return response.data;
@@ -25,5 +26,5 @@ export default {
         console.log(error);
       });
     return response;
-  }
+  },
 };

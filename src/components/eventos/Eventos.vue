@@ -26,6 +26,7 @@
               hide-details
             ></v-text-field>
           </v-card-title>
+
           <v-data-table
             no-data-text="Nenhum evento cadastrado"
             no-results-text="Nenhum evento encontrado"
@@ -33,11 +34,19 @@
             :items="eventos"
             :search="search"
           >
+            <template v-slot:item.member="{ item }">
+              <span> {{ item.member.first_name }} </span>
+            </template>
             <template v-slot:item.date="{ item }">
               <span>{{ formatDate(item.date) }}</span>
             </template>
             <template v-slot:item.time="{ item }">
               <span>{{ formatTime(item.time) }}</span>
+            </template>
+            <template v-slot:item.actions="{ item }">
+              <v-icon small @click="meetingShow(item)"
+                >mdi-dots-horizontal</v-icon
+              >
             </template>
           </v-data-table>
         </v-card>
@@ -76,6 +85,7 @@ export default {
         { text: "Lider", value: "member", align: "center" },
         { text: "Data", value: "date", align: "center" },
         { text: "Hora", value: "time", align: "center" },
+        { text: "Detalhes", value: "details", align: "center" },
       ],
       eventos: [],
     };
