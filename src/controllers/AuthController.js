@@ -1,6 +1,5 @@
 import router from "../router/index";
 
-
 export default {
   login(http, email, senha) {
     let request = new Object();
@@ -13,9 +12,10 @@ export default {
 
     return http
       .post(url, request)
-      .then(res => {
+      .then((res) => {
         localStorage.setItem("access_token", res.data.token);
         localStorage.setItem("user_id", res.data.user.id);
+        localStorage.setItem("is_staff", res.data.user.is_staff);
         this.routerPath(res);
         return res;
       })
@@ -27,22 +27,23 @@ export default {
   routerPath(res) {
     res.data.user.is_staff
       ? router.push("/adm/dashboard")
-      : router.push("/member/perfil");
+      : router.push("/member/dashboard");
   },
 
-  logout(http){
+  logout(http) {
     let url = "http://itexas.pythonanywhere.com/rest-auth/logout/";
 
     return http
       .post(url)
-      .then(res => {
+      .then((res) => {
         localStorage.removeItem("access_token");
-        localStorage.removeItem("user_id")
-        router.push("/login")
+        localStorage.removeItem("user_id");
+        localStorage.removeItem("is_staff");
+        router.push("/login");
         return res;
       })
-      .catch(err => {
+      .catch((err) => {
         return err;
       });
-  }
+  },
 };

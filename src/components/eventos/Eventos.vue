@@ -43,8 +43,8 @@
             <template v-slot:item.time="{ item }">
               <span>{{ formatTime(item.time) }}</span>
             </template>
-            <template v-slot:item.actions="{ item }">
-              <v-icon small @click="meetingShow(item)"
+            <template v-slot:item.details="{ item }">
+              <v-icon small @click="eventShow(item)"
                 >mdi-dots-horizontal</v-icon
               >
             </template>
@@ -53,17 +53,26 @@
       </v-flex>
     </v-row>
     <NovoEvento :show="btnEvento" @close="btnEvento = false"></NovoEvento>
+    <modalDetail
+      v-if="showDetail"
+      :show="showDetail"
+      @close="showDetail = false"
+      :event="eventDetail"
+    >
+    </modalDetail>
   </v-container>
 </template>
 
 <script>
 import NovoEvento from "./CadastrarEvento.vue";
 import eventController from "../../controllers/EventController";
+import modalDetail from "./ModalDetail.vue";
 import moment from "moment";
 
 export default {
   components: {
     NovoEvento,
+    modalDetail,
   },
 
   async created() {
@@ -76,6 +85,8 @@ export default {
       btnEvento: false,
       search: "",
       eventController,
+      eventDetail: null,
+      showDetail: false,
       headersEvento: [
         {
           text: "Nome",
@@ -97,6 +108,11 @@ export default {
     formatTime(time) {
       let hora = time.split(":");
       return `${hora[0]}:${hora[1]}`;
+    },
+    eventShow(event) {
+      this.eventDetail = event;
+      console.log(this.eventDetail);
+      this.showDetail = true;
     },
   },
 };
