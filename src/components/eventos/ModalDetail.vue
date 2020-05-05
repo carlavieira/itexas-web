@@ -160,6 +160,11 @@
             </v-time-picker>
           </v-dialog>
         </v-layout>
+        <v-layout col-xs-12 col-sm-6 row justify-center v-if="editEvent">
+          <v-btn class="ma-2 mt-4" @click="sendEdit()" depressed color="success"
+            >Salvar</v-btn
+          >
+        </v-layout>
       </v-layout>
     </v-card>
   </v-dialog>
@@ -207,6 +212,13 @@ export default {
   },
 
   methods: {
+    sendEdit() {
+      console.log("editado");
+    },
+    deleteEvent() {
+      console.log("deleteado");
+    },
+
     formatDate(date) {
       if (!date) return null;
 
