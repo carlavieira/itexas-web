@@ -204,8 +204,8 @@ export default {
     leader: "",
     leaders: [],
     snackbarDetail: {
-      color: "warning",
-      text: "Reunião Atualizada com sucesso",
+      color: "",
+      text: "",
     },
     hostName: "",
     participantesToDelete: [],
@@ -274,7 +274,6 @@ export default {
         await this.memberController.getAllMembers(this.$api)
       );
       this.leaders = this.setFullName(this.leaders);
-      console.log(this.leaders);
     },
 
     setFullName(array) {
