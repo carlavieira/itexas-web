@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <v-row class="px-4 py-2">
@@ -98,6 +99,9 @@
 </template>
 
 <script>
+import eventController from "../../controllers/EventController";
+import participationController from "../../controllers/ParticipationController";
+
 export default {
   data: () => ({
     focus: "",
@@ -110,10 +114,14 @@ export default {
     },
     start: null,
     end: null,
+    eventController,
+    participationController,
     selectedEvent: {},
     selectedElement: null,
     selectedOpen: false,
     events: [],
+    eventos: [],
+    meetings: [],
     colors: [
       "blue",
       "indigo",
@@ -164,6 +172,9 @@ export default {
       });
     },
   },
+  created() {
+    this.getEvents();
+  },
   mounted() {
     this.$refs.calendar.checkChange();
   },
@@ -198,33 +209,84 @@ export default {
       }
       nativeEvent.stopPropagation();
     },
+    async getEvents() {
+      if (localStorage.getItem("is_staff")) {
+        this.eventos = await this.eventController.getAllEvents(this.$api);
+      }
+      // eslint-disable-next-line no-constant-condition
+      if (true) {
+        const events = [];
+        const memberID = localStorage.getItem("user_id");
+        const eventosMembro = await this.participationController.getMemberParticipationEvent(
+          this.$api,
+          memberID
+        );
+        eventosMembro.forEach((evento) => {
+          delete evento.member;
+          delete evento.event.member;
+          delete evento.url;
+
+          events.push({
+            color: "orange",
+            start: this.formatDate(evento.event.date, evento.event.time, false),
+            end: this.formatDate(evento.event.date, evento.event.time, true),
+            name: evento.event.type
+          })
+
+        });
+        this.events = events;
+        console.log(this.events);
+
+        /*
+          color: "orange"
+          end: "2020-5-10 17:15"
+          name: "Evento"
+          start: "2020-5-10 16:15"
+        */
+      }
+    },
+    formatDate(date, time, plusTwoHours) {
+      if (plusTwoHours) {
+        // eslint-disable-next-line no-unused-vars
+        let timePlusHour = new Date(`2020-05-05 ${time}`);
+        timePlusHour =
+         `${timePlusHour.getHours() + 2}:${timePlusHour.getMinutes()}`;
+          return `${date} ${timePlusHour}`
+      } else {
+        return `${date} ${time}`;
+      }
+    },
+    /*
     updateRange({ start, end }) {
+      
       const events = [];
       const min = new Date(`${start.date}T00:00:00`);
       const max = new Date(`${end.date}T23:59:59`);
-      const days = (max.getTime() - min.getTime()) / 86400000;
-      const eventCount = this.rnd(days, days + 20);
-      console.log(eventCount);
-      const quantidadeEventos = 8;
-      /* Definir o flag do for abaixo com a quantidade eventos */
+
+      const quantidadeEventos = 1;
       for (let i = 0; i < quantidadeEventos; i++) {
         const allDay = this.rnd(0, 3) === 0;
         const firstTimestamp = this.rnd(min.getTime(), max.getTime());
         const first = new Date(firstTimestamp - (firstTimestamp % 900000));
         const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
         const second = new Date(first.getTime() + secondTimestamp);
+        
         events.push({
           name: this.names[this.rnd(0, this.names.length - 1)],
           start: this.formatDate(first, !allDay),
           end: this.formatDate(second, !allDay),
           color: this.colors[this.rnd(0, this.colors.length - 1)],
         });
+        
         console.log(events);
       }
       this.start = start;
       this.end = end;
       this.events = events;
+      
     },
+    */
+
     nth(d) {
       return d > 3 && d < 21
         ? "th"
@@ -232,12 +294,6 @@ export default {
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
-    },
-    formatDate(a, withTime) {
-      return withTime
-        ? `${a.getFullYear()}-${a.getMonth() +
-            1}-${a.getDate()} ${a.getHours()}:${a.getMinutes()}`
-        : `${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()}`;
     },
   },
 };
