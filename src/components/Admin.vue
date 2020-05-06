@@ -103,7 +103,7 @@ export default {
           adminItem: true,
         },
         {
-          text: "Relatórios",
+          text: "Critérios de Membresia",
           icon: "mdi-clipboard-text-multiple",
           path: "/adm/membresia",
           adminItem: true,
@@ -138,7 +138,7 @@ export default {
         {
           text: "Meu Critério",
           icon: "mdi-clipboard-text-multiple",
-          path: "/adm/membresia"
+          path: "/adm/meu-criterio"
         },
         {
           text: "Calendário",
