@@ -36,7 +36,7 @@
           :key="item.text"
           router
           :to="item.path"
-          v-bind:class="{'admin-item':(item.adminItem == true)}"
+          v-bind:class="{ 'admin-item': item.adminItem == true }"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -57,14 +57,14 @@
       </v-list>
     </v-navigation-drawer>
 
-    <div class="pa-3" style="background-color: #f1f1f1; height: 100vh;">
+    <div class="pa-3" style="background-color: #f1f1f1; min-height: 100vh;">
       <router-view> </router-view>
     </div>
   </div>
 </template>
 
 <script>
-import authController from "../controllers/AuthController"
+import authController from "../controllers/AuthController";
 
 export default {
   data() {
@@ -82,7 +82,6 @@ export default {
           icon: "mdi-account",
           path: "/adm/membros",
           adminItem: true,
-
         },
         {
           text: "Office Hours",
@@ -118,48 +117,50 @@ export default {
         {
           text: "Meu Perfil",
           icon: "mdi-account-circle",
-          path: "/adm/perfil"
+          path: "/adm/perfil",
         },
         {
           text: "Minhas Office Hours",
           icon: "mdi-alarm-check",
-          path: "/adm/officeHours"
+          path: "/adm/officeHours",
         },
         {
           text: "Minhas Reuniões",
           icon: "mdi-account-multiple",
-          path: "/adm/reuniao"
+          path: "/adm/reuniao",
         },
         {
           text: "Meus Eventos",
           icon: "mdi-account-group",
-          path: "/adm/eventos"
+          path: "/adm/eventos",
         },
         {
           text: "Meu Critério",
           icon: "mdi-clipboard-text-multiple",
-          path: "/adm/meu-criterio"
+          path: "/adm/meu-criterio",
         },
         {
           text: "Calendário",
           icon: "mdi-calendar-month",
-          path: "/adm/calendario"
-        }
+          path: "/adm/calendario",
+        },
       ],
-      drawer: true
+      drawer: true,
     };
   },
 
-  methods:{
-    logout(){
-      this.authController.logout(this.$http)
-      .then(res => {
-        console.log(res)
-      }).catch(e => {
-        console.log(e)
-      })
-    }
-  }
+  methods: {
+    logout() {
+      this.authController
+        .logout(this.$http)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+  },
 };
 </script>
 
