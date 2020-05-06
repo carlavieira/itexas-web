@@ -45,6 +45,7 @@ export default {
   editMeeting(api, meetingDetails) {
     console.log(meetingDetails);
     url = `manage-meetings/${meetingDetails.id}/`;
+    meetingDetails.member = meetingDetails.member.id;
 
     const response = api
       .put(url, meetingDetails)

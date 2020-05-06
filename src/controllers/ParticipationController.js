@@ -1,4 +1,3 @@
-
 export default {
   createParticipationMeeting(api, participationDetails) {
     const response = api
@@ -40,6 +39,32 @@ export default {
     let url = `manage-meeting-participation/${participationID}/`;
     const response = api
       .delete(url)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        // handle error
+        console.log(error);
+      });
+    return response;
+  },
+  getMemberParticipationEvent(api, participationID) {
+    let url = `list-event-participation/?member=${participationID}`;
+    const response = api
+      .get(url)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        // handle error
+        console.log(error);
+      });
+    return response;
+  },
+  getMemberParticipationMeeting(api, participationID) {
+    let url = `list-meeting-participation/?member=${participationID}`;
+    const response = api
+      .get(url)
       .then(function(response) {
         return response.data;
       })

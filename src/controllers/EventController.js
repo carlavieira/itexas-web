@@ -3,7 +3,6 @@ export default {
     const response = api
       .get("list-events/")
       .then(function(response) {
-        console.log(response.data);
         return response;
       })
       .catch(function(error) {
@@ -28,6 +27,7 @@ export default {
 
   editEvent(api, eventDetails) {
     let url = `manage-event/${eventDetails.id}/`;
+    eventDetails.member = eventDetails.member.id;
     const response = api
       .put(url, eventDetails)
       .then(function(response) {
