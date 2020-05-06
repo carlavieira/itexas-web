@@ -85,12 +85,20 @@
                 <p v-html="selectedEvent.lider"></p>
                 <p v-html="selectedEvent.presenca"></p>
                 <div class="my-2" v-if="selectedEvent.markAttendance == true">
-                  <v-btn small color="success" @click="mudarPresenca" dark
+                  <v-btn
+                    small
+                    color="success"
+                    @click="mudarPresenca(selectedEvent.event)"
+                    dark
                     >Marcar Presença</v-btn
                   >
                 </div>
                 <div v-if="selectedEvent.markAttendance == false" class="my-2">
-                  <v-btn small color="error" @click="mudarPresenca" dark
+                  <v-btn
+                    small
+                    color="error"
+                    @click="mudarPresenca(selectedEvent.event)"
+                    dark
                     >Desmarcar Presença</v-btn
                   >
                 </div>
@@ -256,6 +264,7 @@ export default {
             lider: `Lider: ${evento.event.member.first_name} ${evento.event.member.last_name}`,
             presenca: `Presença: ${evento.attendance}`,
             markAttendance: evento.attendance ? false : true,
+            event: evento,
           });
         });
       }
@@ -324,8 +333,18 @@ export default {
         return `${date} ${time}`;
       }
     },
-    mudarPresenca() {
-      console.log("mudar");
+    async mudarPresenca(evento) {
+      console.log(evento);
+      const participationDetail = {
+        attendance: !evento.attendance,
+        event: evento.event.id,
+        id: evento.id,
+        member: localStorage.getItem("user_id"),
+      };
+      await this.participationController.editParticipationEvent(
+        this.$api,
+        participationDetail
+      );
     },
     nth(d) {
       return d > 3 && d < 21

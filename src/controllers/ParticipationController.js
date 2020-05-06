@@ -74,4 +74,17 @@ export default {
       });
     return response;
   },
+  editParticipationEvent(api, participationDetails) {
+    let url = `manage-event-participation/${participationDetails.id}/`;
+    const response = api
+      .put(url, participationDetails)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        // handle error
+        console.log(error);
+      });
+    return response;
+  },
 };
