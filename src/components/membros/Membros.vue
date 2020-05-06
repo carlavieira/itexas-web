@@ -3,7 +3,7 @@
     <v-row class="px-4">
       <h2>Membros</h2>
       <v-spacer></v-spacer>
-      <v-btn @click="btnMembro = true" title="Cadastrar novo membro" small color="secondary" fab>
+      <v-btn v-if="$route.name == 'members'" @click="btnMembro = true" title="Cadastrar novo membro" small color="secondary" fab>
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-row>

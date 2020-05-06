@@ -144,12 +144,7 @@ export default {
           text: "Calendário",
           icon: "mdi-calendar-month",
           path: "/adm/calendario"
-        },
-        {
-          text: "Contact List",
-          icon: "mdi-account",
-          path: "/adm/membros"
-        },
+        }
       ],
       drawer: true
     };

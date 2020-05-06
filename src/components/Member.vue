@@ -76,6 +76,11 @@ export default {
           icon: "mdi-account-circle",
           path: "/member/perfil"
         },
+        {
+          text: "Contact List",
+          icon: "mdi-account",
+          path: "/member/contactList"
+        }
       ],
       drawer: true
     };

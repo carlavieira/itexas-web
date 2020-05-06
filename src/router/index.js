@@ -43,7 +43,8 @@ const routes = [
     name: "memberTemplate",
     component: memberTemplate,
     children: [
-      { path: "/member/perfil", name: "perfil", component:  perfil}
+      { path: "/member/perfil", name: "perfil", component:  perfil},
+      { path: "/member/contactList", name: "contactList", component: members}
     ]
   }
 ];
