@@ -3,21 +3,20 @@ import VueRouter from "vue-router";
 import login from "../components/Login.vue";
 
 import admTemplate from "../components/Admin.vue";
-import dashboard from "../components/Dashboard.vue"
+import dashboard from "../components/Dashboard.vue";
 import members from "../components/membros/Membros.vue";
 import reuniao from "../components/reuniao/Reuniao.vue";
 import eventos from "../components/eventos/Eventos.vue";
 import calendario from "../components/calendario/Calendario.vue";
 import membershipCriteria from "../components/membershipCriteria/MembershipCriteria.vue";
-import perfil from "../components/Perfil.vue"
-import officeHours from "../components/officeHours/OfficeHours.vue"
+import perfil from "../components/Perfil.vue";
+import officeHours from "../components/officeHours/OfficeHours.vue";
 
 import memberTemplate from "../components/Member.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
-  
   { path: "*", redirect: "/login" },
   { path: "/", redirect: "/login" },
   { path: "/login", name: "login", component: login },
@@ -33,9 +32,13 @@ const routes = [
       { path: "/adm/eventos", name: "eventos", component: eventos },
       { path: "/adm/calendario", name: "calendario", component: calendario },
       { path: "/adm/perfil", name: "perfil", component: perfil },
-      { path: "/adm/officeHours", name: "officeHours", component: officeHours},
-      { path: "/adm/membresia", name: "membershipCriteria", component: membershipCriteria}
-    ]
+      { path: "/adm/officeHours", name: "officeHours", component: officeHours },
+      {
+        path: "/adm/membresia",
+        name: "membershipCriteria",
+        component: membershipCriteria,
+      },
+    ],
   },
 
   {
@@ -43,15 +46,17 @@ const routes = [
     name: "memberTemplate",
     component: memberTemplate,
     children: [
-      { path: "/member/perfil", name: "perfil", component:  perfil},
-      { path: "/member/contactList", name: "contactList", component: members}
-    ]
-  }
+      { path: "/member/contactList", name: "contactList", component: members},
+      { path: "/member/dashboard", name: "dashboard", component: dashboard },
+      { path: "/member/perfil", name: "perfil", component: perfil },
+      { path: "/member/calendario", name: "calendario", component: calendario },
+    ],
+  },
 ];
 
 const router = new VueRouter({
-  mode: 'history',
-  routes
+  mode: "history",
+  routes,
 });
 
 export default router;

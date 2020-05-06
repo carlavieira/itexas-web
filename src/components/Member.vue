@@ -1,5 +1,3 @@
-
-
 <template>
   <div>
     <v-app-bar
@@ -64,7 +62,7 @@
 </template>
 
 <script>
-import authController from "../controllers/AuthController"
+import authController from "../controllers/AuthController";
 
 export default {
   data() {
@@ -72,9 +70,19 @@ export default {
       authController,
       items: [
         {
+          text: "Dashboard",
+          icon: "mdi-view-dashboard-outline",
+          path: "/member/dashboard",
+        },
+        {
           text: "Perfil",
           icon: "mdi-account-circle",
-          path: "/member/perfil"
+          path: "/member/perfil",
+        },
+        {
+          text: "Calendário",
+          icon: "mdi-calendar-month",
+          path: "/member/calendario",
         },
         {
           text: "Contact List",
@@ -82,20 +90,22 @@ export default {
           path: "/member/contactList"
         }
       ],
-      drawer: true
+      drawer: true,
     };
   },
 
-  methods:{
-    logout(){
-      this.authController.logout(this.$http)
-      .then(res => {
-        console.log(res)
-      }).catch(e => {
-        console.log(e)
-      })
-    }
-  }
+  methods: {
+    logout() {
+      this.authController
+        .logout(this.$http)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+  },
 };
 </script>
 
