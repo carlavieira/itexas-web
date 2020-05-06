@@ -182,7 +182,7 @@ export default {
     eventDetails: {},
     hostName: "-",
     dialog: false,
-    date: new Date().toISOString().substr(0, 10),
+    date: "",
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     menu1: false,
     menu2: false,
@@ -202,9 +202,17 @@ export default {
     },
   }),
 
+  computed: {
+    computedDateFormatted() {
+      return this.formatDate(this.date);
+    },
+  },
+
   created() {
     this.hostName = `${this.event.member.first_name} ${this.event.member.last_name}`;
     this.populaSelectLider();
+    this.date = this.event.date;
+    this.time = this.event.time;
   },
 
   props: {
@@ -220,6 +228,9 @@ export default {
 
   methods: {
     async sendEdit() {
+      this.event.date = this.date;
+      console.log(this.date);
+      console.log(this.event);
       await this.eventController
         .editEvent(this.$api, this.event)
         .then((res) => {
