@@ -99,6 +99,7 @@
 
 <script>
 import eventController from "../../controllers/EventController";
+import meetingController from "../../controllers/MeetingController";
 import participationController from "../../controllers/ParticipationController";
 
 export default {
@@ -115,12 +116,14 @@ export default {
     end: null,
     eventController,
     participationController,
+    meetingController,
     selectedEvent: {},
     selectedElement: null,
     selectedOpen: false,
     events: [],
     eventos: [],
     meetings: [],
+    reunioes: [],
     colors: [
       "blue",
       "indigo",
@@ -173,6 +176,7 @@ export default {
   },
   created() {
     this.getEvents();
+    this.getMeetings();
   },
   mounted() {
     this.$refs.calendar.checkChange();
@@ -210,15 +214,14 @@ export default {
     },
     async getEvents() {
       if (localStorage.getItem("is_staff")) {
-        const events = [];
+        /*const events = [];*/
         const eventosAdmin = await this.eventController.getAllEvents(this.$api);
 
-        console.log(eventosAdmin.data);
         eventosAdmin.data.forEach((evento) => {
           delete evento.member;
           delete evento.url;
 
-          events.push({
+          this.events.push({
             color: "green",
             start: this.formatDate(evento.date, evento.time, false),
             end: this.formatDate(evento.date, evento.time, true),
@@ -226,8 +229,7 @@ export default {
           });
         });
 
-        this.events = events;
-        console.log(this.events);
+        /*this.events = events;*/
       } else {
         const events = [];
         const memberID = localStorage.getItem("user_id");
@@ -248,7 +250,50 @@ export default {
           });
         });
         this.events = events;
-        console.log(this.events);
+      }
+    },
+    async getMeetings() {
+      if (localStorage.getItem("is_staff")) {
+        const meetingsAdmin = await this.meetingController.getAllMeeting(
+          this.$api
+        );
+
+        meetingsAdmin.forEach((meeting) => {
+          delete meeting.member;
+          delete meeting.url;
+
+          this.events.push({
+            color: "red",
+            start: this.formatDate(meeting.date, meeting.time, false),
+            end: this.formatDate(meeting.date, meeting.time, true),
+            name: meeting.type,
+          });
+        });
+
+        /*meetings.map((meeting) => {
+          this.events.push(meeting);
+        });*/
+      } else {
+        const meetings = [];
+        const memberID = localStorage.getItem("user_id");
+        const meetingsMembro = await this.participationController.getMemberParticipationEvent(
+          this.$api,
+          memberID
+        );
+        meetingsMembro.forEach((meeting) => {
+          delete meeting.member;
+
+          delete meeting.url;
+
+          meeting.push({
+            color: "orange",
+            start: this.formatDate(meeting.date, meeting.time, false),
+            end: this.formatDate(meeting.date, meeting.time, true),
+            name: meeting.type,
+          });
+        });
+        this.events = meetings;
+        console.log(this.meetings);
       }
     },
     formatDate(date, time, plusTwoHours) {
