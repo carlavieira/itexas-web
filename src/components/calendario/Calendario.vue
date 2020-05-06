@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <v-row class="px-4 py-2">
@@ -211,10 +210,25 @@ export default {
     },
     async getEvents() {
       if (localStorage.getItem("is_staff")) {
-        this.eventos = await this.eventController.getAllEvents(this.$api);
-      }
-      // eslint-disable-next-line no-constant-condition
-      if (true) {
+        const events = [];
+        const eventosAdmin = await this.eventController.getAllEvents(this.$api);
+
+        console.log(eventosAdmin.data);
+        eventosAdmin.data.forEach((evento) => {
+          delete evento.member;
+          delete evento.url;
+
+          events.push({
+            color: "green",
+            start: this.formatDate(evento.date, evento.time, false),
+            end: this.formatDate(evento.date, evento.time, true),
+            name: evento.type,
+          });
+        });
+
+        this.events = events;
+        console.log(this.events);
+      } else {
         const events = [];
         const memberID = localStorage.getItem("user_id");
         const eventosMembro = await this.participationController.getMemberParticipationEvent(
@@ -230,28 +244,20 @@ export default {
             color: "orange",
             start: this.formatDate(evento.event.date, evento.event.time, false),
             end: this.formatDate(evento.event.date, evento.event.time, true),
-            name: evento.event.type
-          })
-
+            name: evento.event.type,
+          });
         });
         this.events = events;
         console.log(this.events);
-
-        /*
-          color: "orange"
-          end: "2020-5-10 17:15"
-          name: "Evento"
-          start: "2020-5-10 16:15"
-        */
       }
     },
     formatDate(date, time, plusTwoHours) {
       if (plusTwoHours) {
         // eslint-disable-next-line no-unused-vars
         let timePlusHour = new Date(`2020-05-05 ${time}`);
-        timePlusHour =
-         `${timePlusHour.getHours() + 2}:${timePlusHour.getMinutes()}`;
-          return `${date} ${timePlusHour}`
+        timePlusHour = `${timePlusHour.getHours() +
+          2}:${timePlusHour.getMinutes()}`;
+        return `${date} ${timePlusHour}`;
       } else {
         return `${date} ${time}`;
       }
