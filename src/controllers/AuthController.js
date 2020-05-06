@@ -27,7 +27,7 @@ export default {
   routerPath(res) {
     res.data.user.is_staff
       ? router.push("/adm/dashboard")
-      : router.push("/member/perfil");
+      : router.push("/member/dashboard");
   },
 
   logout(http) {
