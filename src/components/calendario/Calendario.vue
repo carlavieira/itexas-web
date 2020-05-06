@@ -82,8 +82,8 @@
                 </v-btn>
               </v-toolbar>
               <v-card-text>
-                <span v-html="selectedEvent.lider"></span>
-                <span v-html="selectedEvent.presenca"></span>
+                <p v-html="selectedEvent.lider"></p>
+                <p v-html="selectedEvent.presenca"></p>
               </v-card-text>
               <v-card-actions>
                 <v-btn text color="secondary" @click="selectedOpen = false">
@@ -206,7 +206,10 @@ export default {
       nativeEvent.stopPropagation();
     },
     async getEvents() {
-      if (localStorage.getItem("is_staff")) {
+      const is_staff = localStorage.getItem("is_staff");
+      console.log(is_staff);
+      if (is_staff == "true") {
+        console.log("admin events");
         /*const events = [];*/
         const eventosAdmin = await this.eventController.getAllEvents(this.$api);
 
@@ -214,40 +217,42 @@ export default {
           delete evento.url;
 
           this.events.push({
-            color: "green",
+            color: "yellow darken-2",
             start: this.formatDate(evento.date, evento.time, false),
             end: this.formatDate(evento.date, evento.time, true),
             name: this.formatEventType(evento.type),
             lider: `Lider: ${evento.member.first_name} ${evento.member.last_name}`,
           });
         });
-
-        /*this.events = events;*/
       }
-      // eslint-disable-next-line no-constant-condition
-      if (true) {
+      if (is_staff == "false") {
         const memberID = localStorage.getItem("user_id");
+        console.log("membro eventos");
         const eventosMembro = await this.participationController.getMemberParticipationEvent(
           this.$api,
           memberID
         );
+        console.log(eventosMembro);
         eventosMembro.forEach((evento) => {
           delete evento.member;
           delete evento.url;
 
           this.events.push({
-            color: "orange",
+            color: evento.attendance ? "indigo" : "cyan",
             start: this.formatDate(evento.event.date, evento.event.time, false),
             end: this.formatDate(evento.event.date, evento.event.time, true),
             name: this.formatEventType(evento.event.type),
             lider: `Lider: ${evento.event.member.first_name} ${evento.event.member.last_name}`,
-            presenca: "Presenca:",
+            presenca: `Presença: ${evento.attendance}`,
           });
         });
       }
     },
     async getMeetings() {
-      if (localStorage.getItem("is_staff")) {
+      const is_staff = localStorage.getItem("is_staff");
+      console.log(is_staff);
+      if (is_staff == "true") {
+        console.log("admin meeting");
         const meetingsAdmin = await this.meetingController.getAllMeeting(
           this.$api
         );
@@ -256,7 +261,7 @@ export default {
           delete meeting.url;
 
           this.events.push({
-            color: "red",
+            color: "yellow darken-4",
             start: this.formatDate(meeting.date, meeting.time, false),
             end: this.formatDate(meeting.date, meeting.time, true),
             name: this.formatEventType(meeting.type),
@@ -264,18 +269,19 @@ export default {
           });
         });
       }
-      // eslint-disable-next-line no-constant-condition
-      if (true) {
+      if (is_staff == "false") {
+        console.log("membro meeting");
         const memberID = localStorage.getItem("user_id");
         const meetingsMembro = await this.participationController.getMemberParticipationMeeting(
           this.$api,
           memberID
         );
+
         meetingsMembro.forEach((meeting) => {
           delete meeting.url;
 
           this.events.push({
-            color: "purple",
+            color: meeting.attendance ? "green" : "red",
             start: this.formatDate(
               meeting.meeting.date,
               meeting.meeting.time,
@@ -288,7 +294,7 @@ export default {
             ),
             name: this.formatEventType(meeting.meeting.type),
             lider: `Lider: ${meeting.meeting.member.first_name} ${meeting.meeting.member.last_name}`,
-            presenca: "Presenca:",
+            presenca: `Presença: ${meeting.attendance}`,
           });
         });
       }
@@ -304,37 +310,6 @@ export default {
         return `${date} ${time}`;
       }
     },
-    /*
-    updateRange({ start, end }) {
-      
-      const events = [];
-      const min = new Date(`${start.date}T00:00:00`);
-      const max = new Date(`${end.date}T23:59:59`);
-
-      const quantidadeEventos = 1;
-      for (let i = 0; i < quantidadeEventos; i++) {
-        const allDay = this.rnd(0, 3) === 0;
-        const firstTimestamp = this.rnd(min.getTime(), max.getTime());
-        const first = new Date(firstTimestamp - (firstTimestamp % 900000));
-        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
-        const second = new Date(first.getTime() + secondTimestamp);
-        
-        events.push({
-          name: this.names[this.rnd(0, this.names.length - 1)],
-          start: this.formatDate(first, !allDay),
-          end: this.formatDate(second, !allDay),
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
-        });
-        
-        console.log(events);
-      }
-      this.start = start;
-      this.end = end;
-      this.events = events;
-      
-    },
-    */
-
     nth(d) {
       return d > 3 && d < 21
         ? "th"
