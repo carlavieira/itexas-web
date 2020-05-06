@@ -88,6 +88,11 @@ export default {
           text: "Contact List",
           icon: "mdi-account",
           path: "/member/contactList"
+        },
+        {
+          text: "Meu Critério",
+          icon: "mdi-clipboard-text-multiple",
+          path: "/member/meu-criterio"
         }
       ],
       drawer: true,
