@@ -82,11 +82,12 @@
                 </v-btn>
               </v-toolbar>
               <v-card-text>
-                <span v-html="selectedEvent.details"></span>
+                <span v-html="selectedEvent.lider"></span>
+                <span v-html="selectedEvent.presenca"></span>
               </v-card-text>
               <v-card-actions>
                 <v-btn text color="secondary" @click="selectedOpen = false">
-                  Cancel
+                  Fechar
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -132,14 +133,6 @@ export default {
       "green",
       "orange",
       "grey darken-1",
-    ],
-    names: [
-      "Reunião LR",
-      "Evento Geral",
-      "Confererência",
-      "Reunião Diretoria",
-      "Evento",
-      "Happy Hour",
     ],
   }),
   computed: {
@@ -218,7 +211,6 @@ export default {
         const eventosAdmin = await this.eventController.getAllEvents(this.$api);
 
         eventosAdmin.data.forEach((evento) => {
-          delete evento.member;
           delete evento.url;
 
           this.events.push({
@@ -226,12 +218,14 @@ export default {
             start: this.formatDate(evento.date, evento.time, false),
             end: this.formatDate(evento.date, evento.time, true),
             name: this.formatEventType(evento.type),
+            lider: `Lider: ${evento.member.first_name} ${evento.member.last_name}`,
           });
         });
 
         /*this.events = events;*/
-      } else {
-        const events = [];
+      }
+      // eslint-disable-next-line no-constant-condition
+      if (true) {
         const memberID = localStorage.getItem("user_id");
         const eventosMembro = await this.participationController.getMemberParticipationEvent(
           this.$api,
@@ -239,17 +233,17 @@ export default {
         );
         eventosMembro.forEach((evento) => {
           delete evento.member;
-          delete evento.event.member;
           delete evento.url;
 
-          events.push({
+          this.events.push({
             color: "orange",
             start: this.formatDate(evento.event.date, evento.event.time, false),
             end: this.formatDate(evento.event.date, evento.event.time, true),
             name: this.formatEventType(evento.event.type),
+            lider: `Lider: ${evento.event.member.first_name} ${evento.event.member.last_name}`,
+            presenca: "Presenca:",
           });
         });
-        this.events = events;
       }
     },
     async getMeetings() {
@@ -259,7 +253,6 @@ export default {
         );
 
         meetingsAdmin.forEach((meeting) => {
-          delete meeting.member;
           delete meeting.url;
 
           this.events.push({
@@ -267,21 +260,22 @@ export default {
             start: this.formatDate(meeting.date, meeting.time, false),
             end: this.formatDate(meeting.date, meeting.time, true),
             name: this.formatEventType(meeting.type),
+            lider: `Lider: ${meeting.member.first_name} ${meeting.member.last_name}`,
           });
         });
-        console.log(meetingsAdmin);
-      } else {
+      }
+      // eslint-disable-next-line no-constant-condition
+      if (true) {
         const memberID = localStorage.getItem("user_id");
         const meetingsMembro = await this.participationController.getMemberParticipationMeeting(
           this.$api,
           memberID
         );
         meetingsMembro.forEach((meeting) => {
-          delete meeting.member;
           delete meeting.url;
 
           this.events.push({
-            color: "orange",
+            color: "purple",
             start: this.formatDate(
               meeting.meeting.date,
               meeting.meeting.time,
@@ -293,9 +287,10 @@ export default {
               true
             ),
             name: this.formatEventType(meeting.meeting.type),
+            lider: `Lider: ${meeting.meeting.member.first_name} ${meeting.meeting.member.last_name}`,
+            presenca: "Presenca:",
           });
         });
-        console.log(meetingsMembro);
       }
     },
     formatDate(date, time, plusTwoHours) {
