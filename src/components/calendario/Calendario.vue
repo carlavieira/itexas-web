@@ -269,31 +269,33 @@ export default {
             name: meeting.type,
           });
         });
-
-        /*meetings.map((meeting) => {
-          this.events.push(meeting);
-        });*/
+        console.log(meetingsAdmin);
       } else {
-        const meetings = [];
         const memberID = localStorage.getItem("user_id");
-        const meetingsMembro = await this.participationController.getMemberParticipationEvent(
+        const meetingsMembro = await this.participationController.getMemberParticipationMeeting(
           this.$api,
           memberID
         );
         meetingsMembro.forEach((meeting) => {
           delete meeting.member;
-
           delete meeting.url;
 
-          meeting.push({
+          this.events.push({
             color: "orange",
-            start: this.formatDate(meeting.date, meeting.time, false),
-            end: this.formatDate(meeting.date, meeting.time, true),
-            name: meeting.type,
+            start: this.formatDate(
+              meeting.meeting.date,
+              meeting.meeting.time,
+              false
+            ),
+            end: this.formatDate(
+              meeting.meeting.date,
+              meeting.meeting.time,
+              true
+            ),
+            name: meeting.meeting.type,
           });
         });
-        this.events = meetings;
-        console.log(this.meetings);
+        console.log(meetingsMembro);
       }
     },
     formatDate(date, time, plusTwoHours) {

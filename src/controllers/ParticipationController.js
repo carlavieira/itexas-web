@@ -61,4 +61,17 @@ export default {
       });
     return response;
   },
+  getMemberParticipationMeeting(api, participationID) {
+    let url = `list-meeting-participation/?member=${participationID}`;
+    const response = api
+      .get(url)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        // handle error
+        console.log(error);
+      });
+    return response;
+  },
 };
