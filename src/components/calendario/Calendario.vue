@@ -225,7 +225,7 @@ export default {
             color: "green",
             start: this.formatDate(evento.date, evento.time, false),
             end: this.formatDate(evento.date, evento.time, true),
-            name: evento.type,
+            name: this.formatEventType(evento.type),
           });
         });
 
@@ -246,7 +246,7 @@ export default {
             color: "orange",
             start: this.formatDate(evento.event.date, evento.event.time, false),
             end: this.formatDate(evento.event.date, evento.event.time, true),
-            name: evento.event.type,
+            name: this.formatEventType(evento.event.type),
           });
         });
         this.events = events;
@@ -266,7 +266,7 @@ export default {
             color: "red",
             start: this.formatDate(meeting.date, meeting.time, false),
             end: this.formatDate(meeting.date, meeting.time, true),
-            name: meeting.type,
+            name: this.formatEventType(meeting.type),
           });
         });
         console.log(meetingsAdmin);
@@ -292,7 +292,7 @@ export default {
               meeting.meeting.time,
               true
             ),
-            name: meeting.meeting.type,
+            name: this.formatEventType(meeting.meeting.type),
           });
         });
         console.log(meetingsMembro);
@@ -347,6 +347,17 @@ export default {
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
+    },
+    formatEventType(sigla) {
+      if (sigla == "RG") return "Reunião Geral";
+      else if (sigla == "AS") return "Assembléia";
+      else if (sigla == "CF") return "Conferência";
+      else if (sigla == "OU") return "Outros";
+      else if (sigla == "REB") return "REB";
+      else if (sigla == "RA") return "Reunião de Área";
+      else if (sigla == "RT") return "Reunião de Time";
+      else if (sigla == "LR") return "Reunião de LR";
+      else if (sigla == "CN") return "Reunião de Corner";
     },
   },
 };
