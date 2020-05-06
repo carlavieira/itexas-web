@@ -1,4 +1,4 @@
-const url = "membershipCriteria/";
+const url = "list-membership-criteria/";
 
 export default {
     listMembershipCriteria(api) {
@@ -11,6 +11,17 @@ export default {
         .catch(function(error) {
         console.log(error);
         });
+        return response;
+    },
+    getMyMembershipCriteria(api, MemberId) {
+        const response = api
+          .get(`list-membership-criteria/?member=${MemberId}`)
+          .then(function(response) {
+            return response;
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
         return response;
     },
 }
