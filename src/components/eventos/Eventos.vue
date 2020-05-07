@@ -37,6 +37,9 @@
             :items="eventos"
             :search="search"
           >
+            <template v-slot:item.type="{ item }">
+              <span> {{ formatTypeEvent(item.type) }} </span>
+            </template>
             <template v-slot:item.member="{ item }">
               <span> {{ item.member.first_name }} </span>
             </template>
@@ -133,6 +136,12 @@ export default {
     },
     async deleteEvent() {
       await this.eventController.deleteEvent(this.$api, this.event);
+    },
+    formatTypeEvent(sigla) {
+      if (sigla == "RG") return "Reunião Geral";
+      else if (sigla == "AS") return "Assembléia";
+      else if (sigla == "CF") return "Conferência";
+      else if (sigla == "OU") return "Outros";
     },
   },
 };
