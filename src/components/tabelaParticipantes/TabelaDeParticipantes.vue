@@ -1,19 +1,9 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="participantesWithName"
-    class="elevation-1"
-  >
-    <template v-slot:item.participante="{ item }">
-      {{ item.full_name }}
-    </template>
+  <v-data-table :headers="headers" :items="participantesWithName" class="elevation-1">
+    <template v-slot:item.participante="{ item }">{{ item.full_name }}</template>
 
     <template v-slot:item.attendance="{ item }">
-      <input
-        type="checkbox"
-        @click="enviaParticipantesParaPai()"
-        v-model="item.attendance"
-      />
+      <input type="checkbox" @click="enviaParticipantesParaPai()" v-model="item.attendance" />
     </template>
 
     <template v-slot:top>
@@ -60,11 +50,9 @@
                       persistent-hint
                     >
                       <template v-slot:no-data>
-                        <span pa-2
-                          >Todos os participantes já estão na reunião</span
-                        >
-                      </template></v-select
-                    >
+                        <span pa-2>Todos os participantes já estão na reunião</span>
+                      </template>
+                    </v-select>
                   </v-col>
                 </v-row>
               </v-container>
@@ -80,9 +68,7 @@
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
-      <v-icon small @click="deleteItem(item)">
-        mdi-delete
-      </v-icon>
+      <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
     </template>
     <template v-slot:no-data>
       <span>Não há participantes nesta reunião.</span>
@@ -105,7 +91,7 @@ export default {
     headers: [
       { text: "Participante", value: "participante", align: "start" },
       { text: "Presença", value: "attendance", align: "center" },
-      { value: "actions", sortable: false, align: "end" },
+      { value: "actions", sortable: false, align: "end" }
     ],
     participantes: [],
     participantesWithName: [],
@@ -115,21 +101,21 @@ export default {
     editedIndex: -1,
     editedItem: {
       participante: "",
-      attendance: false,
+      attendance: false
     },
     defaultItem: {
       participante: "",
-      attendance: false,
-    },
+      attendance: false
+    }
   }),
 
   props: {
     form: String,
-    objForm: Object,
+    objForm: Object
   },
 
   directives: {
-    Ripple,
+    Ripple
   },
 
   computed: {
@@ -137,13 +123,13 @@ export default {
       return this.editedIndex === -1
         ? "Novo Participante"
         : "Editar Participante";
-    },
+    }
   },
 
   watch: {
     dialog(val) {
       val || this.close();
-    },
+    }
   },
 
   async created() {
@@ -178,7 +164,7 @@ export default {
       console.log("Ok");
       this.membros = await this.memberController.getAllMembers(this.$api);
       this.participantesDiferent = [];
-      this.membros.forEach((item) => {
+      this.membros.forEach(item => {
         this.participantesDiferent.push(item);
       });
       this.setFullName(this.membros);
@@ -215,7 +201,7 @@ export default {
     },
     setFullName(array) {
       const newArray = new Array();
-      array.map((item) => {
+      array.map(item => {
         item.full_name = `${item.first_name} ${item.last_name}`;
         newArray.push(item);
       });
@@ -240,10 +226,12 @@ export default {
         meetingId
       );
 
-      this.participantes.forEach(async (item) => {
+
+      /* REMOVER ESSE GETMEMBERBY ID */
+      this.participantes.forEach(async item => {
         const member = await this.memberController.getMemberById(
           this.$api,
-          item.member
+          item.member.id
         );
         item.full_name = member.first_name + " " + member.last_name;
         this.participantesWithName.push(item);
@@ -268,7 +256,7 @@ export default {
     },
     deleteItem(item) {
       const index = this.participantesWithName.indexOf(item);
-      let checkItem = (item) => {
+      let checkItem = item => {
         if (!item.email) {
           this.participantesDeleted.push(item);
           this.enviaParticipantesParaPai();
@@ -289,7 +277,7 @@ export default {
       }, 300);
     },
     save() {
-      this.editedItem.participante.map((participante) => {
+      this.editedItem.participante.map(participante => {
         if (!participante.attendance) {
           participante.attendance = true;
         }
@@ -311,8 +299,8 @@ export default {
           JSON.parse(JSON.stringify(this.participantesForSend))
         );
       }, 300);
-    },
-  },
+    }
+  }
 };
 </script>
 

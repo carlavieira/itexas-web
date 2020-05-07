@@ -3,9 +3,9 @@
     <v-card class="pa-5 pl-10 modal">
       <v-layout row class="px-3">
         <v-btn
-          v-if="!editMeeting"
+          v-if="!editEvent"
           color="black"
-          @click="editMeeting = true"
+          @click="editEvent = true"
           title="Editar"
           small
         >
@@ -35,7 +35,7 @@
                 text
                 @click="
                   dialog = false;
-                  deleteMeeting();
+                  deleteEvent();
                 "
               >
                 Sim
@@ -55,38 +55,41 @@
       </v-layout>
 
       <v-layout column mx-2 justify-center align-center>
-        <span v-if="!editMeeting" class="titulo font-weight-medium mt-3">
-          {{ this.formatTypeMeeting(meeting.type) }}
+        <span v-if="!editEvent" class="titulo font-weight-medium mt-3">
+          {{ this.formatTypeEvent(event.type) }}
         </span>
 
-        <span v-if="!editMeeting" class="subheading font-weight-regular"
-          >(Responsável: {{ hostName }} )</span
+        <span v-if="!editEvent" class="subheading font-weight-regular"
+          >(Responsável: {{ this.event.member.first_name }}
+          {{ this.event.member.last_name }} )</span
         >
       </v-layout>
 
       <v-layout row mt-3 justify-space-around style="width: 100%;">
-        <v-layout justify-left col-xs-12 col-sm-6 v-if="editMeeting">
+        <v-layout justify-left col-xs-12 col-sm-6 v-if="editEvent">
           <v-select
-            v-model="meeting.type"
+            v-model="event.type"
             :items="types"
             item-text="name"
             item-value="value"
-            label="Tipo da Reunião"
+            label="Tipo do Evento"
             prepend-inner-icon="mdi-account-group"
             required
             no-gutters
             outlined
             dense
+            hide-details
           ></v-select>
         </v-layout>
 
-        <v-layout justify-left col-xs-12 col-sm-6 v-if="editMeeting">
+        <v-layout justify-left col-xs-12 col-sm-6 v-if="editEvent">
           <v-select
             label="Líder"
+            no-gutters
             outlined
             dense
             prepend-inner-icon="mdi-account-star"
-            v-model="meeting.member"
+            v-model="event.member"
             :items="leaders"
             item-text="full_name"
             item-value="id"
@@ -105,13 +108,13 @@
             <template v-slot:activator="{ on }">
               <v-text-field
                 v-model="dateFormatted"
-                label="Data da Reunião"
+                label="Data da Evento"
                 persistent-hint
                 prepend-inner-icon="mdi-calendar"
                 v-on="on"
                 dense
                 outlined
-                :disabled="!editMeeting"
+                :disabled="!editEvent"
                 hide-details
               ></v-text-field>
             </template>
@@ -134,13 +137,13 @@
             <template v-slot:activator="{ on }">
               <v-text-field
                 v-model="time"
-                label="Hora da Reunião"
+                label="Hora do evento"
                 prepend-inner-icon="mdi-clock-outline"
                 readonly
                 outlined
                 dense
                 v-on="on"
-                :disabled="!editMeeting"
+                :disabled="!editEvent"
               ></v-text-field>
             </template>
             <v-time-picker
@@ -158,17 +161,7 @@
             </v-time-picker>
           </v-dialog>
         </v-layout>
-
-        <tabelaParticipante
-          v-on:enviarParticipantesPai="ListaParticipantes"
-          :objForm="meeting"
-          v-if="editMeeting"
-        ></tabelaParticipante>
-        <tabelaParticipanteView
-          :objForm="meeting"
-          v-if="!editMeeting"
-        ></tabelaParticipanteView>
-        <v-layout col-xs-12 col-sm-6 row justify-center v-if="editMeeting">
+        <v-layout col-xs-12 col-sm-6 row justify-center v-if="editEvent">
           <v-btn class="ma-2 mt-4" @click="sendEdit()" depressed color="success"
             >Salvar</v-btn
           >
@@ -179,43 +172,34 @@
 </template>
 
 <script>
-import meetingController from "../../controllers/MeetingController";
 import memberController from "../../controllers/MemberController";
-import participationController from "../../controllers/ParticipationController";
-import tabelaParticipante from "../tabelaParticipantes/TabelaDeParticipantes";
-import tabelaParticipanteView from "../tabelaParticipantes/TabelaDeParticipantesView";
-
+import eventController from "../../controllers/EventController";
 export default {
   data: (vm) => ({
-    date: new Date().toISOString().substr(0, 10),
+    editEvent: false,
+    memberController,
+    eventController,
+    eventDetails: {},
+    hostName: "-",
+    dialog: false,
+    date: "",
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     menu1: false,
     menu2: false,
     modal: false,
-    time: "00:00",
-    dialog: false,
-    editMeeting: false,
-    meetingDetails: {},
-    meetingController,
-    memberController,
-    participationController,
-    memberById: null,
-    participantes: [],
     leader: "",
     leaders: [],
-    snackbarDetail: {
-      color: "",
-      text: "",
-    },
-    hostName: "",
-    participantesToDelete: [],
+    time: "00:00",
     types: [
-      { name: "REB", value: "REB" },
-      { name: "Reunião de Área", value: "RA" },
-      { name: "Reunião de Time", value: "RT" },
-      { name: "Reunião de LR", value: "LR" },
-      { name: "Reunião de Corner", value: "CN" },
+      { name: "Reunião Geral", value: "RG" },
+      { name: "Assembléia", value: "AS" },
+      { name: "Conferência", value: "CF" },
+      { name: "Outros", value: "OU" },
     ],
+    snackbarDetail: {
+      color: "warning",
+      text: "Reunião Atualizada com sucesso",
+    },
   }),
 
   computed: {
@@ -224,17 +208,16 @@ export default {
     },
   },
 
-  components: {
-    tabelaParticipante,
-    tabelaParticipanteView,
+  created() {
+    this.hostName = `${this.event.member.first_name} ${this.event.member.last_name}`;
+    this.populaSelectLider();
+    this.date = this.event.date;
+    this.time = this.event.time;
   },
 
-  created() {
-    this.populaSelectLider();
-    this.date = this.meeting.date;
-    this.time = this.meeting.time;
-    this.hostName =
-      this.meeting.member.first_name + " " + this.meeting.member.last_name;
+  props: {
+    show: Boolean,
+    event: Object,
   },
 
   watch: {
@@ -243,12 +226,47 @@ export default {
     },
   },
 
-  props: {
-    show: Boolean,
-    meeting: Object,
-  },
-
   methods: {
+    async sendEdit() {
+      this.event.date = this.date;
+      console.log(this.date);
+      console.log(this.event);
+      await this.eventController
+        .editEvent(this.$api, this.event)
+        .then((res) => {
+          console.log(res);
+          this.$emit("getAllEvents");
+
+          this.snackbarDetail.text = "Evento editado com sucesso";
+          this.snackbarDetail.color = "warning";
+          setTimeout(() => {
+            this.$emit("close");
+            this.$emit("showSnackbar", this.snackbarDetail);
+          }, 1000);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    async deleteEvent() {
+      await this.eventController
+        .deleteEvent(this.$api, this.event)
+        .then((res) => {
+          console.log(res);
+          this.$emit("getAllEvents");
+
+          this.snackbarDetail.text = "Evento deletado com sucesso";
+          this.snackbarDetail.color = "error";
+          setTimeout(() => {
+            this.$emit("close");
+            this.$emit("showSnackbar", this.snackbarDetail);
+          }, 1000);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+
     formatDate(date) {
       if (!date) return null;
 
@@ -261,31 +279,18 @@ export default {
       const [month, day, year] = date.split("/");
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     },
-    formatTypeMeeting(sigla) {
-      if (sigla == "REB") return "REB";
-      else if (sigla == "RA") return "Reunião de Área";
-      else if (sigla == "RT") return "Reunião de Time";
-      else if (sigla == "LR") return "Reunião de LR";
-      else if (sigla == "CN") return "Reunião de Corner";
+    formatTypeEvent(sigla) {
+      if (sigla == "RG") return "Reunião Geral";
+      else if (sigla == "AS") return "Assembléia";
+      else if (sigla == "CF") return "Conferência";
+      else if (sigla == "OU") return "Outros";
     },
-
     async populaSelectLider() {
       this.leaders = this.ordenaOrdemCrescente(
         await this.memberController.getAllMembers(this.$api)
       );
       this.leaders = this.setFullName(this.leaders);
     },
-
-    setFullName(array) {
-      const newArray = new Array();
-      array.map((item) => {
-        item.full_name = `${item.first_name} ${item.last_name}`;
-        newArray.push(item);
-      });
-
-      return newArray;
-    },
-
     ordenaOrdemCrescente(array) {
       array.sort(function(item1, item2) {
         if (item1.first_name && item2.first_name) {
@@ -296,74 +301,14 @@ export default {
       });
       return array;
     },
-    async sendEdit() {
-      /* Edit Meeting */
-      this.meeting.date = this.date;
-      this.meeting.time = this.time;
-      console.log(this.meeting);
-      await this.meetingController
-        .editMeeting(this.$api, this.meeting)
-        .then((res) => {
-          console.log(res);
-          this.$emit("getAllMeeting");
-
-          setTimeout(() => {
-            this.$emit("close");
-            this.$emit("showSnackbar", this.snackbarDetail);
-          }, 1000);
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-
-      /* Edit Participation */
-      this.participantes.forEach(async (participante) => {
-        if (participante.is_active) {
-          let part = new Object();
-          part.meeting = this.meeting.id;
-          part.member = participante.id;
-          part.attendance = participante.attendance;
-          await this.participationController.createParticipationMeeting(
-            this.$api,
-            part
-          );
-        } else {
-          participante.meeting = participante.meeting.id;
-          participante.member = participante.member.id;
-          await this.participationController.editParticipationMeeting(
-            this.$api,
-            participante
-          );
-        }
+    setFullName(array) {
+      const newArray = new Array();
+      array.map((item) => {
+        item.full_name = `${item.first_name} ${item.last_name}`;
+        newArray.push(item);
       });
 
-      /* Delete Participation */
-      if (this.participantesToDelete.length !== 0) {
-        this.participantesToDelete.forEach(async (participante) => {
-          await this.participationController.deleteParticipationMeeting(
-            this.$api,
-            participante.id
-          );
-        });
-      }
-    },
-    ListaParticipantes(participantes) {
-      this.participantes = [];
-      this.participantes = participantes.participantesWithName;
-      this.participantesToDelete = participantes.participantesDeleted;
-    },
-    async deleteMeeting() {
-      return await this.meetingController
-        .deleteMeeting(this.$api, this.meeting.id)
-        .then((res) => {
-          console.log(res);
-          this.$emit("getAllMeeting");
-
-          setTimeout(() => {
-            this.$emit("close");
-            this.$emit("showSnackbar", this.snackbarDetail);
-          }, 1000);
-        });
+      return newArray;
     },
   },
 };

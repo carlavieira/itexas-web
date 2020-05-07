@@ -36,6 +36,7 @@
           :key="item.text"
           router
           :to="item.path"
+          v-bind:class="{'admin-item':(item.adminItem == true)}"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -44,6 +45,7 @@
             <v-list-item-title>{{ item.text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
         <v-list-item link @click="logout()">
           <v-list-item-icon>
             <v-icon>mdi-exit-to-app</v-icon>
@@ -72,44 +74,77 @@ export default {
         {
           text: "Dashboard",
           icon: "mdi-view-dashboard-outline",
-          path: "/dashboard"
+          path: "/adm/dashboard",
+        },
+        //Admin
+        {
+          text: "Membros",
+          icon: "mdi-account",
+          path: "/adm/membros",
+          adminItem: true,
+
         },
         {
           text: "Office Hours",
           icon: "mdi-alarm-check",
-          path: "/adm/officeHours"
-        },
-        {
-          text: "Relatórios",
-          icon: "mdi-clipboard-text-multiple",
-          path: "/adm/membresia"
-        },
-        {
-          text: "Membros",
-          icon: "mdi-account",
-          path: "/adm/membros"
+          path: "/adm/officeHours",
+          adminItem: true,
         },
         {
           text: "Reuniões",
           icon: "mdi-account-multiple",
-          path: "/adm/reuniao"
+          path: "/adm/reuniao",
+          adminItem: true,
         },
         {
           text: "Eventos",
           icon: "mdi-account-group",
+          path: "/adm/eventos",
+          adminItem: true,
+        },
+        {
+          text: "Critérios de Membresia",
+          icon: "mdi-clipboard-text-multiple",
+          path: "/adm/membresia",
+          adminItem: true,
+        },
+        //Members
+        {
+          text: "Check-in/Check-out",
+          icon: "mdi-view-dashboard-outline",
+          path: "/dashboard",
+          adminItem: true,
+        },
+        {
+          text: "Meu Perfil",
+          icon: "mdi-account-circle",
+          path: "/adm/perfil"
+        },
+        {
+          text: "Minhas Office Hours",
+          icon: "mdi-alarm-check",
+          path: "/adm/officeHours"
+        },
+        {
+          text: "Minhas Reuniões",
+          icon: "mdi-account-multiple",
+          path: "/adm/reuniao"
+        },
+        {
+          text: "Meus Eventos",
+          icon: "mdi-account-group",
           path: "/adm/eventos"
+        },
+        {
+          text: "Meu Critério",
+          icon: "mdi-clipboard-text-multiple",
+          path: "/adm/meu-criterio"
         },
         {
           text: "Calendário",
           icon: "mdi-calendar-month",
           path: "/adm/calendario"
-        },
-        {
-          text: "Perfil",
-          icon: "mdi-account-circle",
-          path: "/adm/perfil"
-        },
-
+        }
       ],
       drawer: true
     };
@@ -131,5 +166,8 @@ export default {
 <style scoped>
 .radius {
   border-radius: 6px !important;
+}
+.admin-item {
+  background-color: #2f2f2f;
 }
 </style>

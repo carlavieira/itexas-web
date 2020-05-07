@@ -2,9 +2,7 @@
   <v-dialog max-width="800px" persistent v-model="show">
     <v-card class="pa-5 modal">
       <v-layout row class="px-3" justify-space-between>
-        <h2>Marcação de Office Hours - </h2>
-        <h2 v-if="type == 'add'">Novo</h2>
-        <h2 v-if="type == 'edit'">Edição</h2>
+        <h2>Marcação de Office Hours</h2>
         <v-btn @click="$emit('close'), $emit('reload')" title="Fechar" icon>
           <v-icon color="grey">mdi-close</v-icon>
         </v-btn>

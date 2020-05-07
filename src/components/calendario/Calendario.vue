@@ -82,11 +82,30 @@
                 </v-btn>
               </v-toolbar>
               <v-card-text>
-                <span v-html="selectedEvent.details"></span>
+                <p v-html="selectedEvent.lider"></p>
+                <p v-html="selectedEvent.presenca"></p>
+                <div class="my-2" v-if="selectedEvent.markAttendance == true">
+                  <v-btn
+                    small
+                    color="success"
+                    @click="mudarPresenca(selectedEvent.event)"
+                    dark
+                    >Marcar Presença</v-btn
+                  >
+                </div>
+                <div v-if="selectedEvent.markAttendance == false" class="my-2">
+                  <v-btn
+                    small
+                    color="error"
+                    @click="mudarPresenca(selectedEvent.event)"
+                    dark
+                    >Desmarcar Presença</v-btn
+                  >
+                </div>
               </v-card-text>
               <v-card-actions>
                 <v-btn text color="secondary" @click="selectedOpen = false">
-                  Cancel
+                  Fechar
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -98,6 +117,10 @@
 </template>
 
 <script>
+import eventController from "../../controllers/EventController";
+import meetingController from "../../controllers/MeetingController";
+import participationController from "../../controllers/ParticipationController";
+
 export default {
   data: () => ({
     focus: "",
@@ -110,10 +133,16 @@ export default {
     },
     start: null,
     end: null,
+    eventController,
+    participationController,
+    meetingController,
     selectedEvent: {},
     selectedElement: null,
     selectedOpen: false,
     events: [],
+    eventos: [],
+    meetings: [],
+    reunioes: [],
     colors: [
       "blue",
       "indigo",
@@ -122,14 +151,6 @@ export default {
       "green",
       "orange",
       "grey darken-1",
-    ],
-    names: [
-      "Reunião LR",
-      "Evento Geral",
-      "Confererência",
-      "Reunião Diretoria",
-      "Evento",
-      "Happy Hour",
     ],
   }),
   computed: {
@@ -163,6 +184,10 @@ export default {
         month: "long",
       });
     },
+  },
+  created() {
+    this.getEvents();
+    this.getMeetings();
   },
   mounted() {
     this.$refs.calendar.checkChange();
@@ -198,32 +223,128 @@ export default {
       }
       nativeEvent.stopPropagation();
     },
-    updateRange({ start, end }) {
-      const events = [];
-      const min = new Date(`${start.date}T00:00:00`);
-      const max = new Date(`${end.date}T23:59:59`);
-      const days = (max.getTime() - min.getTime()) / 86400000;
-      const eventCount = this.rnd(days, days + 20);
-      console.log(eventCount);
-      const quantidadeEventos = 8;
-      /* Definir o flag do for abaixo com a quantidade eventos */
-      for (let i = 0; i < quantidadeEventos; i++) {
-        const allDay = this.rnd(0, 3) === 0;
-        const firstTimestamp = this.rnd(min.getTime(), max.getTime());
-        const first = new Date(firstTimestamp - (firstTimestamp % 900000));
-        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
-        const second = new Date(first.getTime() + secondTimestamp);
-        events.push({
-          name: this.names[this.rnd(0, this.names.length - 1)],
-          start: this.formatDate(first, !allDay),
-          end: this.formatDate(second, !allDay),
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
+    async getEvents() {
+      const is_staff = localStorage.getItem("is_staff");
+      console.log(is_staff);
+      if (is_staff == "true") {
+        console.log("admin events");
+        /*const events = [];*/
+        const eventosAdmin = await this.eventController.getAllEvents(this.$api);
+
+        eventosAdmin.data.forEach((evento) => {
+          delete evento.url;
+
+          this.events.push({
+            color: "yellow darken-2",
+            start: this.formatDate(evento.date, evento.time, false),
+            end: this.formatDate(evento.date, evento.time, true),
+            name: this.formatEventType(evento.type),
+            lider: `Lider: ${evento.member.first_name} ${evento.member.last_name}`,
+            markAttendance: "none",
+          });
         });
-        console.log(events);
       }
-      this.start = start;
-      this.end = end;
-      this.events = events;
+      if (is_staff == "false") {
+        const memberID = localStorage.getItem("user_id");
+        console.log("membro eventos");
+        const eventosMembro = await this.participationController.getMemberParticipationEvent(
+          this.$api,
+          memberID
+        );
+        console.log(eventosMembro);
+        eventosMembro.forEach((evento) => {
+          delete evento.member;
+          delete evento.url;
+
+          this.events.push({
+            color: evento.attendance ? "indigo" : "cyan",
+            start: this.formatDate(evento.event.date, evento.event.time, false),
+            end: this.formatDate(evento.event.date, evento.event.time, true),
+            name: this.formatEventType(evento.event.type),
+            lider: `Lider: ${evento.event.member.first_name} ${evento.event.member.last_name}`,
+            presenca: `Presença: ${evento.attendance}`,
+            markAttendance: evento.attendance ? false : true,
+            event: evento,
+          });
+        });
+      }
+    },
+    async getMeetings() {
+      const is_staff = localStorage.getItem("is_staff");
+      console.log(is_staff);
+      if (is_staff == "true") {
+        console.log("admin meeting");
+        const meetingsAdmin = await this.meetingController.getAllMeeting(
+          this.$api
+        );
+
+        meetingsAdmin.forEach((meeting) => {
+          delete meeting.url;
+
+          this.events.push({
+            color: "yellow darken-4",
+            start: this.formatDate(meeting.date, meeting.time, false),
+            end: this.formatDate(meeting.date, meeting.time, true),
+            name: this.formatEventType(meeting.type),
+            lider: `Lider: ${meeting.member.first_name} ${meeting.member.last_name}`,
+            markAttendance: "none",
+          });
+        });
+      }
+      if (is_staff == "false") {
+        console.log("membro meeting");
+        const memberID = localStorage.getItem("user_id");
+        const meetingsMembro = await this.participationController.getMemberParticipationMeeting(
+          this.$api,
+          memberID
+        );
+
+        meetingsMembro.forEach((meeting) => {
+          delete meeting.url;
+
+          this.events.push({
+            color: meeting.attendance ? "green" : "red",
+            start: this.formatDate(
+              meeting.meeting.date,
+              meeting.meeting.time,
+              false
+            ),
+            end: this.formatDate(
+              meeting.meeting.date,
+              meeting.meeting.time,
+              true
+            ),
+            name: this.formatEventType(meeting.meeting.type),
+            lider: `Lider: ${meeting.meeting.member.first_name} ${meeting.meeting.member.last_name}`,
+            presenca: `Presença: ${meeting.attendance}`,
+            markAttendance: "none",
+          });
+        });
+      }
+    },
+    formatDate(date, time, plusTwoHours) {
+      if (plusTwoHours) {
+        // eslint-disable-next-line no-unused-vars
+        let timePlusHour = new Date(`2020-05-05 ${time}`);
+        timePlusHour = `${timePlusHour.getHours() +
+          2}:${timePlusHour.getMinutes()}`;
+        return `${date} ${timePlusHour}`;
+      } else {
+        return `${date} ${time}`;
+      }
+    },
+    async mudarPresenca(evento) {
+      console.log(evento);
+      const participationDetail = {
+        attendance: !evento.attendance,
+        event: evento.event.id,
+        id: evento.id,
+        member: localStorage.getItem("user_id"),
+      };
+      await this.participationController.editParticipationEvent(
+        this.$api,
+        participationDetail
+      );
     },
     nth(d) {
       return d > 3 && d < 21
@@ -233,11 +354,16 @@ export default {
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
     },
-    formatDate(a, withTime) {
-      return withTime
-        ? `${a.getFullYear()}-${a.getMonth() +
-            1}-${a.getDate()} ${a.getHours()}:${a.getMinutes()}`
-        : `${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()}`;
+    formatEventType(sigla) {
+      if (sigla == "RG") return "Reunião Geral";
+      else if (sigla == "AS") return "Assembléia";
+      else if (sigla == "CF") return "Conferência";
+      else if (sigla == "OU") return "Outros";
+      else if (sigla == "REB") return "REB";
+      else if (sigla == "RA") return "Reunião de Área";
+      else if (sigla == "RT") return "Reunião de Time";
+      else if (sigla == "LR") return "Reunião de LR";
+      else if (sigla == "CN") return "Reunião de Corner";
     },
   },
 };

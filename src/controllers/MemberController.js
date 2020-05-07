@@ -1,9 +1,8 @@
 export default {
   getAllMembers(api) {
     const response = api
-      .get("members/")
+      .get("list-members/")
       .then(function(response) {
-        /* console.log(response.data); */
         return response.data;
       })
       .catch(function(error) {
@@ -14,7 +13,7 @@ export default {
 
   getMemberById(api, id) {
     return api
-      .get(`members/${id}`)
+      .get(`list-members/${id}/`)
       .then(function(response) {
         return response.data;
       })
@@ -24,7 +23,6 @@ export default {
   },
 
   createMember(api, memberDetails) {
-    console.log(memberDetails);
     return api
       .post("rest-auth/registration/", memberDetails)
       .then((res) => res.data)
@@ -35,7 +33,7 @@ export default {
 
   editMember(api, memberDetails) {
     return api
-      .put(`members/${memberDetails.id}/`, memberDetails)
+      .put(`manage-member/${memberDetails.id}/`, memberDetails)
       .then((res) => res.data)
       .catch((e) => {
         throw e;
@@ -44,7 +42,7 @@ export default {
 
   deleteMember(api, memberDetails) {
     return api
-      .delete(`members/${memberDetails.id}/`, memberDetails)
+      .delete(`manage-member/${memberDetails.id}/`, memberDetails)
       .then((res) => res.data)
       .catch((e) => {
         throw e;
@@ -52,7 +50,7 @@ export default {
   },
   getAllLiderandos(api, id) {
     return api
-      .get(`members/?leader=${id}`)
+      .get(`members/?leader=${id}/`)
       .then(function(response) {
         return response.data;
       })

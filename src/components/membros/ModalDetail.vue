@@ -3,7 +3,7 @@
     <v-card class="pa-5">
       <v-layout row class="px-3">
         <v-btn
-          v-if="!editMember"
+          v-if="!editMember && $route.name == 'members'"
           color="black"
           @click="editMember = true"
           title="Editar"
@@ -12,6 +12,7 @@
         </v-btn>
 
         <v-btn
+          v-if="$route.name == 'members'"
           color="red"
           @click.stop="dialog = true"
           class="ml-2"
@@ -125,7 +126,7 @@
             <v-text-field
               outlined
               prepend-inner-icon="mdi-briefcase"
-              v-model="member.post"
+              v-model="member.post.name"
               :disabled="!editMember"
               label="Cargo"
               hide-details
@@ -146,7 +147,7 @@
               outlined
               prepend-inner-icon="mdi-account-star"
               label="Líder"
-              v-model="member.leader"
+              v-model="member.leader.first_name"
               :disabled="!editMember"
               hide-details
             ></v-text-field>

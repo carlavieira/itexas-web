@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">
+      {{ text }}</v-snackbar
+    >
     <v-row class="px-4">
       <h2>Eventos</h2>
       <v-spacer></v-spacer>
@@ -26,6 +29,7 @@
               hide-details
             ></v-text-field>
           </v-card-title>
+
           <v-data-table
             no-data-text="Nenhum evento cadastrado"
             no-results-text="Nenhum evento encontrado"
@@ -33,28 +37,47 @@
             :items="eventos"
             :search="search"
           >
+            <template v-slot:item.member="{ item }">
+              <span> {{ item.member.first_name }} </span>
+            </template>
             <template v-slot:item.date="{ item }">
               <span>{{ formatDate(item.date) }}</span>
             </template>
             <template v-slot:item.time="{ item }">
               <span>{{ formatTime(item.time) }}</span>
             </template>
+            <template v-slot:item.details="{ item }">
+              <v-icon small @click="eventShow(item)"
+                >mdi-dots-horizontal</v-icon
+              >
+            </template>
           </v-data-table>
         </v-card>
       </v-flex>
     </v-row>
     <NovoEvento :show="btnEvento" @close="btnEvento = false"></NovoEvento>
+    <modalDetail
+      v-if="showDetail"
+      :show="showDetail"
+      @close="showDetail = false"
+      :event="eventDetail"
+      v-on:showSnackbar="showSnackbar"
+      @getAllEvents="getAllEvents()"
+    >
+    </modalDetail>
   </v-container>
 </template>
 
 <script>
 import NovoEvento from "./CadastrarEvento.vue";
 import eventController from "../../controllers/EventController";
+import modalDetail from "./ModalDetail.vue";
 import moment from "moment";
 
 export default {
   components: {
     NovoEvento,
+    modalDetail,
   },
 
   async created() {
@@ -67,6 +90,12 @@ export default {
       btnEvento: false,
       search: "",
       eventController,
+      eventDetail: null,
+      showDetail: false,
+      snackbar: false,
+      text: "",
+      timeout: 3000,
+      color: "",
       headersEvento: [
         {
           text: "Nome",
@@ -76,6 +105,7 @@ export default {
         { text: "Lider", value: "member", align: "center" },
         { text: "Data", value: "date", align: "center" },
         { text: "Hora", value: "time", align: "center" },
+        { text: "Detalhes", value: "details", align: "center" },
       ],
       eventos: [],
     };
@@ -87,6 +117,22 @@ export default {
     formatTime(time) {
       let hora = time.split(":");
       return `${hora[0]}:${hora[1]}`;
+    },
+    eventShow(event) {
+      this.eventDetail = event;
+      this.showDetail = true;
+    },
+    showSnackbar(snackbarDetails) {
+      this.snackbar = true;
+      this.text = snackbarDetails.text;
+      this.color = snackbarDetails.color;
+    },
+    async getAllEvents() {
+      let res = await this.eventController.getAllEvents(this.$api);
+      this.eventos = res.data;
+    },
+    async deleteEvent() {
+      await this.eventController.deleteEvent(this.$api, this.event);
     },
   },
 };
