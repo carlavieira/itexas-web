@@ -136,7 +136,10 @@ export default {
     },
     async initializeLiderandosTable() {
       /* Ao invés de utilizar id 8, dar get no localstorage userID */
-      let res = await this.memberController.getAllLiderandos(this.$api, 8);
+      let res = await this.memberController.getAllLiderandos(
+        this.$api,
+        localStorage.getItem("user_id")
+      );
       this.participantes = res.sort(function(item1, item2) {
         return item1.first_name < item2.first_name ? -1 : 1;
       });
@@ -154,7 +157,7 @@ export default {
         this.$api,
         meetingId
       );
-      
+
       this.participantes.forEach(async (item) => {
         const member = await this.memberController.getMemberById(
           this.$api,
