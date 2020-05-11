@@ -50,7 +50,7 @@ export default {
   },
   getAllLiderandos(api, id) {
     return api
-      .get(`members/?leader=${id}/`)
+      .get(`list-members/?leader=${id}`)
       .then(function(response) {
         return response.data;
       })

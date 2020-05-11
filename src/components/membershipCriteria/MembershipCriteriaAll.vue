@@ -6,14 +6,18 @@
     </v-row>
     <v-divider class="pb-3"></v-divider>
     <v-data-table
-            no-data-text="Nenhum resultado até o momento"
-            no-results-text="Nenhum resultado até o momento"
-            :headers="header"
-            :items="membresia"
-          >
-      <template v-slot:item.member="{ item }">{{ item.member.first_name + " " + item.member.last_name }}</template>
+      no-data-text="Nenhum resultado até o momento"
+      no-results-text="Nenhum resultado até o momento"
+      :headers="header"
+      :items="membresia"
+    >
+      <template v-slot:item.member="{ item }">{{
+        item.member.first_name + " " + item.member.last_name
+      }}</template>
       <template v-slot:item.member.leader="{ item }">
-        <span v-if="item.member.leader"> {{ item.member.leader.first_name }} </span>
+        <span v-if="item.member.leader">
+          {{ item.member.leader.first_name }}
+        </span>
         <span v-else> - </span>
       </template>
       <template v-slot:item.dayMonth="{ item }">
@@ -37,55 +41,52 @@
 </template>
 
 <script>
-
 import MembershipCriteriaController from "../../controllers/MembershipCriteriaController";
-import moment from 'moment';
+import moment from "moment";
 
 export default {
-
   data() {
     return {
       MembershipCriteriaController,
       header: [
         { text: "Nome", value: "member" },
-        { text: "Área", value: "member.department.name"},
-        { text: "Líder", value: "member.leader"},
+        { text: "Área", value: "member.department.name" },
+        { text: "Líder", value: "member.leader" },
         { text: "Referência", value: "dayMonth" },
         { text: "Office Hours", value: "officeHoursCriteria" },
         { text: "Reuniões", value: "meetingsCriteria" },
         { text: "Eventos", value: "eventsCriteria" },
-        { text: "Status", value: "status" }
+        { text: "Status", value: "status" },
       ],
       membresia: [],
       showModal: false,
     };
   },
 
-  async created(){
+  async created() {
     await this.listMembershipCriteria();
   },
 
   methods: {
-    async listMembershipCriteria(){
+    async listMembershipCriteria() {
       await this.MembershipCriteriaController.listMembershipCriteria(this.$api)
-      .then(res => {
-        this.membresia = res.data
-      }).catch(err => {
-        console.log(err)
-      })
+        .then((res) => {
+          this.membresia = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    
-    formatPercentage(item){
-      if(item > 100) {
-        return 100 + ' %';
-      } 
-      else
-        return item + ' %';
+
+    formatPercentage(item) {
+      if (item > 100) {
+        return 100 + " %";
+      } else return item + " %";
     },
-    
-    formatDate(item){
-      return moment(item).format('MM/YYYY')
-    }
-  }
+
+    formatDate(item) {
+      return moment(item).format("MM/YYYY");
+    },
+  },
 };
 </script>

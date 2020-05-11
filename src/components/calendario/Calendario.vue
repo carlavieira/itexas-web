@@ -262,7 +262,7 @@ export default {
             end: this.formatDate(evento.event.date, evento.event.time, true),
             name: this.formatEventType(evento.event.type),
             lider: `Lider: ${evento.event.member.first_name} ${evento.event.member.last_name}`,
-            presenca: `Presença: ${evento.attendance}`,
+            presenca: `Status: ${evento.attendance ? `Presente` : `Ausente`}`,
             markAttendance: evento.attendance ? false : true,
             event: evento,
           });
@@ -316,7 +316,7 @@ export default {
             ),
             name: this.formatEventType(meeting.meeting.type),
             lider: `Lider: ${meeting.meeting.member.first_name} ${meeting.meeting.member.last_name}`,
-            presenca: `Presença: ${meeting.attendance}`,
+            presenca: `Status: ${meeting.attendance ? `Presente` : `Ausente`}`,
             markAttendance: "none",
           });
         });
@@ -341,10 +341,20 @@ export default {
         id: evento.id,
         member: localStorage.getItem("user_id"),
       };
-      await this.participationController.editParticipationEvent(
-        this.$api,
-        participationDetail
-      );
+      await this.participationController
+        .editParticipationEvent(this.$api, participationDetail)
+        .then(function(response) {
+          alert("Presença Alterada com sucesso");
+          console.log(response);
+        })
+        .catch(function(error) {
+          alert("Erro: presença não alterada");
+          console.log(error);
+        });
+      this.selectedOpen = false;
+      this.events = [];
+      this.getEvents();
+      this.getMeetings();
     },
     nth(d) {
       return d > 3 && d < 21

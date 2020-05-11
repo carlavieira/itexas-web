@@ -55,7 +55,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <div class="pa-3" style="background-color: #f1f1f1; height: 100vh;">
+    <div class="pa-3" style="background-color: #f1f1f1; min-height: 100vh">
       <router-view> </router-view>
     </div>
   </div>
@@ -87,13 +87,13 @@ export default {
         {
           text: "Contact List",
           icon: "mdi-account",
-          path: "/member/contactList"
+          path: "/member/contactList",
         },
         {
           text: "Meu Critério",
           icon: "mdi-clipboard-text-multiple",
-          path: "/member/meu-criterio"
-        }
+          path: "/member/meu-criterio",
+        },
       ],
       drawer: true,
     };
