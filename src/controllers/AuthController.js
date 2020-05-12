@@ -8,7 +8,7 @@ export default {
     request.email = email;
     request.password = senha;
 
-    let url = "https://itexas.pythonanywhere.com/rest-auth/login/";
+    let url = "http://itexas.pythonanywhere.com/rest-auth/login/";
 
     return http
       .post(url, request)
