@@ -3,7 +3,14 @@
     <v-row class="px-4">
       <h2>Membros</h2>
       <v-spacer></v-spacer>
-      <v-btn v-if="$route.name == 'members'" @click="btnMembro = true" title="Cadastrar novo membro" small color="secondary" fab>
+      <v-btn
+        v-if="$route.name == 'members'"
+        @click="btnMembro = true"
+        title="Cadastrar novo membro"
+        small
+        color="secondary"
+        fab
+      >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-row>
@@ -29,19 +36,27 @@
             :sort-by="'full_name'"
             :sort-desc="false"
           >
-            <template v-slot:item.member="{ item }">{{ item.full_name }}</template>
+            <template v-slot:item.member="{ item }">{{
+              item.full_name
+            }}</template>
             <template v-slot:item.leader="{ item }">
               <span v-if="item.leader"> {{ item.leader.first_name }} </span>
               <span v-else> - </span>
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-icon small @click="memberShow(item)">mdi-account-details</v-icon>
+              <v-icon small @click="memberShow(item)"
+                >mdi-account-details</v-icon
+              >
             </template>
           </v-data-table>
         </v-card>
       </v-flex>
     </v-row>
-    <NovoMembro :show="btnMembro" @close="btnMembro = false" @getMembers="getMembers()"></NovoMembro>
+    <NovoMembro
+      :show="btnMembro"
+      @close="btnMembro = false"
+      @getMembers="getMembers()"
+    ></NovoMembro>
     <modalDetail
       v-if="showDetail"
       :show="showDetail"
@@ -59,12 +74,12 @@ import modalDetail from "./ModalDetail.vue";
 export default {
   components: {
     NovoMembro,
-    modalDetail
+    modalDetail,
   },
 
   async created() {
     //this.membros = await this.getMembers()
-    this.membros = this.setFullName(await this.getMembers())
+    this.membros = this.setFullName(await this.getMembers());
     //this.membros = this.setFullName(this.membros);
   },
 
@@ -77,36 +92,45 @@ export default {
         {
           text: "Nome",
           align: "start",
-          value: "full_name"
+          value: "full_name",
         },
         { text: "Cargo", value: "post.name" },
         { text: "Área", value: "department.name" },
         { text: "Líder", value: "leader" },
-        { text: "Detalhes", value: "actions", sortable: false }
+        { text: "Detalhes", value: "actions", sortable: false },
       ],
       membros: [],
       userDetail: null,
-      showDetail: false
+      showDetail: false,
     };
   },
 
   methods: {
     memberShow(user) {
+      console.log(user);
       this.userDetail = user;
       this.showDetail = true;
     },
     async getMembers() {
-      return await this.memberController.getAllMembers(this.$api);
+      const members = await this.memberController.getAllMembers(this.$api);
+      console.log(members);
+      members.forEach((member) => {
+        if (!member.leader) {
+          member.leader = { first_name: "-" };
+        }
+      });
+
+      return members;
     },
     setFullName(array) {
       const newArray = new Array();
-      array.map(item => {
+      array.map((item) => {
         item.full_name = `${item.first_name} ${item.last_name}`;
         newArray.push(item);
       });
 
       return newArray;
-    }
-  }
+    },
+  },
 };
 </script>
