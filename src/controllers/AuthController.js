@@ -8,7 +8,7 @@ export default {
     request.email = email;
     request.password = senha;
 
-    let url = "http://itexas.herokuapp.com/rest-auth/login/";
+    let url = "https://itexas.herokuapp.com/rest-auth/login/";
 
     return http
       .post(url, request)
