@@ -23,9 +23,11 @@
       <template v-slot:item.dayMonth="{ item }">
         <span v-if="item.dayMonth">{{ formatDate(item.dayMonth) }}</span>
       </template>
-      <template v-slot:item.officeHoursCriteria="{ item }">{{
-        formatPercentage(item.officeHoursCriteria)
-      }}</template>
+      <template v-slot:item.officeHoursCriteria="{}">
+        <v-chip class="ma-2" color="green" text-color="white">
+          teste
+        </v-chip>
+      </template>
       <template v-slot:item.meetingsCriteria="{ item }">{{
         formatPercentage(item.meetingsCriteria)
       }}</template>

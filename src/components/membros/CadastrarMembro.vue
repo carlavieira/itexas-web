@@ -247,6 +247,7 @@ export default {
     },
 
     async submit() {
+      console.log(this.memberDetails);
       await this.memberController
         .createMember(this.$api, this.memberDetails)
         .then((res) => {
