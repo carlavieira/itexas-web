@@ -30,6 +30,14 @@
       </v-list-item>
       <v-divider></v-divider>
       <v-list nav dense dark class="tertiary--text px-7 pt-6 py-4">
+        <v-list-item link @click="makeCheck()">
+          <v-list-item-icon>
+            <v-icon>mdi-alarm-check</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Check-in / Check-out</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item
           class="radius"
           v-for="item in items"
@@ -45,7 +53,6 @@
             <v-list-item-title>{{ item.text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-
         <v-list-item link @click="logout()">
           <v-list-item-icon>
             <v-icon>mdi-exit-to-app</v-icon>
@@ -64,7 +71,8 @@
 </template>
 
 <script>
-import authController from "../controllers/AuthController";
+import authController from "../controllers/AuthController"
+import officeHoursController from "../controllers/OfficeHoursController"
 
 export default {
   data() {
@@ -121,12 +129,6 @@ export default {
         },
         //Members
         {
-          text: "Check-in/Check-out",
-          icon: "mdi-view-dashboard-outline",
-          path: "/dashboard",
-          adminItem: true,
-        },
-        {
           text: "Meu Perfil",
           icon: "mdi-account-circle",
           path: "/adm/perfil",
@@ -158,6 +160,8 @@ export default {
         },
       ],
       drawer: true,
+      officeHoursController,
+      officeHours: []
     };
   },
 
@@ -172,6 +176,52 @@ export default {
           console.log(e);
         });
     },
+
+    async makeCheck(){
+      let checkOut = false
+      await this.officeHoursController
+        .getOfficeHours(this.$api)
+        .then(res => {
+          this.officeHours = res.data;
+          this.officeHours.forEach(oh => {
+            if(!oh.checkout_time){
+              oh.checkout_time = new Date()
+              this.updateOfficeHour(oh)
+              checkOut = true
+            }
+          })
+
+          if(!checkOut){
+            let oh = {}
+            oh.date = new Date().toISOString().split('T')[0];
+            oh.checkin_time = new Date()
+            this.createOfficeHour(oh)
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
+    async createOfficeHour(oh){
+      await officeHoursController.createOfficeHour(this.$api, oh)
+      .then(res => {
+        console.log(res)
+        alert("Check-in realizado!")
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    async updateOfficeHour(oh){
+      await officeHoursController.editOfficeHour(this.$api, oh)
+      .then(res => {
+        console.log(res)
+        alert("Check-out realizado!")
+      }).catch(err => {
+        console.log(err)
+      })
+    }
   },
 };
 </script>

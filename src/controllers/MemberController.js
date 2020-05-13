@@ -58,4 +58,14 @@ export default {
         console.log(error);
       });
   },
+
+  getAllDepartments(api){
+    return api
+      .get(`manage-departments/`)
+      .then(res => {
+        return res
+      }).catch(e => {
+        return e
+      })
+  }
 };
