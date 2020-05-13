@@ -94,6 +94,11 @@ export default {
           icon: "mdi-clipboard-text-multiple",
           path: "/member/meu-criterio",
         },
+        {
+          text: "Office Hours",
+          icon: "mdi-clipboard-text-multiple",
+          path: "/member/officeHours",
+        }
       ],
       drawer: true,
     };

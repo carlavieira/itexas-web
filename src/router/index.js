@@ -12,6 +12,7 @@ import membershipCriteriaAll from "../components/membershipCriteria/MembershipCr
 import membershipCriteriaMember from "../components/membershipCriteria/MembershipCriteriaMember.vue";
 import perfil from "../components/Perfil.vue";
 import officeHours from "../components/officeHours/OfficeHours.vue";
+import officeHoursAdm from "../components/officeHours/OfficeHoursAdm.vue"
 
 import memberTemplate from "../components/Member.vue";
 
@@ -43,6 +44,11 @@ const routes = [
         path: "/adm/meu-criterio",
         name: "membershipCriteriaAdm",
         component: membershipCriteriaMember
+      },
+      {
+        path: "/adm/officeHoursAdm",
+        name: "officeHoursAdm",
+        component: officeHoursAdm
       }
     ],
   },
@@ -60,7 +66,8 @@ const routes = [
         path: "/member/meu-criterio",
         name: "membershipCriteriaUser",
         component: membershipCriteriaMember
-      }
+      },
+      { path: "/member/officeHour", name: "officeHours", component: officeHours }
     ],
   },
 ];

@@ -86,7 +86,7 @@ export default {
         {
           text: "Office Hours",
           icon: "mdi-alarm-check",
-          path: "/adm/officeHours",
+          path: "/adm/officeHoursAdm",
           adminItem: true,
         },
         {
