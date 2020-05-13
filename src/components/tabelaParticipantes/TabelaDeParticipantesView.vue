@@ -96,6 +96,7 @@ export default {
   props: {
     form: String,
     objForm: Object,
+    typeEvent: String,
   },
 
   directives: {
@@ -152,11 +153,18 @@ export default {
       });
       return array;
     },
-    async initializeAttendanceAlreadySent(meetingId) {
-      this.participantes = await this.participationController.getParticipantsInMeeting(
-        this.$api,
-        meetingId
-      );
+    async initializeAttendanceAlreadySent(eventId) {
+      if (this.typeEvent == "meeting") {
+        this.participantes = await this.participationController.getParticipantsInMeeting(
+          this.$api,
+          eventId
+        );
+      } else if (this.typeEvent == "event") {
+        this.participantes = await this.participationController.getParticipantsInEvent(
+          this.$api,
+          eventId
+        );
+      }
 
       this.participantes.forEach(async (item) => {
         const member = await this.memberController.getMemberById(
@@ -169,7 +177,6 @@ export default {
       this.participantesWithName = this.ordenaOrdemCrescente(
         this.participantesWithName
       );
-      console.log;
     },
     editItem(item) {
       this.editedIndex = this.participantes.indexOf(item);

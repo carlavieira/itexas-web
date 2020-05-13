@@ -7,6 +7,7 @@
       <h2>Eventos</h2>
       <v-spacer></v-spacer>
       <v-btn
+        v-if="$route.name == 'eventos'"
         @click="btnEvento = true"
         title="Marcar Evento"
         small
@@ -65,7 +66,7 @@
       @close="showDetail = false"
       :event="eventDetail"
       v-on:showSnackbar="showSnackbar"
-      @getAllEvents="getAllEvents()"
+      @getAllEvents="getEvents()"
     >
     </modalDetail>
   </v-container>
@@ -73,6 +74,7 @@
 
 <script>
 import NovoEvento from "./CadastrarEvento.vue";
+import participationController from "../../controllers/ParticipationController";
 import eventController from "../../controllers/EventController";
 import modalDetail from "./ModalDetail.vue";
 import moment from "moment";
@@ -84,7 +86,7 @@ export default {
   },
 
   async created() {
-    let res = await this.eventController.getAllEvents(this.$api);
+    let res = this.getEvents();
     this.eventos = res.data;
   },
 
@@ -93,6 +95,7 @@ export default {
       btnEvento: false,
       search: "",
       eventController,
+      participationController,
       eventDetail: null,
       showDetail: false,
       snackbar: false,
@@ -113,6 +116,9 @@ export default {
       eventos: [],
     };
   },
+  updated() {
+    this.getEvents();
+  },
   methods: {
     formatDate(date) {
       return moment(date).format("DD/MM/YYYY");
@@ -130,9 +136,22 @@ export default {
       this.text = snackbarDetails.text;
       this.color = snackbarDetails.color;
     },
-    async getAllEvents() {
-      let res = await this.eventController.getAllEvents(this.$api);
-      this.eventos = res.data;
+    async getEvents() {
+      if (this.$route.name == "eventos") {
+        const res = await this.eventController.getAllEvents(this.$api);
+        this.eventos = res.data;
+      } else if (this.$route.name == "meus-eventos") {
+        const memberID = localStorage.getItem("user_id");
+        const minhasParticipacoes = await this.participationController.getMemberParticipationEvent(
+          this.$api,
+          memberID
+        );
+        const meusEventos = [];
+        minhasParticipacoes.forEach((participacao) => {
+          meusEventos.push(participacao.event);
+        });
+        this.eventos = meusEventos;
+      }
     },
     async deleteEvent() {
       await this.eventController.deleteEvent(this.$api, this.event);

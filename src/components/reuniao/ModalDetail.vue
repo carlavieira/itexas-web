@@ -3,7 +3,7 @@
     <v-card class="pa-5 pl-10 modal">
       <v-layout row class="px-3">
         <v-btn
-          v-if="!editMeeting"
+          v-if="!editMeeting && $route.name == 'reuniao'"
           color="black"
           @click="editMeeting = true"
           title="Editar"
@@ -13,6 +13,7 @@
         </v-btn>
 
         <v-btn
+          v-if="$route.name == 'reuniao'"
           color="red"
           @click.stop="dialog = true"
           class="ml-2"
@@ -161,13 +162,17 @@
 
         <tabelaParticipante
           v-on:enviarParticipantesPai="ListaParticipantes"
+          :typeEvent="'meeting'"
           :objForm="meeting"
           v-if="editMeeting"
         ></tabelaParticipante>
+
         <tabelaParticipanteView
+          :typeEvent="'meeting'"
           :objForm="meeting"
           v-if="!editMeeting"
         ></tabelaParticipanteView>
+
         <v-layout col-xs-12 col-sm-6 row justify-center v-if="editMeeting">
           <v-btn class="ma-2 mt-4" @click="sendEdit()" depressed color="success"
             >Salvar</v-btn

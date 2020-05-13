@@ -26,14 +26,13 @@ export default {
     },
 
     editOfficeHour(api, data) {
-        data.member = userId
+        data.member.id ? (data.member = data.member.id) : (data.member = userId)
         return api
         .put(`manage-office-hours/${data.id}/`, data)
         .then((res) => res.data)
         .catch((e) => {
           throw e;
         });
-
     },
 
     deleteOfficeHour(api, data){
@@ -43,5 +42,14 @@ export default {
         .catch((e) => {
           throw e;
         });
+    },
+
+    listOfficeHour(api){
+        return api
+        .get(`list-office-hours`)
+        .then(res => res)
+        .catch(e => {
+            throw e
+        })
     }
 }

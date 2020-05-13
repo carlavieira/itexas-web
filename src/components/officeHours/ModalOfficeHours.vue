@@ -19,10 +19,12 @@
             <template v-slot:activator="{ on }">
               <v-text-field
                 v-model="officeHour.date"
+                dense
                 label="Data"
                 prepend-icon="mdi-calendar"
                 readonly
                 v-on="on"
+                hide-details
               ></v-text-field>
             </template>
             <v-date-picker v-model="officeHour.date" color="red lighten-1" locale="pt-br" scrollable>
@@ -48,11 +50,13 @@
                 prepend-icon="mdi-clock-outline"
                 readonly
                 v-on="on"
+                dense
+                hide-details
               ></v-text-field>
             </template>
             <v-time-picker v-model="officeHour.checkin_time" color="red lighten-1" format="24hr" full-width>
               <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="modalCheckin = false">Cancel</v-btn>
+              <v-btn text color="primary" @click="modalCheckin = false">Cancelar</v-btn>
               <v-btn text color="primary" @click="$refs.dialogCheckin.save(officeHour.checkin_time)">OK</v-btn>
             </v-time-picker>
           </v-dialog>
@@ -73,6 +77,8 @@
                 prepend-icon="mdi-clock-outline"
                 readonly
                 v-on="on"
+                dense
+                hide-details
               ></v-text-field>
             </template>
             <v-time-picker v-model="officeHour.checkout_time" color="red lighten-1" format="24hr" full-width>
@@ -82,9 +88,11 @@
             </v-time-picker>
           </v-dialog>
         </v-col>
-        <v-col class="col-12" sm="6" md="6" lg="6">
-          <v-btn v-if="type == 'add'" class="ma-2" depressed color="success" @click="createOfficeHour()">Salvar</v-btn>
-          <v-btn v-if="type == 'edit'" class="ma-2" depressed color="success" @click="editOfficeHour()">Salvar</v-btn>
+        <v-col class="col-12 py-0" sm="12">
+          <v-layout align-center justify-end="">
+            <v-btn v-if="type == 'add'" class="ma-0" depressed color="success" @click="createOfficeHour()">Salvar</v-btn>
+            <v-btn v-if="type == 'edit'" class="ma-0" depressed color="success" @click="editOfficeHour()">Salvar</v-btn>
+          </v-layout>
         </v-col>
       </v-row>
     </v-card>

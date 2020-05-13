@@ -85,6 +85,16 @@ export default {
           path: "/member/calendario",
         },
         {
+          text: "Minhas Reuniões",
+          icon: "mdi-account-multiple",
+          path: "/member/minhas-reunioes",
+        },
+        {
+          text: "Meus Eventos",
+          icon: "mdi-account-group",
+          path: "/member/meus-eventos",
+        },
+        {
           text: "Contact List",
           icon: "mdi-account",
           path: "/member/contactList",
@@ -94,6 +104,11 @@ export default {
           icon: "mdi-clipboard-text-multiple",
           path: "/member/meu-criterio",
         },
+        {
+          text: "Office Hours",
+          icon: "mdi-clipboard-text-multiple",
+          path: "/member/officeHours",
+        }
       ],
       drawer: true,
     };

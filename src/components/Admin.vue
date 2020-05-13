@@ -86,7 +86,7 @@ export default {
         {
           text: "Office Hours",
           icon: "mdi-alarm-check",
-          path: "/adm/officeHours",
+          path: "/adm/officeHoursAdm",
           adminItem: true,
         },
         {
@@ -127,12 +127,12 @@ export default {
         {
           text: "Minhas Reuniões",
           icon: "mdi-account-multiple",
-          path: "/adm/reuniao",
+          path: "/adm/minhas-reunioes",
         },
         {
           text: "Meus Eventos",
           icon: "mdi-account-group",
-          path: "/adm/eventos",
+          path: "/adm/meus-eventos",
         },
         {
           text: "Meu Critério",
