@@ -46,4 +46,16 @@ export default {
         return err;
       });
   },
+
+  sendEmail(http, email){
+    let url = "http://itexas.pythonanywhere.com/rest-auth/password/reset/";
+    return http
+      .post(url, { email })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
 };
