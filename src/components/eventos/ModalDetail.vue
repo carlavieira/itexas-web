@@ -3,7 +3,7 @@
     <v-card class="pa-5 pl-10 modal">
       <v-layout row class="px-3">
         <v-btn
-          v-if="!editEvent"
+          v-if="!editEvent && $route.name == 'eventos'"
           color="black"
           @click="editEvent = true"
           title="Editar"
@@ -18,6 +18,7 @@
           class="ml-2"
           title="Excluir"
           small
+          v-if="$route.name == 'eventos'"
         >
           <v-icon color="white">mdi-delete</v-icon>
         </v-btn>
@@ -161,6 +162,20 @@
             </v-time-picker>
           </v-dialog>
         </v-layout>
+
+        <tabelaParticipante
+          v-on:enviarParticipantesPai="ListaParticipantes"
+          :typeEvent="'event'"
+          :objForm="event"
+          v-if="editEvent"
+        ></tabelaParticipante>
+
+        <tabelaParticipanteView
+          :typeEvent="'event'"
+          :objForm="event"
+          v-if="!editEvent"
+        ></tabelaParticipanteView>
+
         <v-layout col-xs-12 col-sm-6 row justify-center v-if="editEvent">
           <v-btn class="ma-2 mt-4" @click="sendEdit()" depressed color="success"
             >Salvar</v-btn
@@ -174,11 +189,16 @@
 <script>
 import memberController from "../../controllers/MemberController";
 import eventController from "../../controllers/EventController";
+import tabelaParticipante from "../tabelaParticipantes/TabelaDeParticipantes";
+import tabelaParticipanteView from "../tabelaParticipantes/TabelaDeParticipantesView";
+import participationController from "../../controllers/ParticipationController";
+
 export default {
   data: (vm) => ({
     editEvent: false,
     memberController,
     eventController,
+    participationController,
     eventDetails: {},
     hostName: "-",
     dialog: false,
@@ -189,6 +209,8 @@ export default {
     modal: false,
     leader: "",
     leaders: [],
+    participantes: [],
+    participantesToDelete: [],
     time: "00:00",
     types: [
       { name: "Reunião Geral", value: "RG" },
@@ -215,6 +237,11 @@ export default {
     this.time = this.event.time;
   },
 
+  components: {
+    tabelaParticipante,
+    tabelaParticipanteView,
+  },
+
   props: {
     show: Boolean,
     event: Object,
@@ -228,6 +255,7 @@ export default {
 
   methods: {
     async sendEdit() {
+      /* Edit Event */
       this.event.date = this.date;
       console.log(this.date);
       console.log(this.event);
@@ -247,6 +275,43 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+
+      /* Edit Participation */
+      this.participantes.forEach(async (participante) => {
+        if (participante.is_active) {
+          let part = new Object();
+          part.event = this.event.id;
+          part.member = participante.id;
+          part.attendance = participante.attendance;
+          await this.participationController.createParticipationEvent(
+            this.$api,
+            part
+          );
+        } else {
+          participante.event = participante.event.id;
+          participante.member = participante.member.id;
+          await this.participationController.editParticipationEvent(
+            this.$api,
+            participante
+          );
+        }
+      });
+
+      /* Delete Participation */
+      if (this.participantesToDelete.length !== 0) {
+        this.participantesToDelete.forEach(async (participante) => {
+          await this.participationController.deleteParticipationEvent(
+            this.$api,
+            participante.id
+          );
+        });
+      }
+    },
+    ListaParticipantes(participantes) {
+      console.log("update");
+      this.participantes = [];
+      this.participantes = participantes.participantesWithName;
+      this.participantesToDelete = participantes.participantesDeleted;
     },
     async deleteEvent() {
       await this.eventController

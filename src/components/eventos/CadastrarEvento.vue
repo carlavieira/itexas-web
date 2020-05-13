@@ -139,12 +139,13 @@ export default {
         { name: "Reunião Geral", value: "RG" },
         { name: "Assembléia", value: "AS" },
         { name: "Conferência", value: "CF" },
-        { name: "Outros", value: "OU" }
-      ]
+        { name: "Outros", value: "OU" },
+      ],
+      participantes: [],
     };
   },
   props: {
-    show: Boolean
+    show: Boolean,
   },
 
   methods: {
@@ -159,8 +160,12 @@ export default {
       console.log(eventDetails);
 
       return await this.eventController.createEvent(this.$api, eventDetails);
-    }
-  }
+    },
+    ListaParticipantes(participantes) {
+      this.participantes = [];
+      this.participantes = participantes;
+    },
+  },
 };
 </script>
 

@@ -1,9 +1,19 @@
 <template>
-  <v-data-table :headers="headers" :items="participantesWithName" class="elevation-1">
-    <template v-slot:item.participante="{ item }">{{ item.full_name }}</template>
+  <v-data-table
+    :headers="headers"
+    :items="participantesWithName"
+    class="elevation-1"
+  >
+    <template v-slot:item.participante="{ item }">{{
+      item.full_name
+    }}</template>
 
     <template v-slot:item.attendance="{ item }">
-      <input type="checkbox" @click="enviaParticipantesParaPai()" v-model="item.attendance" />
+      <input
+        type="checkbox"
+        @click="enviaParticipantesParaPai()"
+        v-model="item.attendance"
+      />
     </template>
 
     <template v-slot:top>
@@ -46,11 +56,13 @@
                       item-value="select_box"
                       placeholder="Nome"
                       outlined
-                      hint="Será mostrado apenas participantes que já não fazem parte da reunião."
+                      hint="Será mostrado apenas participantes que já não fazem parte do evento."
                       persistent-hint
                     >
                       <template v-slot:no-data>
-                        <span pa-2>Todos os participantes já estão na reunião</span>
+                        <span pa-2
+                          >Todos os participantes já estão no evento</span
+                        >
                       </template>
                     </v-select>
                   </v-col>
@@ -71,7 +83,7 @@
       <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
     </template>
     <template v-slot:no-data>
-      <span>Não há participantes nesta reunião.</span>
+      <span>Não há participantes neste evento.</span>
     </template>
   </v-data-table>
 </template>
@@ -91,7 +103,7 @@ export default {
     headers: [
       { text: "Participante", value: "participante", align: "start" },
       { text: "Presença", value: "attendance", align: "center" },
-      { value: "actions", sortable: false, align: "end" }
+      { value: "actions", sortable: false, align: "end" },
     ],
     participantes: [],
     participantesWithName: [],
@@ -101,21 +113,22 @@ export default {
     editedIndex: -1,
     editedItem: {
       participante: "",
-      attendance: false
+      attendance: false,
     },
     defaultItem: {
       participante: "",
-      attendance: false
-    }
+      attendance: false,
+    },
   }),
 
   props: {
     form: String,
-    objForm: Object
+    objForm: Object,
+    typeEvent: String,
   },
 
   directives: {
-    Ripple
+    Ripple,
   },
 
   computed: {
@@ -123,13 +136,13 @@ export default {
       return this.editedIndex === -1
         ? "Novo Participante"
         : "Editar Participante";
-    }
+    },
   },
 
   watch: {
     dialog(val) {
       val || this.close();
-    }
+    },
   },
 
   async created() {
@@ -161,10 +174,9 @@ export default {
       return -1;
     },
     async initializeMembersInput() {
-      console.log("Ok");
       this.membros = await this.memberController.getAllMembers(this.$api);
       this.participantesDiferent = [];
-      this.membros.forEach(item => {
+      this.membros.forEach((item) => {
         this.participantesDiferent.push(item);
       });
       this.setFullName(this.membros);
@@ -201,7 +213,7 @@ export default {
     },
     setFullName(array) {
       const newArray = new Array();
-      array.map(item => {
+      array.map((item) => {
         item.full_name = `${item.first_name} ${item.last_name}`;
         newArray.push(item);
       });
@@ -220,15 +232,21 @@ export default {
       this.setFullName(this.participantesWithName);
       this.enviaParticipantesParaPai();
     },
-    async initializeAttendanceAlreadySent(meetingId) {
-      this.participantes = await this.participationController.getParticipantsInMeeting(
-        this.$api,
-        meetingId
-      );
-
+    async initializeAttendanceAlreadySent(eventId) {
+      if (this.typeEvent == "meeting") {
+        this.participantes = await this.participationController.getParticipantsInMeeting(
+          this.$api,
+          eventId
+        );
+      } else if (this.typeEvent == "event") {
+        this.participantes = await this.participationController.getParticipantsInEvent(
+          this.$api,
+          eventId
+        );
+      }
 
       /* REMOVER ESSE GETMEMBERBY ID */
-      this.participantes.forEach(async item => {
+      this.participantes.forEach(async (item) => {
         const member = await this.memberController.getMemberById(
           this.$api,
           item.member.id
@@ -256,7 +274,7 @@ export default {
     },
     deleteItem(item) {
       const index = this.participantesWithName.indexOf(item);
-      let checkItem = item => {
+      let checkItem = (item) => {
         if (!item.email) {
           this.participantesDeleted.push(item);
           this.enviaParticipantesParaPai();
@@ -277,7 +295,7 @@ export default {
       }, 300);
     },
     save() {
-      this.editedItem.participante.map(participante => {
+      this.editedItem.participante.map((participante) => {
         if (!participante.attendance) {
           participante.attendance = true;
         }
@@ -299,8 +317,8 @@ export default {
           JSON.parse(JSON.stringify(this.participantesForSend))
         );
       }, 300);
-    }
-  }
+    },
+  },
 };
 </script>
 
