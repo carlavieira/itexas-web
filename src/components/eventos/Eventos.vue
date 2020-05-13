@@ -7,6 +7,7 @@
       <h2>Eventos</h2>
       <v-spacer></v-spacer>
       <v-btn
+        v-if="$route.name == 'eventos'"
         @click="btnEvento = true"
         title="Marcar Evento"
         small

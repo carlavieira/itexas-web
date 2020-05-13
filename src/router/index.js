@@ -30,6 +30,11 @@ const routes = [
       { path: "/adm/dashboard", name: "dashboard", component: dashboard },
       { path: "/adm/membros", name: "members", component: members },
       { path: "/adm/reuniao", name: "reuniao", component: reuniao },
+      {
+        path: "/adm/minhas-reunioes",
+        name: "minhas-reunioes",
+        component: reuniao,
+      },
       { path: "/adm/eventos", name: "eventos", component: eventos },
       { path: "/adm/meus-eventos", name: "meus-eventos", component: eventos },
       { path: "/adm/calendario", name: "calendario", component: calendario },
@@ -61,6 +66,16 @@ const routes = [
         path: "/member/meu-criterio",
         name: "membershipCriteriaUser",
         component: membershipCriteriaMember,
+      },
+      {
+        path: "/member/minhas-reunioes",
+        name: "minhas-reunioes",
+        component: reuniao,
+      },
+      {
+        path: "/member/meus-eventos",
+        name: "meus-eventos",
+        component: eventos,
       },
     ],
   },

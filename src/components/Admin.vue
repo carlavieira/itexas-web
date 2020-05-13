@@ -127,7 +127,7 @@ export default {
         {
           text: "Minhas Reuniões",
           icon: "mdi-account-multiple",
-          path: "/adm/reuniao",
+          path: "/adm/minhas-reunioes",
         },
         {
           text: "Meus Eventos",

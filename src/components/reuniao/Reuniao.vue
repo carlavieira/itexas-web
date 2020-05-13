@@ -7,6 +7,7 @@
       <h2>Reuniões</h2>
       <v-spacer></v-spacer>
       <v-btn
+        v-if="$route.name == 'reuniao'"
         @click="btnReuniao = true"
         title="Marcar Reunião"
         small
@@ -60,7 +61,7 @@
     <NovaReuniao
       :show="btnReuniao"
       @close="btnReuniao = false"
-      @getAllMeeting="getAllMeeting()"
+      @getAllMeeting="getMeeting()"
       v-on:showSnackbar="showSnackbar"
     ></NovaReuniao>
     <modalDetail
@@ -69,7 +70,7 @@
       :meeting="meetingDetail"
       @close="showDetail = false"
       v-on:showSnackbar="showSnackbar"
-      @getAllMeeting="getAllMeeting()"
+      @getAllMeeting="getMeeting()"
     >
     </modalDetail>
   </v-container>
@@ -78,6 +79,7 @@
 <script>
 import NovaReuniao from "./CadastrarReuniao.vue";
 import meetingController from "../../controllers/MeetingController";
+import participationController from "../../controllers/ParticipationController";
 import modalDetail from "./ModalDetail.vue";
 import moment from "moment";
 
@@ -88,6 +90,7 @@ export default {
       search: "",
       data: null,
       meetingController,
+      participationController,
       meetingDetail: null,
       showDetail: false,
       leaders: {},
@@ -128,7 +131,7 @@ export default {
   },
 
   async created() {
-    this.getAllMeeting();
+    this.getMeeting();
   },
 
   methods: {
@@ -150,10 +153,23 @@ export default {
       (this.meetingDetail = meeting), (this.showDetail = true);
     },
 
-    async getAllMeeting() {
-      this.reunioes = await this.meetingController.getAllMeeting(this.$api);
+    async getMeeting() {
+      if (this.$route.name == "reuniao") {
+        const res = await this.meetingController.getAllMeeting(this.$api);
+        this.reunioes = res;
+      } else if (this.$route.name == "minhas-reunioes") {
+        const memberID = localStorage.getItem("user_id");
+        const minhasParticipacoes = await this.participationController.getMemberParticipationMeeting(
+          this.$api,
+          memberID
+        );
+        const minhasReunioes = [];
+        minhasParticipacoes.forEach((participacao) => {
+          minhasReunioes.push(participacao.meeting);
+        });
+        this.reunioes = minhasReunioes;
+      }
     },
-
     showSnackbar(snackbarDetails) {
       this.snackbar = true;
       this.text = snackbarDetails.text;
