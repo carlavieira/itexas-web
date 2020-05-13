@@ -24,6 +24,32 @@
         ></v-select>
       </v-card-title>
 
+      <v-dialog v-model="dialog" max-width="500" min-h>
+          <v-card>
+            <v-card-title style="font-size: 16px !important" class="headline"
+              >Deseja realmente deletar a office hour?</v-card-title
+            >
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                color="green darken-1"
+                text
+                @click="
+                  dialog = false;
+                  deleteItem(deletedItem);
+                "
+              >
+                Sim
+              </v-btn>
+
+              <v-btn color="red darken-1" text @click="dialog = false">
+                Não
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
       <v-data-table
         :search="search"
         :sort-by="['date', 'checkin_time', 'member.first_name']"
@@ -43,7 +69,7 @@
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon small @click="edit(item)">mdi-pencil</v-icon>
-          <v-icon class="pl-3" small @click="deleteItem(item)">mdi-delete</v-icon>
+          <v-icon class="pl-3" small @click="dialog = true, deletedItem = item">mdi-delete</v-icon>
         </template>
       </v-data-table>
     </v-card>
@@ -87,7 +113,9 @@ export default {
       oh: {},
       search: "",
       search1: "",
-      cargos: [ "teste", "teste1", ""]
+      cargos: [ "teste", "teste1", ""],
+      dialog: false,
+      deletedItem: ""
     };
   },
 
