@@ -116,9 +116,6 @@ export default {
       eventos: [],
     };
   },
-  updated() {
-    this.getEvents();
-  },
   methods: {
     formatDate(date) {
       return moment(date).format("DD/MM/YYYY");

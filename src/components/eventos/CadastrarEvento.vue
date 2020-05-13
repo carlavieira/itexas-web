@@ -15,92 +15,103 @@
               :items="types"
               item-text="name"
               item-value="value"
+              :rules="rules.type"
               label="Nome do Evento"
-              prepend-icon="mdi-account-group"
+              prepend-inner-icon="mdi-account-group"
               required
               no-gutters
+              outlined
+              dense
             ></v-select>
           </v-col>
 
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-text-field
-              :counter="40"
+            <v-select
               v-model="leader"
+              :items="leaders"
+              item-text="full_name"
+              item-value="id"
               label="Líder responsável"
-              prepend-icon="mdi-account-star"
-            ></v-text-field>
+              prepend-inner-icon="mdi-account-star"
+              :rules="rules.leader"
+              outlined
+              dense
+              required
+            ></v-select>
           </v-col>
 
-          <v-row justify="space-around">
-            <v-col class="col-12" sm="6" md="6" lg="6">
-              <v-dialog
-                ref="dialog2"
-                v-model="modal1"
-                :return-value.sync="date"
-                persistent
-                width="290px"
+          <v-col class="col-12" sm="6" md="6" lg="6">
+            <v-dialog
+              ref="dialog2"
+              v-model="modal1"
+              :return-value.sync="date"
+              persistent
+              width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="dateFormatted"
+                  label="Data do Evento"
+                  prepend-inner-icon="mdi-calendar"
+                  readonly
+                  v-on="on"
+                  outlined
+                  dense
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="date"
+                color="red lighten-1"
+                locale="pt-br"
+                scrollable
               >
-                <template v-slot:activator="{ on }">
-                  <v-text-field
-                    v-model="date"
-                    label="Data do Evento"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="date"
-                  color="red lighten-1"
-                  locale="pt-br"
-                  scrollable
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="modal1 = false"
+                  >Voltar</v-btn
                 >
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="modal1 = false"
-                    >Voltar</v-btn
-                  >
-                  <v-btn text color="primary" @click="$refs.dialog2.save(date)"
-                    >OK</v-btn
-                  >
-                </v-date-picker>
-              </v-dialog>
-            </v-col>
+                <v-btn text color="primary" @click="$refs.dialog2.save(date)"
+                  >OK</v-btn
+                >
+              </v-date-picker>
+            </v-dialog>
+          </v-col>
 
-            <v-col class="col-12" sm="6" md="6" lg="6">
-              <v-dialog
-                ref="dialog"
-                v-model="modal2"
-                :return-value.sync="time"
-                persistent
-                width="290px"
-              >
-                <template v-slot:activator="{ on }">
-                  <v-text-field
-                    v-model="time"
-                    label="Hora do Evento"
-                    prepend-icon="mdi-clock-outline"
-                    readonly
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-time-picker
-                  v-if="modal2"
+          <v-col class="col-12" sm="6" md="6" lg="6">
+            <v-dialog
+              ref="dialog"
+              v-model="modal2"
+              :return-value.sync="time"
+              persistent
+              width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  outlined
+                  dense
                   v-model="time"
-                  color="red lighten-1"
-                  format="24hr"
-                  full-width
+                  label="Hora do Evento"
+                  prepend-inner-icon="mdi-clock-outline"
+                  readonly
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-time-picker
+                v-if="modal2"
+                v-model="time"
+                color="red lighten-1"
+                format="24hr"
+                full-width
+              >
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="modal2 = false"
+                  >Cancel</v-btn
                 >
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="modal2 = false"
-                    >Cancel</v-btn
-                  >
-                  <v-btn text color="primary" @click="$refs.dialog.save(time)"
-                    >OK</v-btn
-                  >
-                </v-time-picker>
-              </v-dialog>
-            </v-col>
-          </v-row>
+                <v-btn text color="primary" @click="$refs.dialog.save(time)"
+                  >OK</v-btn
+                >
+              </v-time-picker>
+            </v-dialog>
+          </v-col>
           <v-col
             class="mt-6 col-12 offset-md-4 offset-lg-4 offset-sm-3 column-button"
             sm="6"
@@ -120,35 +131,71 @@
 
 <script>
 import eventController from "../../controllers/EventController";
+import memberController from "../../controllers/MemberController";
 //import moment from "moment";
 
 export default {
-  data() {
-    return {
-      date: new Date().toISOString().substr(0, 10),
-      modal1: false,
-      modal2: false,
-      time: null,
-      e7: null,
-      select: null,
-      valid: true,
-      eventController,
-      type: null,
-      leader: null,
-      types: [
-        { name: "Reunião Geral", value: "RG" },
-        { name: "Assembléia", value: "AS" },
-        { name: "Conferência", value: "CF" },
-        { name: "Outros", value: "OU" },
-      ],
-      participantes: [],
-    };
-  },
+  data: (vm) => ({
+    date: new Date().toISOString().substr(0, 10),
+    dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+    modal1: false,
+    modal2: false,
+    time: null,
+    e7: null,
+    select: null,
+    valid: true,
+    eventController,
+    memberController,
+    type: null,
+    leader: "",
+    leaders: [],
+    types: [
+      { name: "Reunião Geral", value: "RG" },
+      { name: "Assembléia", value: "AS" },
+      { name: "Conferência", value: "CF" },
+      { name: "Outros", value: "OU" },
+    ],
+    rules: {
+      type: [(v) => !!v || "Selecione um tipo de reunião"],
+      leader: [(v) => !!v || "Selecione o líder na reunião."],
+    },
+    participantes: [],
+  }),
+
   props: {
     show: Boolean,
   },
 
+  async created() {
+    await this.populaSelectLider();
+  },
+
+  computed: {
+    computedDateFormatted() {
+      return this.formatDate(this.date);
+    },
+  },
+
+  watch: {
+    /* caso de erro, colocar o parametro date(val) */
+    date() {
+      this.dateFormatted = this.formatDate(this.date);
+    },
+  },
+
   methods: {
+    formatDate(date) {
+      if (!date) return null;
+
+      const [year, month, day] = date.split("-");
+      return `${day}/${month}/${year}`;
+    },
+    parseDate(date) {
+      if (!date) return null;
+
+      const [month, day, year] = date.split("/");
+      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    },
     async submit() {
       const eventDetails = new Object();
 
@@ -164,6 +211,33 @@ export default {
     ListaParticipantes(participantes) {
       this.participantes = [];
       this.participantes = participantes;
+    },
+    async populaSelectLider() {
+      this.leaders = await this.memberController.getAllMembers(this.$api);
+      this.leaders = this.ordenaOrdemCrescente(
+        await this.memberController.getAllMembers(this.$api)
+      );
+      this.leaders = this.setFullName(this.leaders);
+    },
+    setFullName(array) {
+      const newArray = new Array();
+      array.map((item) => {
+        item.full_name = `${item.first_name} ${item.last_name}`;
+        newArray.push(item);
+      });
+
+      return newArray;
+    },
+
+    ordenaOrdemCrescente(array) {
+      array.sort(function(item1, item2) {
+        if (item1.first_name && item2.first_name) {
+          return item1.first_name < item2.first_name ? -1 : 1;
+        } else {
+          return item1.full_name < item2.full_name ? -1 : 1;
+        }
+      });
+      return array;
     },
   },
 };
