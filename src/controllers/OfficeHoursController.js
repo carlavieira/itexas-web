@@ -34,5 +34,14 @@ export default {
           throw e;
         });
 
+    },
+
+    deleteOfficeHour(api, data){
+        return api
+        .delete(`manage-office-hours/${data.id}`)
+        .then((res) => res.data)
+        .catch((e) => {
+          throw e;
+        });
     }
 }
