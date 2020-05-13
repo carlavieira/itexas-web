@@ -31,19 +31,20 @@ const routes = [
       { path: "/adm/membros", name: "members", component: members },
       { path: "/adm/reuniao", name: "reuniao", component: reuniao },
       { path: "/adm/eventos", name: "eventos", component: eventos },
+      { path: "/adm/meus-eventos", name: "meus-eventos", component: eventos },
       { path: "/adm/calendario", name: "calendario", component: calendario },
       { path: "/adm/perfil", name: "perfil", component: perfil },
       { path: "/adm/officeHours", name: "officeHours", component: officeHours },
       {
         path: "/adm/membresia",
         name: "membershipCriteriaAll",
-        component: membershipCriteriaAll
+        component: membershipCriteriaAll,
       },
       {
         path: "/adm/meu-criterio",
         name: "membershipCriteriaAdm",
-        component: membershipCriteriaMember
-      }
+        component: membershipCriteriaMember,
+      },
     ],
   },
 
@@ -52,15 +53,15 @@ const routes = [
     name: "memberTemplate",
     component: memberTemplate,
     children: [
-      { path: "/member/contactList", name: "contactList", component: members},
+      { path: "/member/contactList", name: "contactList", component: members },
       { path: "/member/dashboard", name: "dashboard", component: dashboard },
       { path: "/member/perfil", name: "perfil", component: perfil },
       { path: "/member/calendario", name: "calendario", component: calendario },
       {
         path: "/member/meu-criterio",
         name: "membershipCriteriaUser",
-        component: membershipCriteriaMember
-      }
+        component: membershipCriteriaMember,
+      },
     ],
   },
 ];

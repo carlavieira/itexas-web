@@ -190,14 +190,14 @@ import memberController from "../../controllers/MemberController";
 import eventController from "../../controllers/EventController";
 import tabelaParticipante from "../tabelaParticipantes/TabelaDeParticipantes";
 import tabelaParticipanteView from "../tabelaParticipantes/TabelaDeParticipantesView";
+import participationController from "../../controllers/ParticipationController";
 
 export default {
   data: (vm) => ({
     editEvent: false,
     memberController,
     eventController,
-    tabelaParticipante,
-    tabelaParticipanteView,
+    participationController,
     eventDetails: {},
     hostName: "-",
     dialog: false,
@@ -208,6 +208,8 @@ export default {
     modal: false,
     leader: "",
     leaders: [],
+    participantes: [],
+    participantesToDelete: [],
     time: "00:00",
     types: [
       { name: "Reunião Geral", value: "RG" },
@@ -234,6 +236,11 @@ export default {
     this.time = this.event.time;
   },
 
+  components: {
+    tabelaParticipante,
+    tabelaParticipanteView,
+  },
+
   props: {
     show: Boolean,
     event: Object,
@@ -247,6 +254,7 @@ export default {
 
   methods: {
     async sendEdit() {
+      /* Edit Event */
       this.event.date = this.date;
       console.log(this.date);
       console.log(this.event);
@@ -266,6 +274,43 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+
+      /* Edit Participation */
+      this.participantes.forEach(async (participante) => {
+        if (participante.is_active) {
+          let part = new Object();
+          part.event = this.event.id;
+          part.member = participante.id;
+          part.attendance = participante.attendance;
+          await this.participationController.createParticipationEvent(
+            this.$api,
+            part
+          );
+        } else {
+          participante.event = participante.event.id;
+          participante.member = participante.member.id;
+          await this.participationController.editParticipationEvent(
+            this.$api,
+            participante
+          );
+        }
+      });
+
+      /* Delete Participation */
+      if (this.participantesToDelete.length !== 0) {
+        this.participantesToDelete.forEach(async (participante) => {
+          await this.participationController.deleteParticipationEvent(
+            this.$api,
+            participante.id
+          );
+        });
+      }
+    },
+    ListaParticipantes(participantes) {
+      console.log("update");
+      this.participantes = [];
+      this.participantes = participantes.participantesWithName;
+      this.participantesToDelete = participantes.participantesDeleted;
     },
     async deleteEvent() {
       await this.eventController

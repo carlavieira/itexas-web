@@ -132,7 +132,7 @@ export default {
         {
           text: "Meus Eventos",
           icon: "mdi-account-group",
-          path: "/adm/eventos",
+          path: "/adm/meus-eventos",
         },
         {
           text: "Meu Critério",
