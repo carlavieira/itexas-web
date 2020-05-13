@@ -8,7 +8,7 @@
       </v-btn>
     </v-row>
     <v-divider class="pb-3"></v-divider>
-    <v-data-table no-data-text="Nan" no-results-text="Nan" :headers="header" :items="officeHours">
+    <v-data-table :sort-by="['date', 'checkin_time']" :sort-desc="[true, true]" no-data-text="Nenhuma office hour cadastrada" no-results-text="Sem resultados para a busca" :headers="header" :items="officeHours">
       <template v-slot:item.date="{ item }">
         {{ formatDate(item.date) }}
       </template>
@@ -86,8 +86,14 @@ export default {
       this.oh = item
     },
 
-    deleteItem(item) {
-      console.log(item);
+    async deleteItem(item) {
+      await this.officeHoursController.deleteOfficeHour(this.$api, item)
+      .then(res => {
+        console.log(res)
+        this.getOfficeHours()
+      }).catch(e => { 
+        console.log(e)
+      })
     },
 
     format(item){
