@@ -8,6 +8,7 @@
       </v-btn>
     </v-row>
     <v-divider class="pb-3"></v-divider>
+    <v-card class="w-100">
     <v-data-table :sort-by="['date', 'checkin_time']" :sort-desc="[true, true]" no-data-text="Nenhuma office hour cadastrada" no-results-text="Sem resultados para a busca" :headers="header" :items="officeHours">
       <template v-slot:item.date="{ item }">
         {{ formatDate(item.date) }}
@@ -23,7 +24,7 @@
         <v-icon class="pl-3" small @click="deleteItem(item)">mdi-delete</v-icon>
       </template>
     </v-data-table>
-
+    </v-card>
     <modalOfficeHours v-if="showModal" :show="showModal" :type="type" :officeHour="oh" @close="showModal = false" @reload="getOfficeHours()"></modalOfficeHours>
 
   </v-container>
