@@ -15,11 +15,13 @@
           hide-details
         ></v-text-field>
         <v-select
-          :items="cargos"
+          :items="departments"
+          item-text="name"
           hide-details
+          no-data-text="Sem departamentos cadastrados"
           style="max-width: 300px;"
           class="pl-2"
-          label="Cargo"
+          label="Departamentos"
           v-model="search"
         ></v-select>
       </v-card-title>
@@ -89,6 +91,7 @@
 import modalOfficeHours from "./ModalOfficeHours.vue";
 import officeHoursController from "../../controllers/OfficeHoursController";
 import moment from "moment";
+import memberController from "../../controllers/MemberController"
 
 export default {
   components: {
@@ -97,10 +100,11 @@ export default {
 
   data() {
     return {
+      memberController,
       officeHoursController,
       header: [
         { text: "Nome", value: "member.first_name" },
-        { text: "Cargo", value: "member.post" },
+        { text: "Área", value: "member.department" },
         { text: "Data", value: "date" },
         { text: "Check-in", value: "checkin_time" },
         { text: "Check-out", value: "checkout_time" },
@@ -113,7 +117,7 @@ export default {
       oh: {},
       search: "",
       search1: "",
-      cargos: [ "teste", "teste1", ""],
+      departments: [],
       dialog: false,
       deletedItem: ""
     };
@@ -121,9 +125,19 @@ export default {
 
   async created() {
     await this.getOfficeHours();
+    await this.getAllDepartments()
   },
 
   methods: {
+    async getAllDepartments(){
+      await this.memberController.getAllDepartments(this.$api)
+      .then(res => {
+        this.departments = res.data
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+
     async getOfficeHours() {
       await this.officeHoursController
         .listOfficeHour(this.$api)
