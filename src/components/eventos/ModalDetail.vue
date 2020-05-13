@@ -161,6 +161,20 @@
             </v-time-picker>
           </v-dialog>
         </v-layout>
+
+        <tabelaParticipante
+          v-on:enviarParticipantesPai="ListaParticipantes"
+          :typeEvent="'event'"
+          :objForm="event"
+          v-if="editEvent"
+        ></tabelaParticipante>
+
+        <tabelaParticipanteView
+          :typeEvent="'event'"
+          :objForm="event"
+          v-if="!editEvent"
+        ></tabelaParticipanteView>
+
         <v-layout col-xs-12 col-sm-6 row justify-center v-if="editEvent">
           <v-btn class="ma-2 mt-4" @click="sendEdit()" depressed color="success"
             >Salvar</v-btn
@@ -174,11 +188,16 @@
 <script>
 import memberController from "../../controllers/MemberController";
 import eventController from "../../controllers/EventController";
+import tabelaParticipante from "../tabelaParticipantes/TabelaDeParticipantes";
+import tabelaParticipanteView from "../tabelaParticipantes/TabelaDeParticipantesView";
+
 export default {
   data: (vm) => ({
     editEvent: false,
     memberController,
     eventController,
+    tabelaParticipante,
+    tabelaParticipanteView,
     eventDetails: {},
     hostName: "-",
     dialog: false,

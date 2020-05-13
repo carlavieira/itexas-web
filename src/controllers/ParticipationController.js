@@ -87,4 +87,16 @@ export default {
       });
     return response;
   },
+  getParticipantsInEvent(api, eventId) {
+    console.log("Entrei");
+    const response = api
+      .get(`list-event-participation/?event=${eventId}`)
+      .then(function(response) {
+        return response.data;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    return response;
+  },
 };

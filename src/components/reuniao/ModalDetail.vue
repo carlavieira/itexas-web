@@ -161,13 +161,17 @@
 
         <tabelaParticipante
           v-on:enviarParticipantesPai="ListaParticipantes"
+          :typeEvent="'meeting'"
           :objForm="meeting"
           v-if="editMeeting"
         ></tabelaParticipante>
+
         <tabelaParticipanteView
+          :typeEvent="'meeting'"
           :objForm="meeting"
           v-if="!editMeeting"
         ></tabelaParticipanteView>
+
         <v-layout col-xs-12 col-sm-6 row justify-center v-if="editMeeting">
           <v-btn class="ma-2 mt-4" @click="sendEdit()" depressed color="success"
             >Salvar</v-btn
