@@ -107,6 +107,18 @@ export default {
           path: "/adm/membresia",
           adminItem: true,
         },
+        {
+          text: "Áreas",
+          icon: "mdi-account",
+          path: "/adm/areas",
+          adminItem: true,
+        },
+        {
+          text: "Cargos",
+          icon: "mdi-account",
+          path: "/adm/cargos",
+          adminItem: true,
+        },
         //Members
         {
           text: "Check-in/Check-out",

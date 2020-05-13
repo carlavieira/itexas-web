@@ -192,7 +192,6 @@
 
 <script>
 import memberController from "../../controllers/MemberController";
-
 export default {
   data() {
     return {
