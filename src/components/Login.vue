@@ -3,9 +3,9 @@
     <v-row align="center">
       <v-col>
         <v-card flat color="branco" class="px-8 pt-5 pb-12 form mx-auto">
-          <v-form ref="form">
+          <v-form ref="form" v-if="loginPage">
             <v-img src="../assets/rrrrr.png" width="100px" class="mt-3 mb-5 mx-auto" />
-            <v-form class="pt-6">
+            <v-form class="pt-6" >
               <v-text-field
                 id="emailLogin"
                 type="text"
@@ -29,7 +29,7 @@
               />
             </v-form>
             <v-row class="px-3">
-              <a class="a-small">Esqueci minha senha</a>
+              <a @click="loginPage = false" class="a-small">Esqueci minha senha</a>
               <v-btn
                 :loading="logando"
                 v-on:click="login()"
@@ -42,6 +42,36 @@
               </v-btn>
             </v-row>
           </v-form>
+
+
+          <v-form ref="form"  v-if="!loginPage">
+            <v-img src="../assets/rrrrr.png" width="100px" class="mt-3 mb-5 mx-auto" />
+          <v-form class="pt-6">
+              <v-text-field
+                id="emailRedefinir"
+                type="text"
+                name="emailRedefinir"
+                v-model="emailRedefinir"
+                required
+                outlined
+                color="tertiary"
+                label="Digite o email para redefinir a senha"
+              />
+            </v-form>
+            <v-row class="px-3">
+              <a @click="loginPage = true" class="a-small">Voltar pro Login</a>
+              <v-btn
+                @click="sendEmail(emailRedefinir)"
+                small
+                outlined
+                color="tertiary"
+                class="ml-auto"
+              >
+                <span>Enviar Email</span>
+              </v-btn>
+            </v-row>
+          </v-form>
+
           <br />
           <v-alert
             :value="alertError"
@@ -66,8 +96,10 @@ export default {
   data() {
     return {
       logando: false,
+      loginPage: true,
       email: "",
       senha: "",
+      emailRedefinir: "",
       alertError: false,
       errorMessage: "",
       routes,
@@ -82,13 +114,25 @@ export default {
     };
   },
   methods: {
+    async sendEmail(email){
+      await this.authController.sendEmail(this.$http, email)
+      .then(res => {
+        console.log(res)
+        this.loginPage = true
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+
     showErrorAlert(message) {
       this.alertError = true;
       this.errorMessage = message;
     },
+
     hideErrorAlert() {
       this.alertError = false;
     },
+
     validarFormularioLogin() {
       return this.$refs.form.validate();
     },
