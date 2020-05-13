@@ -3,7 +3,7 @@
     <v-card class="pa-5">
       <v-layout row class="px-3">
         <v-btn
-          v-if="!editMember"
+          v-if="!editMember && (this.$route.name == 'members')"
           color="black"
           @click="editMember = true"
           title="Editar"
