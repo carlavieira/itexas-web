@@ -3,37 +3,99 @@
     <v-row class="px-4 pb-3">
       <h2>Cargos</h2>
       <v-spacer></v-spacer>
-      <v-btn @click="add()" title="Cadastrar novo Cargo" small color="secondary" fab>
+      <v-btn @click="createPostDialog=true" title="Cadastrar novo Cargo" small color="secondary" fab>
         <v-icon>mdi-plus</v-icon>
       </v-btn>
+      
+      <v-dialog v-model="createPostDialog" max-width="500" min-h>
+      <v-card>
+        <v-card-title
+          style="font-size: 16px !important"
+          class="headline"
+        >Cadastro do Cargo</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <template class="col-12" sm="10" md="10" lg="10">
+            <v-text-field
+              v-model="postName"
+              label="Nome do Cargo"
+              prepend-inner-icon="mdi-account"
+              dense
+              outlined
+            ></v-text-field>
+          </template>
+         
+              
+          <v-btn
+            color="green darken-1"
+            text
+            @click="
+                  createPostDialog = false;
+                  submit()
+                "
+          >Cadastrar</v-btn>
+
+          <v-btn color="red darken-1" text @click="createPostDialog = false">Cancelar</v-btn>
+        </v-card-actions>
+        </v-card>
+      </v-dialog>
+      
+      <v-dialog v-model="editPostDialog" max-width="500" min-h>
+      <v-card>
+        <v-card-title
+          style="font-size: 16px !important"
+          class="headline"
+        >Edição do Cargo</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <template class="col-12" sm="10" md="10" lg="10">
+            <v-text-field
+              v-model="postName"
+              label="Nome do Cargo"
+              prepend-inner-icon="mdi-account"
+              dense
+              outlined
+            ></v-text-field>
+          </template>
+         
+              
+          <v-btn
+            color="green darken-1"
+            text
+            @click="
+                  editPostDialog = false;
+                  sendRequest()
+                "
+          >Editar</v-btn>
+
+          <v-btn color="red darken-1" text @click="editPostDialog = false">Cancelar</v-btn>
+        </v-card-actions>
+        </v-card>
+      </v-dialog>
+
     </v-row>
     <v-divider class="pb-3"></v-divider>
     <v-card class="w-100">
-    <v-data-table :sort-by="['name']" :sort-desc="[true, true]" no-data-text="Nenhum cargo adicionado" no-results-text="Sem resultados para a busca" :headers="header" :items="posts">
-      <!-- <template v-slot:item.date="{ item }">
-        {{ formatDate(item.date) }}
-      </template>
-      <template v-slot:item.checkin_time="{ item }">
-        {{ format(item.checkin_time) }}
-      </template>
-      <template v-slot:item.checkout_time="{ item }">
-        <span v-if="item.checkout_time">{{ format(item.checkout_time) }}</span>
-      </template>-->
+    <v-data-table :sort-by="['name']" :sort-desc="[true, true]" 
+    no-data-text="Nenhum cargo adicionado" 
+    no-results-text="Sem resultados para a busca" :headers="header" :items="posts">
       <template v-slot:item.actions="{ item }">
         <v-icon small @click="edit(item)">mdi-pencil</v-icon>
         <v-icon class="pl-3" small @click="deleteItem(item)">mdi-delete</v-icon>
       </template> 
     </v-data-table>
     </v-card>
+    
   </v-container>
 </template>
 
 <script>
 import postController from "../../controllers/PostController"
 
+
 export default {
   components: {
-    
+
   },
 
   data() {
@@ -43,10 +105,16 @@ export default {
         { text: "Título", value: "name" },
         { text: "Ações", value: "actions", sortable: false }
       ],
+      createPostDialog: false,
+      editPostDialog: false,
+      postName: "",
       posts: [],
+      postDetail: null,
       type: null,
       showModal: false,
-      oh: {}
+      tablePosts: {},
+      search: "",
+      deletedItem: ""
     };
   },
 
@@ -64,31 +132,30 @@ export default {
       })
     },
 
-    // add(){
-    //   this.type = "add"
-    //   this.showModal = true
-    //   this.oh = {
-    //     date: null,
-    //     checkin_time: null,
-    //     checkout_time: null
-    //   }
-    // },
+    async submit(){
+      const postName = {
+        name: this.postName,
+      }
+      console.log(postName)
+      await this.postController.createPost(this.$api, postName) 
+      this.showModal = true
+    },
 
-    // edit(item) {
-    //   this.type = "edit"
-    //   this.showModal = true
-    //   this.oh = item
-    // },
-
-    // async deleteItem(item) {
-    //   await this.officeHoursController.deleteOfficeHour(this.$api, item)
-    //   .then(res => {
-    //     console.log(res)
-    //     this.getOfficeHours()
-    //   }).catch(e => { 
-    //     console.log(e)
-    //   })
-    // },
+    async edit(item) {
+      console.log(item)
+      this.postName=item.name
+      this.editPostDialog=true
+      this.postDetail = {
+        id: item.id,
+        name: this.postName,
+      }
+      
+    },
+    
+    async sendRequest() {
+      await this.postController.editPost(this.$api, this.postDetails)
+    }
+    
   }
 };
 </script>
