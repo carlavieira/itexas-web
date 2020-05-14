@@ -35,7 +35,7 @@
           <v-data-table
             no-data-text="Nenhum evento cadastrado"
             no-results-text="Nenhum evento encontrado"
-            :headers="headersEvento"
+            :headers="getHeaders()"
             :items="eventos"
             :search="search"
           >
@@ -50,6 +50,13 @@
             </template>
             <template v-slot:item.time="{ item }">
               <span>{{ formatTime(item.time) }}</span>
+            </template>
+            <template v-slot:item.attendance="{ item }">
+              <input
+                type="checkbox"
+                disabled
+                v-model="item.attendance"
+              />
             </template>
             <template v-slot:item.details="{ item }">
               <v-icon small @click="eventShow(item)"
@@ -103,17 +110,6 @@ export default {
       text: "",
       timeout: 3000,
       color: "",
-      headersEvento: [
-        {
-          text: "Nome",
-          align: "center",
-          value: "type",
-        },
-        { text: "Lider", value: "member", align: "center" },
-        { text: "Data", value: "date", align: "center" },
-        { text: "Hora", value: "time", align: "center" },
-        { text: "Detalhes", value: "details", align: "center" },
-      ],
       eventos: [],
     };
   },
@@ -134,6 +130,34 @@ export default {
       this.text = snackbarDetails.text;
       this.color = snackbarDetails.color;
     },
+    getHeaders() {
+      if (this.$route.name == "eventos") {
+        return [
+          {
+            text: "Nome",
+            align: "center",
+            value: "type",
+          },
+          { text: "Lider", value: "member", align: "center" },
+          { text: "Data", value: "date", align: "center" },
+          { text: "Hora", value: "time", align: "center" },
+          { text: "Detalhes", value: "details", align: "center" },
+        ]
+      } else {
+        return [
+          {
+            text: "Nome",
+            align: "center",
+            value: "type",
+          },
+          { text: "Lider", value: "member", align: "center" },
+          { text: "Data", value: "date", align: "center" },
+          { text: "Hora", value: "time", align: "center" },
+          { text: "Presenca", value: "attendance", align: "center"},
+          { text: "Detalhes", value: "details", align: "center" },
+        ]
+      }
+    },
     async getEvents() {
       if (this.$route.name == "eventos") {
         const res = await this.eventController.getAllEvents(this.$api);
@@ -146,9 +170,11 @@ export default {
         );
         const meusEventos = [];
         minhasParticipacoes.forEach((participacao) => {
+          participacao.event.attendance = participacao.attendance;
           meusEventos.push(participacao.event);
         });
         this.eventos = meusEventos;
+        console.log(this.eventos)
       }
     },
     async deleteEvent() {

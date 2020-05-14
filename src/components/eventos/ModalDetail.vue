@@ -171,10 +171,9 @@
         ></tabelaParticipante>
 
         <tabelaParticipanteView
-          v-if="$route.name == 'eventos'"
+          v-if="!editEvent && $route.name == 'eventos'"
           :typeEvent="'event'"
           :objForm="event"
-          v-if="!editEvent"
         ></tabelaParticipanteView>
 
         <v-layout col-xs-12 col-sm-6 row justify-center v-if="editEvent">
