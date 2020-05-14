@@ -11,33 +11,86 @@
       :headers="header"
       :items="membresia"
     >
-      <template v-slot:item.member="{ item }">{{
+      <template v-slot:item.member="{ item }">
+        {{
         item.member.first_name + " " + item.member.last_name
-      }}</template>
+        }}
+      </template>
       <template v-slot:item.member.leader="{ item }">
-        <span v-if="item.member.leader">{{
+        <span v-if="item.member.leader">
+          {{
           item.member.leader.first_name
-        }}</span>
+          }}
+        </span>
         <span v-else>-</span>
       </template>
       <template v-slot:item.dayMonth="{ item }">
         <span v-if="item.dayMonth">{{ formatDate(item.dayMonth) }}</span>
       </template>
-      <template v-slot:item.officeHoursCriteria="{}">
-        <v-chip class="ma-2" color="green" text-color="white">
-          teste
+
+      <template v-slot:item.officeHoursCriteria="{ item }">
+        <v-chip
+          v-if="item.officeHoursCriteria == 100.00"
+          class="ma-2"
+          color="green lighten-2"
+          text-color="white"
+          small
+        >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
+        <v-chip
+          v-if="item.officeHoursCriteria < 80.00"
+          class="ma-2"
+          color="white"
+          text-color="red"
+        >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
+        <span v-else>{{formatPercentage(item.officeHoursCriteria)}}</span>
+      </template>
+     
+      <template v-slot:item.meetingsCriteria="{ item }">
+        <v-chip
+          v-if="item.meetingsCriteria == 100.00"
+          class="ma-2"
+          color="white"
+          text-color="green"
+        >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
+        <v-chip
+          v-else-if="item.meetingsCriteria < 75.00"
+          class="ma-2"
+          color="white"
+          text-color="red"
+          small
+        >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
+        <span v-else>{{formatPercentage(item.meetingsCriteria)}}</span>
+      </template>
+
+      <template v-slot:item.eventsCriteria="{ item }">
+        <v-chip
+          v-if="item.eventsCriteria == 100.00"
+          class="ma-2"
+          color="green lighten-2"
+          text-color="white"
+          small
+        >{{formatPercentage(item.eventsCriteria)}}</v-chip>
+        <v-chip
+          v-else-if="item.eventsCriteria < 50.00"
+          class="ma-2"
+          color="white"
+          text-color="red"
+        >{{formatPercentage(item.eventsCriteria)}}</v-chip>
+        <span v-else>{{formatPercentage(item.eventsCriteria)}}</span>
+      </template>
+
+      <template v-slot:item.status="{ item }">
+        <v-chip
+          v-if="item.status = 'Risco'"
+          class="ma-2"
+          color="red"
+          text-color="white"
+          small
+          >{{item.status}}
         </v-chip>
+        <span v-else>{{item.status}}</span>
       </template>
-      <template v-slot:item.meetingsCriteria="{ item }">{{
-        formatPercentage(item.meetingsCriteria)
-      }}</template>
-      <template v-slot:item.eventsCriteria="{ item }">{{
-        formatPercentage(item.eventsCriteria)
-      }}</template>
-      <template v-slot:item.actions="{ item }">
-        <v-icon small @click="edit(item)">mdi-pencil</v-icon>
-        <v-icon class="pl-3" small @click="deleteItem(item)">mdi-delete</v-icon>
-      </template>
+      
     </v-data-table>
   </v-container>
 </template>
@@ -58,10 +111,10 @@ export default {
         { text: "Office Hours", value: "officeHoursCriteria" },
         { text: "Reuniões", value: "meetingsCriteria" },
         { text: "Eventos", value: "eventsCriteria" },
-        { text: "Status", value: "status" },
+        { text: "Status", value: "status" }
       ],
       membresia: [],
-      showModal: false,
+      showModal: false
     };
   },
 
@@ -75,15 +128,16 @@ export default {
         this.$api,
         localStorage.getItem("user_id")
       )
-        .then((res) => {
+        .then(res => {
           this.membresia = res.data;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     },
 
     formatPercentage(item) {
+      console.log(item);
       if (item > 100) {
         return 100 + " %";
       } else return item + " %";
@@ -91,7 +145,7 @@ export default {
 
     formatDate(item) {
       return moment(item).format("MM/YYYY");
-    },
-  },
+    }
+  }
 };
 </script>

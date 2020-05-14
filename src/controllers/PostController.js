@@ -25,21 +25,22 @@ export default {
     },
 
     editPost(api, data) {
+        console.log(data)
         return api
-        .put(url+`${data.id}/`, data)
-        .then((res) => res.data)
-        .catch((e) => {
-          throw e;
-        });
+            .put(url + `${data.id}/`, data)
+            .then((res) => res.data)
+            .catch((e) => {
+                throw e;
+            });
     },
 
-    deletePost(api, data){
+    deletePost(api, data) {
         return api
-        .delete(url+`${data.id}/`)
-        .then((res) => res.data)
-        .catch((e) => {
-          throw e;
-        });
+            .delete(url + `${data.id}/`)
+            .then((res) => res.data)
+            .catch((e) => {
+                throw e;
+            });
     },
 
 }

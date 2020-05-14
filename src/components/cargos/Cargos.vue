@@ -25,7 +25,7 @@
             ></v-text-field>
           </template>
          
-              
+      
           <v-btn
             color="green darken-1"
             text
@@ -136,7 +136,6 @@ export default {
       const postName = {
         name: this.postName,
       }
-      console.log(postName)
       await this.postController.createPost(this.$api, postName) 
       this.showModal = true
     },
@@ -153,7 +152,8 @@ export default {
     },
     
     async sendRequest() {
-      await this.postController.editPost(this.$api, this.postDetails)
+      this.postDetail.name = this.postName;
+      await this.postController.editPost(this.$api, this.postDetail)
     }
     
   }

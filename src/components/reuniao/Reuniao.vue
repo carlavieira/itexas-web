@@ -1,10 +1,9 @@
 <template>
   <v-container>
-    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">
-      {{ text }}</v-snackbar
-    >
+    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">{{ text }}</v-snackbar>
     <v-row class="px-4">
-      <h2>Reuniões</h2>
+      <h2 v-if="$route.name == 'reuniao'">Reuniões</h2>
+      <h2 v-else>Minhas Reuniões</h2>
       <v-spacer></v-spacer>
       <v-btn
         v-if="$route.name == 'reuniao'"
@@ -41,7 +40,7 @@
               <span>{{ formatTypeMeeting(item.type) }}</span>
             </template>
             <template v-slot:item.member="{ item }">
-              <span> {{ item.member.first_name }} </span>
+              <span>{{ item.member.first_name }}</span>
             </template>
             <template v-slot:item.date="{ item }">
               <span>{{ formatDate(item.date) }}</span>
@@ -50,9 +49,7 @@
               <span>{{ formatTime(item.time) }}</span>
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-icon small @click="meetingShow(item)"
-                >mdi-dots-horizontal</v-icon
-              >
+              <v-icon small @click="meetingShow(item)">mdi-dots-horizontal</v-icon>
             </template>
           </v-data-table>
         </v-card>
@@ -71,8 +68,7 @@
       @close="showDetail = false"
       v-on:showSnackbar="showSnackbar"
       @getAllMeeting="getMeeting()"
-    >
-    </modalDetail>
+    ></modalDetail>
   </v-container>
 </template>
 
@@ -102,7 +98,7 @@ export default {
         {
           text: "Tipo",
           align: "center",
-          value: "type",
+          value: "type"
         },
         { text: "Líder", value: "member" },
         { text: "Data", value: "date" },
@@ -111,8 +107,8 @@ export default {
           text: "Detalhes",
           value: "actions",
           sortable: false,
-          align: "center",
-        },
+          align: "center"
+        }
       ],
       reunioes: [],
       types: [
@@ -120,20 +116,20 @@ export default {
         { text: "Reunião de Área", value: "RA" },
         { text: "Reunião de Time", value: "RT" },
         { text: "Reunião de LR", value: "LR" },
-        { text: "Reunião de Corner", value: "CN" },
-      ],
+        { text: "Reunião de Corner", value: "CN" }
+      ]
     };
   },
 
   components: {
     NovaReuniao,
-    modalDetail,
+    modalDetail
   },
 
   async created() {
     this.getMeeting();
   },
-
+  
   methods: {
     formatDate(date) {
       return moment(date).format("DD/MM/YYYY");
@@ -164,7 +160,7 @@ export default {
           memberID
         );
         const minhasReunioes = [];
-        minhasParticipacoes.forEach((participacao) => {
+        minhasParticipacoes.forEach(participacao => {
           minhasReunioes.push(participacao.meeting);
         });
         this.reunioes = minhasReunioes;
@@ -174,8 +170,8 @@ export default {
       this.snackbar = true;
       this.text = snackbarDetails.text;
       this.color = snackbarDetails.color;
-    },
-  },
+    }
+  }
 };
 </script>
 
