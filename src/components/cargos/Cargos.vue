@@ -64,7 +64,7 @@
             text
             @click="
                   editPostDialog = false;
-                  sendRequest()
+                  sendPutRequest()
                 "
           >Editar</v-btn>
 
@@ -81,10 +81,35 @@
     no-results-text="Sem resultados para a busca" :headers="header" :items="posts">
       <template v-slot:item.actions="{ item }">
         <v-icon small @click="edit(item)">mdi-pencil</v-icon>
-        <v-icon class="pl-3" small @click="deleteItem(item)">mdi-delete</v-icon>
+        <v-icon class="pl-3" small @click="deletePost(item)">mdi-delete</v-icon>
       </template> 
     </v-data-table>
     </v-card>
+
+    <v-dialog v-model="deletePostDialog" max-width="500" min-h>
+          <v-card>
+            <v-card-title style="font-size: 16px !important" class="headline">
+              Deseja realmente deletar este cargo? <br>
+              Isso fará com que todos os {{ deletedItem }}s fiquem sem cargo!
+              </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                color="red darken-1"
+                text
+                @click="deletePostDialog = false; deleteItem();
+                "
+              >
+                DELETAR CARGO
+              </v-btn>
+
+              <v-btn text @click="deletePostDialog = false">
+                Voltar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
     
   </v-container>
 </template>
@@ -107,6 +132,7 @@ export default {
       ],
       createPostDialog: false,
       editPostDialog: false,
+      deletePostDialog: false,
       postName: "",
       posts: [],
       postDetail: null,
@@ -121,9 +147,10 @@ export default {
   async created(){
     await this.getPosts()
   },
-
   methods: {
-    async getPosts(){
+
+    async getPosts() {
+
       await this.postController.getPosts(this.$api)
       .then(res => {
         this.posts = res.data
@@ -141,21 +168,33 @@ export default {
     },
 
     async edit(item) {
-      console.log(item)
       this.postName=item.name
       this.editPostDialog=true
       this.postDetail = {
         id: item.id,
         name: this.postName,
       }
-      
     },
-    
-    async sendRequest() {
+
+     async deletePost(item) {
+      this.deletedItem=item.name
+      this.postName=item.name
+      this.deletePostDialog=true
+      this.postDetail = {
+        id: item.id,
+      }
+    },
+
+    async sendPutRequest() {
       this.postDetail.name = this.postName;
       await this.postController.editPost(this.$api, this.postDetail)
+        .then(this.getPosts)
+    },
+
+    async deleteItem() {
+      await this.postController.deletePost(this.$api, this.postDetail.id)
+        .then(this.getPosts)
     }
-    
   }
 };
 </script>

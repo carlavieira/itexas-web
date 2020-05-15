@@ -25,7 +25,6 @@ export default {
     },
 
     editPost(api, data) {
-        console.log(data)
         return api
             .put(url + `${data.id}/`, data)
             .then((res) => res.data)
@@ -36,7 +35,7 @@ export default {
 
     deletePost(api, data) {
         return api
-            .delete(url + `${data.id}/`)
+            .delete(url + `${data}/`)
             .then((res) => res.data)
             .catch((e) => {
                 throw e;
