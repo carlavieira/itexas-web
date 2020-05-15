@@ -163,6 +163,27 @@
           </v-dialog>
         </v-layout>
 
+        <v-layout flex justify-center>
+          <div class="my-2" v-if="event.attendance == false">
+            <v-btn
+              small
+              color="success"
+              @click="mudarPresenca(event)"
+              dark
+              >Marcar Presença</v-btn
+            >
+          </div>
+          <div v-if="event.attendance == true" class="my-2">
+            <v-btn
+              small
+              color="error"
+              @click="mudarPresenca(event)"
+              dark
+              >Desmarcar Presença</v-btn
+            >
+          </div>
+        </v-layout>
+
         <tabelaParticipante
           v-on:enviarParticipantesPai="ListaParticipantes"
           :typeEvent="'event'"
@@ -330,6 +351,26 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+    },
+    async mudarPresenca(evento) {
+      console.log(evento)
+      const participationDetail = {
+        attendance: !evento.attendance,
+        event: evento.id,
+        id: evento.participacaoID,
+        member: localStorage.getItem("user_id"),
+      };
+      await this.participationController
+        .editParticipationEvent(this.$api, participationDetail)
+        .then(function(response) {
+          alert("Presença Alterada com sucesso");
+          console.log(response);
+        })
+        .catch(function(error) {
+          alert("Erro: presença não alterada");
+          console.log(error);
+        });
+      this.$emit("getAllEvents");
     },
 
     formatDate(date) {

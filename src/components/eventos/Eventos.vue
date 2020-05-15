@@ -170,11 +170,11 @@ export default {
         );
         const meusEventos = [];
         minhasParticipacoes.forEach((participacao) => {
+          participacao.event.participacaoID = participacao.id
           participacao.event.attendance = participacao.attendance;
           meusEventos.push(participacao.event);
         });
         this.eventos = meusEventos;
-        console.log(this.eventos)
       }
     },
     async deleteEvent() {
