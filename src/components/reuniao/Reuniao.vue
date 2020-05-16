@@ -32,7 +32,7 @@
           <v-data-table
             no-data-text="Nenhuma reunião cadastrada"
             no-results-text="Nenhuma reunião encontrada"
-            :headers="headersReuniao"
+            :headers="getHeaders()"
             :items="reunioes"
             :search="search"
           >
@@ -48,7 +48,14 @@
             <template v-slot:item.time="{ item }">
               <span>{{ formatTime(item.time) }}</span>
             </template>
-            <template v-slot:item.actions="{ item }">
+            <template v-slot:item.attendance="{ item }">
+              <input
+                type="checkbox"
+                disabled
+                v-model="item.attendance"
+              />
+            </template>
+            <template v-slot:item.details="{ item }">
               <v-icon small @click="meetingShow(item)">mdi-dots-horizontal</v-icon>
             </template>
           </v-data-table>
@@ -94,22 +101,6 @@ export default {
       text: "",
       timeout: 3000,
       color: "",
-      headersReuniao: [
-        {
-          text: "Tipo",
-          align: "center",
-          value: "type"
-        },
-        { text: "Líder", value: "member" },
-        { text: "Data", value: "date" },
-        { text: "Hora", value: "time" },
-        {
-          text: "Detalhes",
-          value: "actions",
-          sortable: false,
-          align: "center"
-        }
-      ],
       reunioes: [],
       types: [
         { text: "REB", value: "REB" },
@@ -131,6 +122,34 @@ export default {
   },
   
   methods: {
+    getHeaders() {
+      if (this.$route.name == "reuniao") {
+        return [
+          {
+            text: "Nome",
+            align: "center",
+            value: "type",
+          },
+          { text: "Lider", value: "member", align: "center" },
+          { text: "Data", value: "date", align: "center" },
+          { text: "Hora", value: "time", align: "center" },
+          { text: "Detalhes", value: "details", align: "center" },
+        ]
+      } else {
+        return [
+          {
+            text: "Nome",
+            align: "center",
+            value: "type",
+          },
+          { text: "Lider", value: "member", align: "center" },
+          { text: "Data", value: "date", align: "center" },
+          { text: "Hora", value: "time", align: "center" },
+          { text: "Presenca", value: "attendance", align: "center"},
+          { text: "Detalhes", value: "details", align: "center" },
+        ]
+      }
+    },
     formatDate(date) {
       return moment(date).format("DD/MM/YYYY");
     },
@@ -161,9 +180,11 @@ export default {
         );
         const minhasReunioes = [];
         minhasParticipacoes.forEach(participacao => {
+          participacao.meeting.attendance = participacao.attendance
           minhasReunioes.push(participacao.meeting);
         });
         this.reunioes = minhasReunioes;
+        console.log(this.reunioes)
       }
     },
     showSnackbar(snackbarDetails) {
