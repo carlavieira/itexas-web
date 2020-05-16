@@ -7,7 +7,7 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
       
-      <v-dialog v-model="createPostDialog" max-width="500" min-h>
+      <v-dialog v-model="createPostDialog" max-width="700" min-h>
       <v-card>
         <v-card-title
           style="font-size: 16px !important"
@@ -15,27 +15,39 @@
         >Cadastro do Cargo</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <template class="col-12" sm="10" md="10" lg="10">
-            <v-text-field
-              v-model="postName"
-              label="Nome do Cargo"
-              prepend-inner-icon="mdi-account"
-              dense
-              outlined
-            ></v-text-field>
-          </template>
-         
-      
-          <v-btn
-            color="green darken-1"
-            text
-            @click="
-                  createPostDialog = false;
-                  submit()
-                "
-          >Cadastrar</v-btn>
+          <template>
+            <v-container fluid>
+              <v-row>
+                <v-col class="d-flex" cols="12" sm="6">
+                  <v-text-field
+                    v-model="abbreviation"
+                    label="Sigla"
+                    prepend-inner-icon="mdi-account"
+                    dense
+                    outlined
+                  ></v-text-field>
+                </v-col>
+                <v-col class="d-flex" cols="12" sm="11">
+                  <v-text-field
+                    v-model="postName"
+                    label="Nome"
+                    prepend-inner-icon="mdi-account"
+                    dense
+                    outlined
+                   ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-col class="d-flex" cols="12" sm="6">
+                 <v-btn
+                  color="green darken-1"
+                  text
+                  @click="createPostDialog = false; submit()"
+                >Cadastrar</v-btn>
 
           <v-btn color="red darken-1" text @click="createPostDialog = false">Cancelar</v-btn>
+              </v-col>
+            </v-container>
+          </template>
         </v-card-actions>
         </v-card>
       </v-dialog>
@@ -47,18 +59,30 @@
           class="headline"
         >Edição do Cargo</v-card-title>
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <template class="col-12" sm="10" md="10" lg="10">
-            <v-text-field
-              v-model="postName"
-              label="Nome do Cargo"
-              prepend-inner-icon="mdi-account"
-              dense
-              outlined
-            ></v-text-field>
-          </template>
-         
-              
+           <v-spacer></v-spacer>
+          <template>
+            <v-container fluid>
+              <v-row>
+                <v-col class="d-flex" cols="12" sm="6">
+                  <v-text-field
+                    v-model="abbreviation"
+                    label="Sigla"
+                    prepend-inner-icon="mdi-account"
+                    dense
+                    outlined
+                  ></v-text-field>
+                </v-col>
+                <v-col class="d-flex" cols="12" sm="11">
+                  <v-text-field
+                    v-model="postName"
+                    label="Nome"
+                    prepend-inner-icon="mdi-account"
+                    dense
+                    outlined
+                   ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-col class="d-flex" cols="12" sm="6">
           <v-btn
             color="green darken-1"
             text
@@ -69,6 +93,9 @@
           >Editar</v-btn>
 
           <v-btn color="red darken-1" text @click="editPostDialog = false">Cancelar</v-btn>
+              </v-col>
+            </v-container>
+          </template>
         </v-card-actions>
         </v-card>
       </v-dialog>
@@ -86,30 +113,30 @@
     </v-data-table>
     </v-card>
 
-    <v-dialog v-model="deletePostDialog" max-width="500" min-h>
-          <v-card>
-            <v-card-title style="font-size: 16px !important" class="headline">
-              Deseja realmente deletar este cargo? <br>
-              Isso fará com que todos os {{ deletedItem }}s fiquem sem cargo!
-              </v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
+    <v-dialog v-model="deletePostDialog" max-width="700" min-h>
+      <v-card>
+        <v-card-title style="font-size: 16px !important" class="headline">
+          Deseja realmente deletar este cargo? <br>
+          Isso fará com que todos os {{ deletedItem }}s fiquem sem cargo!
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
 
-              <v-btn
-                color="red darken-1"
-                text
-                @click="deletePostDialog = false; deleteItem();
-                "
-              >
-                DELETAR CARGO
-              </v-btn>
+          <v-btn
+            color="red darken-1"
+            text
+            @click="deletePostDialog = false; deleteItem();
+            "
+          >
+            DELETAR CARGO
+          </v-btn>
 
-              <v-btn text @click="deletePostDialog = false">
-                Voltar
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+          <v-btn text @click="deletePostDialog = false">
+            Voltar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     
   </v-container>
 </template>
@@ -127,13 +154,15 @@ export default {
     return {
       postController,
       header: [
-        { text: "Título", value: "name" },
+        { text: "Sigla", value: "abbreviation" },
+        { text: "Título", value: "full_name" }, 
         { text: "Ações", value: "actions", sortable: false }
       ],
       createPostDialog: false,
       editPostDialog: false,
       deletePostDialog: false,
       postName: "",
+      abbreviation: "",
       posts: [],
       postDetail: null,
       type: null,
@@ -160,33 +189,37 @@ export default {
     },
 
     async submit(){
-      const postName = {
-        name: this.postName,
+      const post = {
+        full_name: this.postName,
+        abbreviation: this.abbreviation
       }
-      await this.postController.createPost(this.$api, postName) 
+      await this.postController.createPost(this.$api, post).then(this.getPosts)
       this.showModal = true
     },
 
     async edit(item) {
-      this.postName=item.name
-      this.editPostDialog=true
+      this.postName=item.full_name
+      this.abbreviation = item.abbreviation
+      this.editPostDialog = true
       this.postDetail = {
         id: item.id,
-        name: this.postName,
+        full_name: this.postName,
+        abbreviation: this.abbreviation
       }
     },
 
      async deletePost(item) {
-      this.deletedItem=item.name
-      this.postName=item.name
-      this.deletePostDialog=true
+      this.deletePostDialog = true
+      this.deletedItem = item.full_name
+      this.postName = item.full_name
       this.postDetail = {
         id: item.id,
       }
     },
 
     async sendPutRequest() {
-      this.postDetail.name = this.postName;
+      this.postDetail.full_name = this.postName;
+      this.postDetail.abbreviation = this.abbreviation;
       await this.postController.editPost(this.$api, this.postDetail)
         .then(this.getPosts)
     },

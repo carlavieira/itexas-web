@@ -230,7 +230,7 @@ export default {
         password2: null,
         slack: null,
         phone: null,
-        date_joined: "2020-04-03T22:49:56.874Z",
+        date_joined: "2020-05-10",
       },
     };
   },
@@ -247,6 +247,7 @@ export default {
 
     async submit() {
       console.log(this.memberDetails);
+      this.memberDetails.date_joined=this.date;
       await this.memberController
         .createMember(this.$api, this.memberDetails)
         .then((res) => {
