@@ -178,6 +178,7 @@ export default {
 
   async created() {
     await this.populaSelectLider();
+    await this.defaultLeader();
   },
 
   computed: {
@@ -266,6 +267,11 @@ export default {
         await this.memberController.getAllMembers(this.$api)
       );
       this.leaders = this.setFullName(this.leaders);
+      this.leader
+    },
+
+    async defaultLeader() {
+      this.leader = await this.memberController.getMemberById(this.$api, localStorage.getItem("user_id"))
     },
 
     ListaParticipantes(participantes) {
