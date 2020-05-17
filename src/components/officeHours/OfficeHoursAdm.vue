@@ -18,10 +18,10 @@
           :items="departments"
           item-text="name"
           hide-details
-          no-data-text="Sem departamentos cadastrados"
+          no-data-text="Sem áreas cadastradas"
           style="max-width: 300px;"
           class="pl-2"
-          label="Departamentos"
+          label="Áreas"
           v-model="search"
         ></v-select>
       </v-card-title>
@@ -104,7 +104,7 @@ export default {
       officeHoursController,
       header: [
         { text: "Nome", value: "member.first_name" },
-        { text: "Área", value: "member.department" },
+        { text: "Área", value: "member.department.abbreviation" },
         { text: "Data", value: "date" },
         { text: "Check-in", value: "checkin_time" },
         { text: "Check-out", value: "checkout_time" },
