@@ -123,7 +123,7 @@
           <v-btn
             class="ma-2"
             style="float: left"
-            v-on:click.native="submit()"
+            v-on:click.native="submit();defaultLeader()"
             depressed
             color="success"
             >Cadastrar</v-btn
