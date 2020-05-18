@@ -102,11 +102,11 @@
     </v-row>
 
     <v-data-table
-      :headers="headers"
-      :items="desserts"
+      :headers="header"
+      :items="posts"
       :single-expand="singleExpand"
       :expanded.sync="expanded"
-      item-key="name"
+      item-key="id"
       show-expand
       class="elevation-1"
     >
@@ -116,6 +116,10 @@
           <v-spacer></v-spacer>
           <v-switch v-model="singleExpand" label="Single expand" class="mt-2"></v-switch>
         </v-toolbar>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-icon small @click="edit(item)">mdi-pencil</v-icon>
+        <v-icon class="pl-3" small @click="deletePost(item)">mdi-delete</v-icon>
       </template>
       <template v-slot:expanded-item="{ headers }">
         <td :colspan="headers.length">
@@ -128,16 +132,15 @@
                   <th>Area</th>
                   <th>Data de Entrada</th>
                   <th>Detalhes</th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="dessert in desserts" :key="dessert.name">
-                  <td>{{ dessert.name }}</td>
-                  <td>{{ dessert.calories * 4 }}</td>
-                  <td>{{ dessert.fat * 4 }}</td>
-                  <td>{{ dessert.carbs * 4 }}</td>
-                  <td>{{ dessert.carbs * 4 }}</td>
+                <tr v-for="member in desserts" :key="member.name">
+                  <td>{{ member.name }}</td>
+                  <td>{{ member.calories * 4 }}</td>
+                  <td>{{ member.fat * 4 }}</td>
+                  <td>{{ member.carbs * 4 }}</td>
+                  <td>{{ member.carbs * 4 }}</td>
                 </tr>
               </tbody>
             </template>
@@ -149,26 +152,13 @@
 </template>
 <script>
 import postController from "../../controllers/PostController";
+import memberController from "../../controllers/MemberController";
 
 export default {
   data() {
     return {
       expanded: [],
-      singleExpand: false,
-      headers: [
-        {
-          text: "Dessert (100g serving)",
-          align: "left",
-          sortable: false,
-          value: "name"
-        },
-        { text: "Calories", value: "calories" },
-        { text: "Fat (g)", value: "fat" },
-        { text: "Carbs (g)", value: "carbs" },
-        { text: "Protein (g)", value: "protein" },
-        { text: "Iron (%)", value: "iron" },
-        { text: "", value: "data-table-expand" }
-      ],
+      singleExpand: true,
       desserts: [
         {
           name: "Frozen Yogurt",
@@ -193,71 +183,16 @@ export default {
           carbs: 23,
           protein: 6.0,
           iron: "7%"
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: "8%"
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: "16%"
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: "0%"
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: "2%"
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: "45%"
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: "22%"
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: "6%"
         }
       ],
-
       postController,
+      memberController,
       header: [
         { text: "Sigla", value: "abbreviation" },
         { text: "Título", value: "full_name" },
         { text: "Ações", value: "actions", sortable: false }
       ],
+      membersInPost: {},
       createPostDialog: false,
       editPostDialog: false,
       deletePostDialog: false,
@@ -280,7 +215,19 @@ export default {
       await this.postController
         .getPosts(this.$api)
         .then(res => {
+          const allPosts = res.data;
           this.posts = res.data;
+
+          allPosts.forEach(post => {
+            this.memberController
+              .getMembersInPost(this.$api, post.id)
+              .then(res => {
+                this.membersInPost[post.id] = res;
+                /*console.log(getMembersInPost); */
+              });
+          });
+          console.log(this.membersInPost);
+          console.log(res.data);
         })
         .catch(err => {
           console.log(err);

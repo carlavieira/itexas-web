@@ -2,10 +2,10 @@ export default {
   getAllMembers(api) {
     const response = api
       .get("list-members/")
-      .then(function(response) {
+      .then(function (response) {
         return response.data;
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
     return response;
@@ -14,10 +14,10 @@ export default {
   getMemberById(api, id) {
     return api
       .get(`list-members/${id}/`)
-      .then(function(response) {
+      .then(function (response) {
         return response.data;
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   },
@@ -51,15 +51,15 @@ export default {
   getAllLiderandos(api, id) {
     return api
       .get(`list-members/?leader=${id}`)
-      .then(function(response) {
+      .then(function (response) {
         return response.data;
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   },
 
-  getAllDepartments(api){
+  getAllDepartments(api) {
     return api
       .get(`manage-departments/`)
       .then(res => {
@@ -67,5 +67,15 @@ export default {
       }).catch(e => {
         return e
       })
-  }
+  },
+  getMembersInPost(api, postID) {
+    return api
+      .get(`list-members/?post=${postID}`)
+      .then(function (response) {
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  },
 };
