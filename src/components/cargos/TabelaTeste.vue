@@ -114,8 +114,8 @@
         <v-icon small @click="edit(item)">mdi-pencil</v-icon>
         <v-icon class="pl-3" small @click="deletePost(item)">mdi-delete</v-icon>
       </template>
-      <template v-slot:expanded-item="{ headers }">
-        <td :colspan="headers.length">
+      <template v-slot:expanded-item="{ item }">
+        <td :colspan="5">
           <v-simple-table>
             <template v-slot:default>
               <thead>
@@ -128,12 +128,14 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="member in membersInPost.item.id" :key="member.name">
+                <tr v-for="member in membersInPost[item.id]" :key="member.id">
                   <td>{{ member.first_name }}</td>
-                  <td>{{ teste }}</td>
-                  <td>{{ member.fat * 4 }}</td>
-                  <td>{{ member.carbs * 4 }}</td>
-                  <td>{{ member.carbs * 4 }}</td>
+                  <td>{{ member.leader.first_name }}</td>
+                  <td>{{ member.department.abbreviation }}</td>
+                  <td>{{ member.date_joined}}</td>
+                  <td>
+                    <v-icon small>mdi-account-details</v-icon>
+                  </td>
                 </tr>
               </tbody>
             </template>
