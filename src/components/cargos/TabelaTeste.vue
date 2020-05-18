@@ -110,13 +110,6 @@
       show-expand
       class="elevation-1"
     >
-      <template v-slot:top>
-        <v-toolbar flat color="white">
-          <v-toolbar-title>Expandable Table</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-switch v-model="singleExpand" label="Single expand" class="mt-2"></v-switch>
-        </v-toolbar>
-      </template>
       <template v-slot:item.actions="{ item }">
         <v-icon small @click="edit(item)">mdi-pencil</v-icon>
         <v-icon class="pl-3" small @click="deletePost(item)">mdi-delete</v-icon>
@@ -135,9 +128,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="member in desserts" :key="member.name">
-                  <td>{{ member.name }}</td>
-                  <td>{{ member.calories * 4 }}</td>
+                <tr v-for="member in membersInPost.item.id" :key="member.name">
+                  <td>{{ member.first_name }}</td>
+                  <td>{{ teste }}</td>
                   <td>{{ member.fat * 4 }}</td>
                   <td>{{ member.carbs * 4 }}</td>
                   <td>{{ member.carbs * 4 }}</td>
