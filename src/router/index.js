@@ -13,8 +13,9 @@ import membershipCriteriaMember from "../components/membershipCriteria/Membershi
 import perfil from "../components/Perfil.vue";
 import officeHours from "../components/officeHours/OfficeHours.vue";
 import officeHoursAdm from "../components/officeHours/OfficeHoursAdm.vue";
-import cargos from "../components/cargos/Cargos.vue";
+/* import cargos from "../components/cargos/Cargos.vue"; */
 import areas from "../components/areas/Areas.vue";
+import tabelaTeste from "../components/cargos/TabelaTeste.vue"
 
 import memberTemplate from "../components/Member.vue";
 
@@ -43,7 +44,7 @@ const routes = [
       { path: "/adm/calendario", name: "calendario", component: calendario },
       { path: "/adm/perfil", name: "perfil", component: perfil },
       { path: "/adm/officeHours", name: "officeHours", component: officeHours },
-      { path: "/adm/cargos", name: "cargos", component: cargos },
+      { path: "/adm/cargos", name: "cargos", component: tabelaTeste },
       { path: "/adm/areas", name: "areas", component: areas },
       {
         path: "/adm/membresia",
