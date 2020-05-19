@@ -11,19 +11,6 @@
       :headers="header"
       :items="membresia"
     >
-      <template v-slot:item.member="{ item }">
-        {{
-        item.member.first_name + " " + item.member.last_name
-        }}
-      </template>
-      <template v-slot:item.member.leader="{ item }">
-        <span v-if="item.member.leader">
-          {{
-          item.member.leader.first_name
-          }}
-        </span>
-        <span v-else>-</span>
-      </template>
       <template v-slot:item.dayMonth="{ item }">
         <span v-if="item.dayMonth">{{ formatDate(item.dayMonth) }}</span>
       </template>
@@ -105,10 +92,7 @@ export default {
     return {
       MembershipCriteriaController,
       header: [
-        { text: "Nome", value: "member" },
-        { text: "Área", value: "member.department.name" },
-        { text: "Líder", value: "member.leader" },
-        { text: "Referência", value: "dayMonth" },
+        { text: "Mês", value: "dayMonth" },
         { text: "Office Hours", value: "officeHoursCriteria" },
         { text: "Reuniões", value: "meetingsCriteria" },
         { text: "Eventos", value: "eventsCriteria" },
