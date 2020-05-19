@@ -131,6 +131,11 @@ export default {
           if (criteria.member.leader.id == localStorage.getItem("user_id")){
             this.filterLed.push(criteria)
           }
+          else if (criteria.member.leader.leader.id){
+              if (criteria.member.leader.leader.id == localStorage.getItem("user_id")){
+                this.filterLed.push(criteria)
+              }
+          }
         }
       })
     },
