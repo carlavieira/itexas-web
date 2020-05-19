@@ -4,7 +4,6 @@
       <h2>Membros</h2>
       <v-spacer></v-spacer>
       <v-btn
-        v-if="$route.name == 'members'"
         @click="btnMembro = true"
         title="Cadastrar novo membro"
         small

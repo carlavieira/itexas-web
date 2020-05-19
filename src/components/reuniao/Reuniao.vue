@@ -2,11 +2,11 @@
   <v-container>
     <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">{{ text }}</v-snackbar>
     <v-row class="px-4">
-      <h2 v-if="$route.name == 'reuniao'">Reuniões</h2>
+      <h2 v-if="$route.name == 'reuniaoAdm'">Reuniões</h2>
       <h2 v-else>Minhas Reuniões</h2>
       <v-spacer></v-spacer>
       <v-btn
-        v-if="$route.name == 'reuniao'"
+        v-if="$route.name == 'reuniaoAdm'"
         @click="btnReuniao = true"
         title="Marcar Reunião"
         small

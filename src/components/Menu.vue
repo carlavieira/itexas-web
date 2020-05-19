@@ -16,15 +16,20 @@
           <v-img max-width="75px" class="mx-auto" src="../assets/branco.png"></v-img>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item link @click="$router.push('/adm/perfil')">
+
+      <v-list-item link @click="$router.push('/membro/perfil')">
         <v-list-item-content>
-          <span class="px-5 white--text body-2">{{member.first_name}}</span>
-          <span class="px-5 white--text body-2">{{member.post.abbreviation}} de {{member.department.abbreviation}}</span>
+          <span class="px-3 white--text body-2">{{member.first_name}}</span>
+          <span
+            class="px-3 white--text body-2"
+          >{{member.post.abbreviation}} de {{member.department.abbreviation}}</span>
         </v-list-item-content>
       </v-list-item>
+
       <v-divider></v-divider>
-      <v-list nav dense dark class="tertiary--text px-7 pt-6 py-4">
-        <v-list-item link @click="makeCheck()">
+
+      <v-list nav dense dark class="radiustertiary--text px-4 pt-6 py-4">
+        <v-list-item @click="makeCheck()">
           <v-list-item-icon>
             <v-icon>mdi-alarm-check</v-icon>
           </v-list-item-icon>
@@ -32,14 +37,29 @@
             <v-list-item-title>{{ check }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item
-          class="radius"
-          v-for="item in items"
-          :key="item.text"
-          router
-          :to="item.path"
-          v-bind:class="{ 'admin-item': item.adminItem == true }"
-        >
+
+        <v-list-group v-if="member.is_staff" prepend-icon="mdi-account" dark class="radius admin-item tertiary--text mb-1">
+          <template v-slot:activator>
+            <v-list-item-title>Gerenciar</v-list-item-title>
+          </template>
+          <v-list-item
+            class="admin-item"
+            v-for="item in adm"
+            :key="item.text"
+            router
+            :to="item.path"
+            link
+          >
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.text }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
+
+        <v-list-item class="radius" v-for="item in items" :key="item.text" router :to="item.path">
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
@@ -47,6 +67,7 @@
             <v-list-item-title>{{ item.text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
         <v-list-item link @click="logout()">
           <v-list-item-icon>
             <v-icon>mdi-exit-to-app</v-icon>
@@ -59,11 +80,8 @@
     </v-navigation-drawer>
 
     <div class="pa-3" style="background-color: #f1f1f1; min-height: 100vh;">
-      <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">
-          {{ text }}</v-snackbar
-        >
-      <router-view :key="$route.fullPath">
-      </router-view>
+      <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{ text }}</v-snackbar>
+      <router-view :key="$route.fullPath"></router-view>
     </div>
   </div>
 </template>
@@ -71,19 +89,13 @@
 <script>
 import authController from "../controllers/AuthController";
 import officeHoursController from "../controllers/OfficeHoursController";
-import memberController from "../controllers/MemberController"
-
+import memberController from "../controllers/MemberController";
 
 export default {
   data() {
     return {
       authController,
-      items: [
-        {
-          text: "Dashboard",
-          icon: "mdi-view-dashboard-outline",
-          path: "/adm/dashboard"
-        },
+      adm: [
         //Admin
         {
           text: "Membros",
@@ -94,7 +106,7 @@ export default {
         {
           text: "Office Hours",
           icon: "mdi-alarm-check",
-          path: "/adm/officeHoursAdm",
+          path: "/adm/officeHours",
           adminItem: true
         },
         {
@@ -126,44 +138,52 @@ export default {
           icon: "mdi-account",
           path: "/adm/cargos",
           adminItem: true
+        }
+      ],
+
+      items: [
+        {
+          text: "Dashboard",
+          icon: "mdi-view-dashboard-outline",
+          path: "/membro/dashboard"
         },
-        //Members
         {
           text: "Meu Perfil",
           icon: "mdi-account-circle",
-          path: "/adm/perfil"
+          path: "/membro/perfil"
         },
         {
           text: "Minhas Office Hours",
           icon: "mdi-alarm-check",
-          path: "/adm/officeHours"
+          path: "/membro/officeHours"
         },
         {
           text: "Minhas Reuniões",
           icon: "mdi-account-multiple",
-          path: "/adm/minhas-reunioes"
+          path: "/membro/minhas-reunioes"
         },
         {
           text: "Meus Eventos",
           icon: "mdi-account-group",
-          path: "/adm/meus-eventos"
+          path: "/membro/meus-eventos"
         },
         {
           text: "Meu Critério",
           icon: "mdi-clipboard-text-multiple",
-          path: "/adm/meu-criterio"
+          path: "/membro/meu-criterio"
         },
         {
           text: "Meus Liderados",
           icon: "mdi-clipboard-text-multiple",
-          path: "/adm/meus-liderados",
+          path: "/membro/meus-liderados"
         },
         {
           text: "Calendário",
           icon: "mdi-calendar-month",
-          path: "/adm/calendario"
+          path: "/membro/calendario"
         }
       ],
+
       drawer: true,
       officeHoursController,
       officeHours: [],
@@ -172,14 +192,14 @@ export default {
       text: "",
       timeout: 3000,
       color: "",
-      member:{},
+      member: {},
       memberController
     };
   },
 
-  created(){
-    this.getMember()
-    this.changeStatus()
+  async created() {
+    await this.getMember();
+    this.changeStatus();
   },
 
   methods: {
@@ -188,14 +208,14 @@ export default {
         this.$api,
         localStorage.getItem("user_id")
       );
+      console.log(this.member);
     },
 
-    setSnackbar(text, color){
-      this.text = text
-      this.color = color
-      this.snackbar = true
+    setSnackbar(text, color) {
+      this.text = text;
+      this.color = color;
+      this.snackbar = true;
     },
-
 
     logout() {
       this.authController
@@ -251,8 +271,8 @@ export default {
         .createOfficeHour(this.$api, oh)
         .then(res => {
           console.log(res);
-          this.setSnackbar("Check-in realizado!", "success")
-          this.check="Check-out"
+          this.setSnackbar("Check-in realizado!", "success");
+          this.check = "Check-out";
         })
         .catch(err => {
           console.log(err);
@@ -264,8 +284,8 @@ export default {
         .editOfficeHour(this.$api, oh)
         .then(res => {
           console.log(res);
-          this.setSnackbar("Check-out realizado!", "success")
-          this.check="Check-in"
+          this.setSnackbar("Check-out realizado!", "success");
+          this.check = "Check-in";
         })
         .catch(err => {
           console.log(err);

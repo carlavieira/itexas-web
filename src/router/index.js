@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import login from "../components/Login.vue";
 
-import admTemplate from "../components/Admin.vue";
+import menu from "../components/Menu.vue";
 import dashboard from "../components/Dashboard.vue";
 import members from "../components/membros/Membros.vue";
 import reuniao from "../components/reuniao/Reuniao.vue";
@@ -18,7 +18,6 @@ import officeHoursAdm from "../components/officeHours/OfficeHoursAdm.vue";
 import areas from "../components/areas/Areas.vue";
 import tabelaTeste from "../components/cargos/TabelaTeste.vue"
 
-import memberTemplate from "../components/Member.vue";
 
 Vue.use(VueRouter);
 
@@ -28,42 +27,27 @@ const routes = [
   { path: "/login", name: "login", component: login },
 
   {
-    path: "/adm",
-    name: "admTemplate",
-    component: admTemplate,
+    path: "/membro",
+    name: "menu",
+    component: menu,
     children: [
-      { path: "/adm/dashboard", name: "dashboard", component: dashboard },
-      { path: "/adm/membros", name: "members", component: members },
-      { path: "/adm/reuniao", name: "reuniao", component: reuniao },
+      { path: "/membro/dashboard", name: "dashboard", component: dashboard },
       {
-        path: "/adm/minhas-reunioes",
+        path: "/membro/minhas-reunioes",
         name: "minhas-reunioes",
         component: reuniao,
       },
-      { path: "/adm/eventos", name: "eventos", component: eventos },
-      { path: "/adm/meus-eventos", name: "meus-eventos", component: eventos },
-      { path: "/adm/calendario", name: "calendario", component: calendario },
-      { path: "/adm/perfil", name: "perfil", component: perfil },
-      { path: "/adm/officeHours", name: "officeHours", component: officeHours },
-      { path: "/adm/cargos", name: "cargos", component: tabelaTeste },
-      { path: "/adm/areas", name: "areas", component: areas },
+      { path: "/membro/meus-eventos", name: "meus-eventos", component: eventos },
+      { path: "/membro/calendario", name: "calendario", component: calendario },
+      { path: "/membro/perfil", name: "perfil", component: perfil },
+      { path: "/membro/officeHours", name: "officeHours", component: officeHours },
       {
-        path: "/adm/membresia",
-        name: "membershipCriteriaAll",
-        component: membershipCriteriaAll,
-      },
-      {
-        path: "/adm/meu-criterio",
-        name: "membershipCriteriaAdm",
+        path: "/membro/meu-criterio",
+        name: "membershipCriteriamembro",
         component: membershipCriteriaMember
       },
       {
-        path: "/adm/officeHoursAdm",
-        name: "officeHoursAdm",
-        component: officeHoursAdm
-      },
-      {
-        path: "/adm/meus-liderados",
+        path: "/membro/meus-liderados",
         name: "membershipCriteriaLed",
         component: membershipCriteriaLed
       },
@@ -71,40 +55,24 @@ const routes = [
   },
 
   {
-    path: "/member",
-    name: "memberTemplate",
-    component: memberTemplate,
+    path: "/adm",
+    name: "menuAdm",
+    component: menu,
     children: [
-      { path: "/member/contactList", name: "contactList", component: members },
-      { path: "/member/dashboard", name: "dashboard", component: dashboard },
-      { path: "/member/perfil", name: "perfil", component: perfil },
-      { path: "/member/calendario", name: "calendario", component: calendario },
+      { path: "/adm/membros", name: "membersAdm", component: members },
+      { path: "/adm/officeHours", name: "officeHoursAdm", component: officeHoursAdm },
+      { path: "/adm/reuniao", name: "reuniaoAdm", component: reuniao },
+      { path: "/adm/eventos", name: "eventosAdm", component: eventos },
       {
-        path: "/member/meu-criterio",
-        name: "membershipCriteriaUser",
-        component: membershipCriteriaMember
+        path: "/adm/membresia",
+        name: "membershipCriteriaAdm",
+        component: membershipCriteriaAll,
       },
-      { path: "/member/officeHours", 
-        name: "officeHours", 
-        component: officeHours },
-      {
-        path: "/member/minhas-reunioes",
-        name: "minhas-reunioes",
-        component: reuniao,
-      },
-      {
-        path: "/member/meus-eventos",
-        name: "meus-eventos",
-        component: eventos,
-      },
-      {
-        path: "/member/meus-liderados",
-        name: "membershipCriteriaLed",
-        component: membershipCriteriaLed
-      },
-    ],
-  },
-];
+      { path: "/adm/cargos", name: "cargosAdm", component: tabelaTeste },
+      { path: "/adm/areas", name: "areasAdm", component: areas },
+    ]
+  }
+]
 
 const router = new VueRouter({
   mode: "history",

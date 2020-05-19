@@ -3,7 +3,7 @@
     <v-card class="pa-5 pl-10 modal">
       <v-layout row class="px-3">
         <v-btn
-          v-if="!editEvent && $route.name == 'eventos'"
+          v-if="!editEvent && $route.name == 'eventosAdm'"
           color="black"
           @click="editEvent = true"
           title="Editar"
@@ -18,7 +18,7 @@
           class="ml-2"
           title="Excluir"
           small
-          v-if="$route.name == 'eventos'"
+          v-if="$route.name == 'eventosAdm'"
         >
           <v-icon color="white">mdi-delete</v-icon>
         </v-btn>

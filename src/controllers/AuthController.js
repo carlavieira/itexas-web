@@ -16,18 +16,12 @@ export default {
         localStorage.setItem("access_token", res.data.token);
         localStorage.setItem("user_id", res.data.user.id);
         localStorage.setItem("is_staff", res.data.user.is_staff);
-        this.routerPath(res);
+        router.push("/membro/dashboard")
         return res;
       })
       .catch(err => {
        throw err;
       });
-  },
-
-  routerPath(res) {
-    res.data.user.is_staff
-      ? router.push("/adm/dashboard")
-      : router.push("/member/dashboard");
   },
 
   logout(http) {

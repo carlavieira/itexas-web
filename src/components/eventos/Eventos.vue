@@ -4,11 +4,11 @@
       {{ text }}</v-snackbar
     >
     <v-row class="px-4">
-      <h2 v-if="$route.name == 'eventos'">Eventos</h2>
+      <h2 v-if="$route.name == 'eventosAdm'">Eventos</h2>
       <h2 v-else>Meus Eventos</h2>
       <v-spacer></v-spacer>
       <v-btn
-        v-if="$route.name == 'eventos'"
+        v-if="$route.name == 'eventosAdm'"
         @click="btnEvento = true"
         title="Marcar Evento"
         small

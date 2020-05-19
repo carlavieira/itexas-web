@@ -3,7 +3,7 @@
     <v-card class="pa-5 pl-10 modal">
       <v-layout row class="px-3">
         <v-btn
-          v-if="!editMeeting && $route.name == 'reuniao'"
+          v-if="!editMeeting && $route.name == 'reuniaoAdm'"
           color="black"
           @click="editMeeting = true"
           title="Editar"
@@ -13,7 +13,7 @@
         </v-btn>
 
         <v-btn
-          v-if="$route.name == 'reuniao'"
+          v-if="$route.name == 'reuniaoAdm'"
           color="red"
           @click.stop="dialog = true"
           class="ml-2"
