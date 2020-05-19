@@ -10,6 +10,7 @@ import eventos from "../components/eventos/Eventos.vue";
 import calendario from "../components/calendario/Calendario.vue";
 import membershipCriteriaAll from "../components/membershipCriteria/MembershipCriteriaAll.vue";
 import membershipCriteriaMember from "../components/membershipCriteria/MembershipCriteriaMember.vue";
+import membershipCriteriaLed from "../components/membershipCriteria/MembershipCriteriaLed.vue";
 import perfil from "../components/Perfil.vue";
 import officeHours from "../components/officeHours/OfficeHours.vue";
 import officeHoursAdm from "../components/officeHours/OfficeHoursAdm.vue";
@@ -60,7 +61,12 @@ const routes = [
         path: "/adm/officeHoursAdm",
         name: "officeHoursAdm",
         component: officeHoursAdm
-      }
+      },
+      {
+        path: "/adm/meus-liderados",
+        name: "membershipCriteriaLed",
+        component: membershipCriteriaLed
+      },
     ],
   },
 
@@ -78,7 +84,9 @@ const routes = [
         name: "membershipCriteriaUser",
         component: membershipCriteriaMember
       },
-      { path: "/member/officeHour", name: "officeHours", component: officeHours },
+      { path: "/member/officeHour", 
+        name: "officeHours", 
+        component: officeHours },
       {
         path: "/member/minhas-reunioes",
         name: "minhas-reunioes",
@@ -88,6 +96,11 @@ const routes = [
         path: "/member/meus-eventos",
         name: "meus-eventos",
         component: eventos,
+      },
+      {
+        path: "/member/meus-liderados",
+        name: "membershipCriteriaLed",
+        component: membershipCriteriaLed
       },
     ],
   },

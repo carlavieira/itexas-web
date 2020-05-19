@@ -144,7 +144,7 @@ export default {
         {
           text: "Meus Liderados",
           icon: "mdi-clipboard-text-multiple",
-          path: "/adm/meu-criterio",
+          path: "/adm/meus-liderados",
         },
         {
           text: "Calendário",

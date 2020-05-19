@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row class="px-4 pb-3">
-      <h2>Meu Critério de Membresia</h2>
+      <h2>Critério de Membresia dos Meus Liderados</h2>
       <v-spacer></v-spacer>
     </v-row>
     <v-divider class="pb-3"></v-divider>
