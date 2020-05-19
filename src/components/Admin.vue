@@ -16,7 +16,7 @@
           <v-img max-width="75px" class="mx-auto" src="../assets/branco.png"></v-img>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item link @click="$router.push('/member/perfil')">
+      <v-list-item link @click="$router.push('/adm/perfil')">
         <v-list-item-content>
           <span class="px-5 white--text body-2">{{member.first_name}}</span>
           <span class="px-5 white--text body-2">{{member.post.abbreviation}} de {{member.department.abbreviation}}</span>
