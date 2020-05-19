@@ -32,9 +32,8 @@
         <v-chip
           v-if="item.officeHoursCriteria == 100.00"
           class="ma-2"
-          color="green lighten-2"
-          text-color="white"
-          small
+          color="white"
+          text-color="green"
         >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
         <v-chip
           v-if="item.officeHoursCriteria < 80.00"
@@ -42,9 +41,11 @@
           color="white"
           text-color="red"
         >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
-        <span v-else>{{formatPercentage(item.officeHoursCriteria)}}</span>
+        <span
+          v-else-if="item.officeHoursCriteria > 80.00 && officeHoursCriteria < 100.00"
+        >{{formatPercentage(item.officeHoursCriteria)}}</span>
       </template>
-     
+
       <template v-slot:item.meetingsCriteria="{ item }">
         <v-chip
           v-if="item.meetingsCriteria == 100.00"
@@ -57,18 +58,18 @@
           class="ma-2"
           color="white"
           text-color="red"
-          small
         >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
-        <span v-else>{{formatPercentage(item.meetingsCriteria)}}</span>
+        <span
+          v-else-if="item.meetingsCriteria > 75.00 && meetingsCriteria < 100.00"
+        >{{formatPercentage(item.meetingsCriteria)}}</span>
       </template>
 
       <template v-slot:item.eventsCriteria="{ item }">
         <v-chip
           v-if="item.eventsCriteria == 100.00"
           class="ma-2"
-          color="green lighten-2"
-          text-color="white"
-          small
+          color="white"
+          text-color="green"
         >{{formatPercentage(item.eventsCriteria)}}</v-chip>
         <v-chip
           v-else-if="item.eventsCriteria < 50.00"
@@ -76,7 +77,9 @@
           color="white"
           text-color="red"
         >{{formatPercentage(item.eventsCriteria)}}</v-chip>
-        <span v-else>{{formatPercentage(item.eventsCriteria)}}</span>
+        <span
+          v-else-if="item.eventsCriteria > 50.00 && eventsCriteria < 100.00"
+        >{{formatPercentage(item.eventsCriteria)}}</span>
       </template>
 
       <template v-slot:item.status="{ item }">
@@ -86,11 +89,9 @@
           color="red"
           text-color="white"
           small
-          >{{item.status}}
-        </v-chip>
+        >{{item.status}}</v-chip>
         <span v-else>{{item.status}}</span>
       </template>
-      
     </v-data-table>
   </v-container>
 </template>
