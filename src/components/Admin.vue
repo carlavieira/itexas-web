@@ -16,6 +16,12 @@
           <v-img max-width="75px" class="mx-auto" src="../assets/branco.png"></v-img>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item link @click="$router.push('/member/perfil')">
+        <v-list-item-content>
+          <span class="px-5 white--text body-2">{{member.first_name}}</span>
+          <span class="px-5 white--text body-2">{{member.post.abbreviation}} de {{member.department.abbreviation}}</span>
+        </v-list-item-content>
+      </v-list-item>
       <v-divider></v-divider>
       <v-list nav dense dark class="tertiary--text px-7 pt-6 py-4">
         <v-list-item link @click="makeCheck()">
@@ -65,6 +71,8 @@
 <script>
 import authController from "../controllers/AuthController";
 import officeHoursController from "../controllers/OfficeHoursController";
+import memberController from "../controllers/MemberController"
+
 
 export default {
   data() {
@@ -163,15 +171,25 @@ export default {
       snackbar: false,
       text: "",
       timeout: 3000,
-      color: ""
+      color: "",
+      member:{},
+      memberController
     };
   },
 
   created(){
+    this.getMember()
     this.changeStatus()
   },
 
   methods: {
+    async getMember() {
+      this.member = await this.memberController.getMemberById(
+        this.$api,
+        localStorage.getItem("user_id")
+      );
+    },
+
     setSnackbar(text, color){
       this.text = text
       this.color = color

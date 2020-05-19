@@ -181,7 +181,6 @@ export default {
         this.$api,
         localStorage.getItem("user_id")
       );
-      console.log(this.member);
       this.member.date_joined = moment(this.member.date_joined).format('DD/MM/YYYY')
       this.date = this.member.date_joined
     },
