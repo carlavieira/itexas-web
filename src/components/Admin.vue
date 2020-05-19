@@ -154,6 +154,11 @@ export default {
           path: "/adm/meu-criterio",
         },
         {
+          text: "Meus Liderados",
+          icon: "mdi-clipboard-text-multiple",
+          path: "/adm/meu-criterio",
+        },
+        {
           text: "Calendário",
           icon: "mdi-calendar-month",
           path: "/adm/calendario",
