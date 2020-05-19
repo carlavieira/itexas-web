@@ -48,6 +48,9 @@
             <template v-slot:item.time="{ item }">
               <span>{{ formatTime(item.time) }}</span>
             </template>
+            <template v-slot:item.engagement="{ item }">
+                <span>{{ formatPercentage(item.engagement) }}</span>
+            </template>
             <template v-slot:item.attendance="{ item }">
               <input
                 type="checkbox"
@@ -130,9 +133,10 @@ export default {
             align: "center",
             value: "type",
           },
-          { text: "Lider", value: "member", align: "center" },
+          { text: "Responsável", value: "member", align: "center" },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
+          { text: "% de Presença", value: "engagement", align: "center" },
           { text: "Detalhes", value: "details", align: "center" },
         ]
       } else {
@@ -142,7 +146,7 @@ export default {
             align: "center",
             value: "type",
           },
-          { text: "Lider", value: "member", align: "center" },
+          { text: "Responsável", value: "member", align: "center" },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "Presenca", value: "attendance", align: "center"},
@@ -160,6 +164,15 @@ export default {
       else if (sigla == "LR") return "Reunião de LR";
       else if (sigla == "CN") return "Reunião de Corner";
     },
+
+    formatPercentage(item) {
+      console.log(item);
+      if (item > 100) {
+        return 100 + " %";
+      } else return item + " %";
+    },
+
+
     formatTime(time) {
       let hora = time.split(":");
       return `${hora[0]}:${hora[1]}`;
