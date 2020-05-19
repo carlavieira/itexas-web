@@ -71,9 +71,9 @@ export default {
           path: "/member/perfil"
         },
         {
-          text: "Calendário",
-          icon: "mdi-calendar-month",
-          path: "/member/calendario"
+          text: "Minhas Office Hours",
+          icon: "mdi-clipboard-text-multiple",
+          path: "/member/officeHours"
         },
         {
           text: "Minhas Reuniões",
@@ -86,20 +86,25 @@ export default {
           path: "/member/meus-eventos"
         },
         {
-          text: "Contact List",
-          icon: "mdi-account",
-          path: "/member/contactList"
-        },
-        {
           text: "Meu Critério",
           icon: "mdi-clipboard-text-multiple",
           path: "/member/meu-criterio"
         },
         {
-          text: "Office Hours",
+          text: "Meus Liderados",
           icon: "mdi-clipboard-text-multiple",
-          path: "/member/officeHours"
-        }
+          path: "/member/meus-liderados",
+        },
+        {
+          text: "Calendário",
+          icon: "mdi-calendar-month",
+          path: "/member/calendario"
+        },
+        {
+          text: "Contact List",
+          icon: "mdi-account",
+          path: "/member/contactList"
+        },
       ],
       drawer: true,
       officeHoursController,
