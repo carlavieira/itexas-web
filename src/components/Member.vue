@@ -53,6 +53,7 @@
 
 <script>
 import authController from "../controllers/AuthController";
+import officeHoursController from "../controllers/OfficeHoursController";
 
 export default {
   data() {
@@ -100,7 +101,10 @@ export default {
           path: "/member/officeHours"
         }
       ],
-      drawer: true
+      drawer: true,
+      officeHoursController,
+      officeHours: [],
+      check: ""
     };
   },
 
@@ -114,6 +118,18 @@ export default {
         .catch(e => {
           console.log(e);
         });
+    },
+
+    async changeStatus() {
+      this.check = "Check-in";
+      await this.officeHoursController.getOfficeHours(this.$api).then(res => {
+        this.officeHours = res.data;
+        this.officeHours.forEach(oh => {
+          if (!oh.checkout_time) {
+            this.check = "Check-out";
+          }
+        });
+      });
     },
 
     async makeCheck() {
@@ -143,11 +159,12 @@ export default {
     },
 
     async createOfficeHour(oh) {
-      await this.officeHoursController
+      await officeHoursController
         .createOfficeHour(this.$api, oh)
         .then(res => {
           console.log(res);
           alert("Check-in realizado!");
+          this.check="Check-out"
         })
         .catch(err => {
           console.log(err);
@@ -155,11 +172,12 @@ export default {
     },
 
     async updateOfficeHour(oh) {
-      await this.officeHoursController
+      await officeHoursController
         .editOfficeHour(this.$api, oh)
         .then(res => {
           console.log(res);
           alert("Check-out realizado!");
+          this.check="Check-in"
         })
         .catch(err => {
           console.log(err);
