@@ -23,7 +23,7 @@
             <v-icon>mdi-alarm-check</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>Check-in / Check-out</v-list-item-title>
+            <v-list-item-title>{{ check }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item class="radius" v-for="item in items" :key="item.text" router :to="item.path">
@@ -111,6 +111,10 @@ export default {
       officeHours: [],
       check: ""
     };
+  },
+
+  created(){
+    this.changeStatus()
   },
 
   methods: {
