@@ -19,8 +19,8 @@ export default {
         this.routerPath(res);
         return res;
       })
-      .catch(function(err) {
-        return err;
+      .catch(err => {
+       throw err;
       });
   },
 

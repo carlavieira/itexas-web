@@ -2,6 +2,9 @@
   <v-container fluid>
     <v-row align="center">
       <v-col>
+        <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">
+          {{ text }}</v-snackbar
+        >
         <v-card flat color="branco" class="px-8 pt-5 pb-12 form mx-auto">
           <v-form ref="form" v-if="loginPage">
             <v-img src="../assets/rrrrr.png" width="100px" class="mt-3 mb-5 mx-auto" />
@@ -110,7 +113,11 @@ export default {
       ],
       validacaoSenha: [
         v => v.length >= 6 || "A senha precisa ter no mínimo 6 caracteres"
-      ]
+      ],
+      snackbar: false,
+      text: "",
+      timeout: 3000,
+      color: ""
     };
   },
   methods: {
@@ -122,6 +129,12 @@ export default {
       }).catch(e => {
         console.log(e)
       })
+    },
+
+    setSnackbar(text, color){
+      this.text = text
+      this.color = color
+      this.snackbar = true
     },
 
     showErrorAlert(message) {
@@ -138,12 +151,15 @@ export default {
     },
 
     async login() {
-      let res = await this.authController.login(
-        this.$http,
-        this.email,
-        this.senha
-      );
-      console.log(res);
+      await this.authController.login( this.$http, this.email, this.senha)
+        .then(res => {
+          console.log(res)
+          this.setSnackbar("Login efetuado", "success")
+        }).catch(error => {
+          console.log(error)
+          this.setSnackbar("Erro ao efetuar login", "error")
+        })
+      
     }
   }
 };
