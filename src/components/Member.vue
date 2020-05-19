@@ -53,6 +53,9 @@
     </v-navigation-drawer>
 
     <div class="pa-3" style="background-color: #f1f1f1; min-height: 100vh">
+      <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">
+          {{ text }}</v-snackbar
+        >
       <router-view></router-view>
     </div>
   </div>
@@ -118,6 +121,10 @@ export default {
       officeHoursController,
       officeHours: [],
       check: "",
+      snackbar: false,
+      text: "",
+      timeout: 3000,
+      color: "",
       member:{},
       memberController
     };
@@ -134,6 +141,12 @@ export default {
         this.$api,
         localStorage.getItem("user_id")
       );
+    },
+
+    setSnackbar(text, color){
+      this.text = text
+      this.color = color
+      this.snackbar = true
     },
 
     logout() {
@@ -190,7 +203,7 @@ export default {
         .createOfficeHour(this.$api, oh)
         .then(res => {
           console.log(res);
-          alert("Check-in realizado!");
+          this.setSnackbar("Check-in realizado!", "success")
           this.check="Check-out"
         })
         .catch(err => {
@@ -203,7 +216,7 @@ export default {
         .editOfficeHour(this.$api, oh)
         .then(res => {
           console.log(res);
-          alert("Check-out realizado!");
+          this.setSnackbar("Check-out realizado!", "success")
           this.check="Check-in"
         })
         .catch(err => {
