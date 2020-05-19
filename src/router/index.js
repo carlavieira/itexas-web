@@ -84,7 +84,7 @@ const routes = [
         name: "membershipCriteriaUser",
         component: membershipCriteriaMember
       },
-      { path: "/member/officeHour", 
+      { path: "/member/officeHours", 
         name: "officeHours", 
         component: officeHours },
       {
