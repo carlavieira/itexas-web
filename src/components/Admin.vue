@@ -1,15 +1,7 @@
 <template>
   <div>
-    <v-app-bar
-      dark
-      color="primary"
-      class="px-2 hidden-lg-and-up"
-      style="max-height: 56px;"
-    >
-      <v-app-bar-nav-icon
-        color="tertiary"
-        @click="drawer = !drawer"
-      ></v-app-bar-nav-icon>
+    <v-app-bar dark color="primary" class="px-2 hidden-lg-and-up" style="max-height: 56px;">
+      <v-app-bar-nav-icon color="tertiary" @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
       <v-toolbar-title class="pl-0">
         <v-img src="../assets/branco2.png" max-width="70px" />
@@ -21,11 +13,7 @@
     <v-navigation-drawer app color="primary" v-model="drawer">
       <v-list-item style="height: 170px;" class="pa-5">
         <v-list-item-content>
-          <v-img
-            max-width="75px"
-            class="mx-auto"
-            src="../assets/branco.png"
-          ></v-img>
+          <v-img max-width="75px" class="mx-auto" src="../assets/branco.png"></v-img>
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
@@ -35,7 +23,7 @@
             <v-icon>mdi-alarm-check</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>Check-in / Check-out</v-list-item-title>
+            <v-list-item-title>{{ check }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item
@@ -65,14 +53,14 @@
     </v-navigation-drawer>
 
     <div class="pa-3" style="background-color: #f1f1f1; min-height: 100vh;">
-      <router-view :key="$route.fullPath"> </router-view>
+      <router-view :key="$route.fullPath"></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import authController from "../controllers/AuthController"
-import officeHoursController from "../controllers/OfficeHoursController"
+import authController from "../controllers/AuthController";
+import officeHoursController from "../controllers/OfficeHoursController";
 
 export default {
   data() {
@@ -82,76 +70,76 @@ export default {
         {
           text: "Dashboard",
           icon: "mdi-view-dashboard-outline",
-          path: "/adm/dashboard",
+          path: "/adm/dashboard"
         },
         //Admin
         {
           text: "Membros",
           icon: "mdi-account",
           path: "/adm/membros",
-          adminItem: true,
+          adminItem: true
         },
         {
           text: "Office Hours",
           icon: "mdi-alarm-check",
           path: "/adm/officeHoursAdm",
-          adminItem: true,
+          adminItem: true
         },
         {
           text: "Reuniões",
           icon: "mdi-account-multiple",
           path: "/adm/reuniao",
-          adminItem: true,
+          adminItem: true
         },
         {
           text: "Eventos",
           icon: "mdi-account-group",
           path: "/adm/eventos",
-          adminItem: true,
+          adminItem: true
         },
         {
           text: "Critérios de Membresia",
           icon: "mdi-clipboard-text-multiple",
           path: "/adm/membresia",
-          adminItem: true,
+          adminItem: true
         },
         {
           text: "Áreas",
           icon: "mdi-account",
           path: "/adm/areas",
-          adminItem: true,
+          adminItem: true
         },
         {
           text: "Cargos",
           icon: "mdi-account",
           path: "/adm/cargos",
-          adminItem: true,
+          adminItem: true
         },
         //Members
         {
           text: "Meu Perfil",
           icon: "mdi-account-circle",
-          path: "/adm/perfil",
+          path: "/adm/perfil"
         },
         {
           text: "Minhas Office Hours",
           icon: "mdi-alarm-check",
-          path: "/adm/officeHours",
+          path: "/adm/officeHours"
         },
         {
           text: "Minhas Reuniões",
           icon: "mdi-account-multiple",
-          path: "/adm/minhas-reunioes",
+          path: "/adm/minhas-reunioes"
         },
         {
           text: "Meus Eventos",
           icon: "mdi-account-group",
-          path: "/adm/meus-eventos",
+          path: "/adm/meus-eventos"
         },
         {
           text: "Meu Critério",
           icon: "mdi-clipboard-text-multiple",
-          path: "/adm/meu-criterio",
+          path: "/adm/meu-criterio"
         },
         {
           text: "Meus Liderados",
@@ -161,46 +149,63 @@ export default {
         {
           text: "Calendário",
           icon: "mdi-calendar-month",
-          path: "/adm/calendario",
-        },
+          path: "/adm/calendario"
+        }
       ],
       drawer: true,
       officeHoursController,
-      officeHours: []
+      officeHours: [],
+      check: ""
     };
+  },
+
+  created(){
+    this.changeStatus()
   },
 
   methods: {
     logout() {
       this.authController
         .logout(this.$http)
-        .then((res) => {
+        .then(res => {
           console.log(res);
         })
-        .catch((e) => {
+        .catch(e => {
           console.log(e);
         });
     },
 
-    async makeCheck(){
-      let checkOut = false
+    async changeStatus() {
+      this.check = "Check-in";
+      await this.officeHoursController.getOfficeHours(this.$api).then(res => {
+        this.officeHours = res.data;
+        this.officeHours.forEach(oh => {
+          if (!oh.checkout_time) {
+            this.check = "Check-out";
+          }
+        });
+      });
+    },
+
+    async makeCheck() {
+      let checkOut = false;
       await this.officeHoursController
         .getOfficeHours(this.$api)
         .then(res => {
           this.officeHours = res.data;
           this.officeHours.forEach(oh => {
-            if(!oh.checkout_time){
-              oh.checkout_time = new Date()
-              this.updateOfficeHour(oh)
-              checkOut = true
+            if (!oh.checkout_time) {
+              oh.checkout_time = new Date();
+              this.updateOfficeHour(oh);
+              checkOut = true;
             }
-          })
+          });
 
-          if(!checkOut){
-            let oh = {}
-            oh.date = new Date().toISOString().split('T')[0];
-            oh.checkin_time = new Date()
-            this.createOfficeHour(oh)
+          if (!checkOut) {
+            let oh = {};
+            oh.date = new Date().toISOString().split("T")[0];
+            oh.checkin_time = new Date();
+            this.createOfficeHour(oh);
           }
         })
         .catch(err => {
@@ -208,26 +213,32 @@ export default {
         });
     },
 
-    async createOfficeHour(oh){
-      await officeHoursController.createOfficeHour(this.$api, oh)
-      .then(res => {
-        console.log(res)
-        alert("Check-in realizado!")
-      }).catch(err => {
-        console.log(err)
-      })
+    async createOfficeHour(oh) {
+      await officeHoursController
+        .createOfficeHour(this.$api, oh)
+        .then(res => {
+          console.log(res);
+          alert("Check-in realizado!");
+          this.check="Check-out"
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
 
-    async updateOfficeHour(oh){
-      await officeHoursController.editOfficeHour(this.$api, oh)
-      .then(res => {
-        console.log(res)
-        alert("Check-out realizado!")
-      }).catch(err => {
-        console.log(err)
-      })
+    async updateOfficeHour(oh) {
+      await officeHoursController
+        .editOfficeHour(this.$api, oh)
+        .then(res => {
+          console.log(res);
+          alert("Check-out realizado!");
+          this.check="Check-in"
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
-  },
+  }
 };
 </script>
 

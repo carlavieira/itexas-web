@@ -79,7 +79,7 @@
           <v-text-field
             outlined
             prepend-inner-icon="mdi-briefcase"
-            v-model="member.post"
+            v-model="member.post.name"
             :disabled="!editMember"
             label="Cargo"
             hide-details
@@ -89,7 +89,7 @@
           <v-text-field
             outlined
             prepend-inner-icon="mdi-border-none-variant"
-            v-model="member.area"
+            v-model="member.department.name"
             label="Area"
             :disabled="!editMember"
             hide-details
@@ -100,7 +100,7 @@
             outlined
             prepend-inner-icon="mdi-account-star"
             label="Líder"
-            v-model="member.leader"
+            v-model="member.leader.first_name"
             :disabled="!editMember"
             hide-details
           ></v-text-field>
@@ -116,7 +116,7 @@
           >
             <template v-slot:activator="{ on }">
               <v-text-field
-                v-model="dateFormatted"
+                v-model="date"
                 label="Data de entrada na AIESEC"
                 persistent-hint
                 prepend-inner-icon="mdi-calendar"
@@ -127,7 +127,7 @@
               ></v-text-field>
             </template>
             <v-date-picker
-              v-model="date"
+              v-model="this.member.date_joined"
               no-title
               @input="menu1 = false"
             ></v-date-picker>
@@ -153,46 +153,27 @@
 
 <script>
 import memberController from "../controllers/MemberController";
+import moment from 'moment';
 export default {
-  data: (vm) => ({
-    date: new Date().toISOString().substr(0, 10),
-    dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+  data(){
+    return {
     menu1: false,
     menu2: false,
     editMember: false,
     memberController,
     dialog: false,
     member: {},
-  }),
-
-  computed: {
-    computedDateFormatted() {
-      return this.formatDate(this.date);
-    },
+    date: ""
+    }
   },
 
   created() {
     this.getMember();
   },
 
-  watch: {
-    date(val) {
-      this.dateFormatted = this.formatDate(this.date);
-    },
-  },
-
   methods: {
-    formatDate(date) {
-      if (!date) return null;
-
-      const [year, month, day] = date.split("-");
-      return `${day}/${month}/${year}`;
-    },
-    parseDate(date) {
-      if (!date) return null;
-
-      const [month, day, year] = date.split("/");
-      return `${yeabr}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    formatData(data){
+      console.log(data)
     },
 
     async getMember() {
@@ -201,6 +182,8 @@ export default {
         localStorage.getItem("user_id")
       );
       console.log(this.member);
+      this.member.date_joined = moment(this.member.date_joined).format('DD/MM/YYYY')
+      this.date = this.member.date_joined
     },
 
     async sendEdit() {
