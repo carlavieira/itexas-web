@@ -28,7 +28,7 @@
 
       <v-divider></v-divider>
 
-      <v-list nav dense dark class="radiustertiary--text px-4 pt-6 py-4">
+      <v-list nav dense dark class="radius tertiary--text px-4 pt-6 py-4">
         <v-list-item @click="makeCheck()">
           <v-list-item-icon>
             <v-icon>mdi-alarm-check</v-icon>
