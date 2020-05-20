@@ -13,6 +13,7 @@ export default new Vuetify({
         secondary: colors.red.lighten1,
         tertiary: "#ff3535",
         branco: "#FBF9FC",
+        tabela: "EAEAEA"
       },
     },
   },

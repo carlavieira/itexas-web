@@ -147,7 +147,7 @@ export default {
             align: "center",
             value: "type",
           },
-          { text: "Responsável", value: "member", align: "center" },
+          { text: "Responsável", value: "member", align: "right" },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "% de Presença", value: "engagement", align: "center" },

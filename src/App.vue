@@ -39,5 +39,15 @@ import routes from './router/index';
 ::-webkit-scrollbar-thumb:hover {
   background: #ff3535 ;
 }
+
+  .theme--light.v-data-table thead tr th :not(.headerTable){
+    color: rgba(0, 0, 0, 0.96) !important;
+    font-size: 14px !important;
+  }
+
+  .v-data-table td {
+    height: 38px !important;
+  }
+
 </style>
 

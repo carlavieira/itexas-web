@@ -101,14 +101,14 @@
       </v-dialog>
     </v-row>
 
-    <v-data-table
+    <v-data-table class="elevation-1 tabela"
       :headers="header"
       :items="posts"
       :single-expand="singleExpand"
       :expanded.sync="expanded"
+      :hide-default-footer="true"
       item-key="id"
       show-expand
-      class="elevation-1"
     >
       <template v-slot:item.actions="{ item }">
         <v-icon small @click="edit(item)">mdi-pencil</v-icon>
@@ -119,7 +119,7 @@
           <v-simple-table>
             <template v-slot:default>
               <thead>
-                <tr>
+                <tr class="headerTable">
                   <th>Nome</th>
                   <th>Líder</th>
                   <th>Area</th>
@@ -153,7 +153,7 @@ export default {
   data() {
     return {
       expanded: [],
-      singleExpand: true,
+      singleExpand: false,
       desserts: [
         {
           name: "Frozen Yogurt",
@@ -274,4 +274,16 @@ export default {
   }
 };
 </script>
+<style scoped>
+  th {
+    background-color: rgb(48, 48, 48);
+    color: white !important;
+  }
+  .v-data-table th {
+    height: 34px !important;
+  }
+  .v-data-table td {
+    height: 34px !important;
+  }
+</style>
   
