@@ -1,6 +1,5 @@
 <template>
   <v-dialog max-width="800px" persistent v-model="show">
-    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{ text }}</v-snackbar>
     <v-card class="pa-6">
       <v-layout row class="px-3" justify-space-between>
         <h2>Cadastro de Membro</h2>
@@ -245,11 +244,7 @@ export default {
         is_active: true,
         is_staff: false,
         password1: "teste65693225#fdgfdgfdgzfdgs"
-      },
-      snackbar: false,
-      text: "",
-      timeout: 3000,
-      color: ""
+      }
     };
   },
 
@@ -264,12 +259,6 @@ export default {
   },
 
   methods: {
-    setSnackbar(text, color) {
-      this.text = text;
-      this.color = color;
-      this.snackbar = true;
-    },
-
     async getPosts() {
       await this.postController
         .getPosts(this.$api)
@@ -301,7 +290,7 @@ export default {
         .createMember(this.$api, this.memberDetails, date)
         .then(res => {
           console.log(res);
-          this.setSnackbar("Membro cadastrado com sucesso!", "success");
+          
           this.memberDetails = {};
           this.$emit("close");
           this.$emit("getMembers");
