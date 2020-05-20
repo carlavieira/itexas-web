@@ -246,6 +246,7 @@ export default {
     },
 
     async sendEdit() {
+      console.log(this.member)
       await this.memberController
         .editMember(this.$api, this.member)
         .then((res) => {

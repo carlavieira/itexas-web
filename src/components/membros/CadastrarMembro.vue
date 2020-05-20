@@ -82,15 +82,17 @@
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-select
-              item-text="full_name"
+              :item-text="leader_full_name"
               item-value="id"
+              v-bind:items="leaders"
               v-model="memberDetails.leader"
               label="Líder"
               name="member"
               prepend-icon="mdi-account-star"
-              :items="leaders"
               no-data-text="Sem líderes cadastrados"
-            ></v-select>
+            >
+            </v-select>
+
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-text-field
@@ -256,7 +258,6 @@ export default {
     this.getDepartments();
     this.getPosts();
     this.getLeaders();
-    this.leaders = this.setFullName(this.leaders);
   },
 
   props: {
@@ -264,6 +265,7 @@ export default {
   },
 
   methods: {
+    leader_full_name: item => `${item.first_name} ${item.last_name}`, 
     async getPosts() {
       await this.postController
         .getPosts(this.$api)
@@ -287,12 +289,18 @@ export default {
     },
 
     async getLeaders() {
+      await this.memberController
+        .getAllMembers(this.$api)
+        .then(res => {
+          this.leaders = res;
+        })
+        .catch(e => {
+          console.log(e);
+        })
     },
 
     async submit() {
       let date = this.memberDetails.dataEntrada.slice(4) + '-' + this.memberDetails.dataEntrada.slice(2, 4) + '-' + this.memberDetails.dataEntrada.slice(0, 2)
-
-      await this.getAllLeaders.getAll(this.$api);
 
       await this.memberController
         .createMember(this.$api, this.memberDetails, date)
@@ -307,19 +315,6 @@ export default {
           console.log(err);
         });
     },
-
-    setFullName(array) {
-      const newArray = new Array();
-      array.map((item) => {
-        item.full_name = `${item.first_name} ${item.last_name}`;
-        newArray.push(item);
-      });
-      return newArray;
-    },
-
-    validate() {
-      this.$refs.form.validate();
-    }
   }
 };
 </script>

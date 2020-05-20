@@ -22,7 +22,6 @@ export default {
 
           })
       });
-      console.log(leadersArray)
       return leadersArray
     })
     .catch((err) => {
