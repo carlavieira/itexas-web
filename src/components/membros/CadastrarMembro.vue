@@ -204,6 +204,7 @@
 import memberController from "../../controllers/MemberController";
 import postController from "../../controllers/PostController";
 import departmentController from "../../controllers/DepartmentsController";
+import getAllLeaders from "../../functions/getAllLeaders"
 
 export default {
   data() {
@@ -212,6 +213,7 @@ export default {
       memberController,
       postController,
       departmentController,
+      getAllLeaders,
       valid: true,
       nameRules: [
         v => !!v || "Campo obrigatório",
@@ -236,7 +238,7 @@ export default {
         email: "",
         post: "",
         department: "",
-        leader: 1,
+        leader: "",
         slack: "",
         photo: null,
         phone: "",
@@ -281,11 +283,14 @@ export default {
         });
     },
 
-    async getLeaders() {},
+    async getLeaders() {
+    },
 
     async submit() {
       let date = this.memberDetails.dataEntrada.slice(4) + '-' + this.memberDetails.dataEntrada.slice(2, 4) + '-' + this.memberDetails.dataEntrada.slice(0, 2)
-      console.log(date)
+
+      await this.getAllLeaders.getAll(this.$api);
+
       await this.memberController
         .createMember(this.$api, this.memberDetails, date)
         .then(res => {

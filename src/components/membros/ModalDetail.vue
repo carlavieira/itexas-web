@@ -3,7 +3,7 @@
     <v-card class="pa-5">
       <v-layout row class="px-3">
          <v-btn
-          v-if="!editMember && (this.$route.name == 'membersAdm')"
+          v-if="this.$route.name == 'membersAdm'"
           color="red"
           @click.stop="dialog = true"
           title="Excluir"
@@ -11,6 +11,7 @@
         >
           <v-icon color="white">mdi-delete</v-icon>
         </v-btn>
+
         <v-btn
           v-if="!editMember && (this.$route.name == 'membersAdm')"
           color="black"
@@ -20,6 +21,7 @@
         >
           <v-icon color="white">mdi-account-edit</v-icon>
         </v-btn>
+        
         <v-dialog v-model="dialog" max-width="500" min-h>
           <v-card>
             <v-card-title style="font-size: 16px !important" class="headline"

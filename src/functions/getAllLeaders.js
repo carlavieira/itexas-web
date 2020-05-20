@@ -6,20 +6,24 @@ export default {
   async getAll(api){
     await postController.getPosts(api)
     .then((res) => {
-      const posts = res.data
-      const membersInPost = []
+      const posts = res.data;
+      const leaders = {};
+      const leadersArray = [];
 
       posts.map(async (post) => {
-        const members = await memberController.getMembersInPost(api, post.id)
-        members.map((member) => {
-          if (member.leader.name)
-          membersInPost.push(member)
-        })
+        await memberController.getMembersInPost(api, post.id)
+          .then((members) => {
+            members.map((member) => {
+              leaders[member.leader.id] = member.leader;
+            })
+            for (var idLeader in leaders){
+              leadersArray.push(leaders[idLeader])
+            } 
+
+          })
       });
-
-      console.log(membersInPost)
-
-      return res.data
+      console.log(leadersArray)
+      return leadersArray
     })
     .catch((err) => {
       console.log(err);
