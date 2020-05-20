@@ -103,7 +103,7 @@
     </v-row>
     <v-divider class="pb-3"></v-divider>
     <v-card class="w-100">
-    <v-data-table :sort-by="['name']" :sort-desc="[true, true]" 
+    <v-data-table :sort-desc="[true, true]" 
     no-data-text="Nenhuma área adicionada" 
     no-results-text="Sem resultados para a busca" :headers="header" :items="departments">
       <template v-slot:item.actions="{ item }">

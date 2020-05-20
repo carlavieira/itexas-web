@@ -140,7 +140,6 @@ export default {
         item.full_name = `${item.first_name} ${item.last_name}`;
         newArray.push(item);
       });
-
       return newArray;
     },
   },

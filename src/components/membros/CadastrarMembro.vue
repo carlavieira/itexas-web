@@ -82,8 +82,11 @@
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-select
+              item-text="full_name"
+              item-value="id"
+              v-model="memberDetails.leader"
               label="Líder"
-              name="leader"
+              name="member"
               prepend-icon="mdi-account-star"
               :items="leaders"
               no-data-text="Sem líderes cadastrados"
@@ -245,7 +248,6 @@ export default {
         dataEntrada: "",
         is_active: true,
         is_staff: false,
-        password1: "teste65693225#fdgfdgfdgzfdgs"
       }
     };
   },
@@ -254,6 +256,7 @@ export default {
     this.getDepartments();
     this.getPosts();
     this.getLeaders();
+    this.leaders = this.setFullName(this.leaders);
   },
 
   props: {
@@ -303,6 +306,15 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+
+    setFullName(array) {
+      const newArray = new Array();
+      array.map((item) => {
+        item.full_name = `${item.first_name} ${item.last_name}`;
+        newArray.push(item);
+      });
+      return newArray;
     },
 
     validate() {
