@@ -1,5 +1,6 @@
 <template>
   <v-dialog max-width="800px" persistent v-model="show">
+    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{ text }}</v-snackbar>
     <v-card class="pa-6">
       <v-layout row class="px-3" justify-space-between>
         <h2>Cadastro de Membro</h2>
@@ -98,23 +99,91 @@
               no-gutters
             ></v-text-field>
           </v-col>
+
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-text-field
-              v-model="memberDetails.phone"
-              name="phone"
-              label="Celular (xx) xxxxx-xxxx"
-              prepend-icon="mdi-cellphone-iphone"
-              no-gutters
-            ></v-text-field>
+            <div
+              data-v-4a0240ab
+              class="v-input v-input--is-label-active v-input--is-dirty theme--light v-text-field v-text-field--is-booted"
+            >
+              <div class="v-input__prepend-outer">
+                <div class="v-input__icon v-input__icon--prepend">
+                  <i
+                    aria-hidden="true"
+                    class="v-icon notranslate mdi mdi-cellphone-iphone theme--light"
+                  ></i>
+                </div>
+              </div>
+              <div class="v-input__control">
+                <div class="v-input__slot">
+                  <div class="v-text-field__slot">
+                    <label
+                      for="input-248"
+                      class="v-label v-label--active theme--light"
+                      style="left: 0px; right: auto; position: absolute;"
+                    >Celular</label>
+                    <the-mask
+                      v-model="memberDetails.phone"
+                      for="phone"
+                      no-gutters
+                      id="input-248"
+                      name="phoneInput"
+                      :mask="'(##)#####-####'"
+                    />
+                  </div>
+                </div>
+                <div class="v-text-field__details">
+                  <div class="v-messages theme--light">
+                    <div class="v-messages__wrapper"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </v-col>
+
+
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-text-field
-              v-model="memberDetails.date_joined"
-              name="date_joined"
-              label="Data de entrada"
-              prepend-icon="mdi-calendar"
-              no-gutters
-            ></v-text-field>
+            <div
+              data-v-4a0240ab
+              class="v-input v-input--is-label-active v-input--is-dirty theme--light v-text-field v-text-field--is-booted"
+            >
+              <div class="v-input__prepend-outer">
+                <div class="v-input__icon v-input__icon--prepend">
+                  <i
+                    aria-hidden="true"
+                    class="v-icon notranslate mdi mdi-calendar theme--light"
+                  ></i>
+                </div>
+              </div>
+              <div class="v-input__control">
+                <div class="v-input__slot">
+                  <div class="v-text-field__slot">
+                    <label
+                      for="input-188"
+                      class="v-label v-label--active theme--light"
+                      style="left: 0px; right: auto; position: absolute;"
+                    >Data de Entrada</label>
+                    <the-mask
+                      v-model="memberDetails.dataEntrada"
+                      no-gutters
+                      id="input-188"
+                      name="dateInput"
+                      :mask="'##/##/####'"
+                    />
+                  </div>
+                </div>
+                <div class="v-text-field__details">
+                  <div class="v-messages theme--light">
+                    <div class="v-messages__wrapper"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </v-col>
+
+          
+
+          <v-col class="col-12" sm="6" md="6" lg="6">
+            <v-switch v-model="memberDetails.is_staff" color="tertiary" label="Administrador"></v-switch>
           </v-col>
         </v-row>
 
@@ -166,16 +235,21 @@ export default {
         last_name: "",
         nickname: "",
         email: "",
-        post: null,
-        department: null,
-        leader: null,
+        post: "",
+        department: "",
+        leader: 1,
         slack: "",
         photo: null,
         phone: "",
-        date_joined: "",
+        dataEntrada: "",
         is_active: true,
-        is_staff: false
-      }
+        is_staff: false,
+        password1: "teste65693225#fdgfdgfdgzfdgs"
+      },
+      snackbar: false,
+      text: "",
+      timeout: 3000,
+      color: ""
     };
   },
 
@@ -190,6 +264,12 @@ export default {
   },
 
   methods: {
+    setSnackbar(text, color) {
+      this.text = text;
+      this.color = color;
+      this.snackbar = true;
+    },
+
     async getPosts() {
       await this.postController
         .getPosts(this.$api)
@@ -205,8 +285,7 @@ export default {
       await this.departmentController
         .getDepartments(this.$api)
         .then(res => {
-          this.departments = res.data
-          console.log(this.departments)
+          this.departments = res.data;
         })
         .catch(e => {
           console.log(e);
@@ -216,11 +295,13 @@ export default {
     async getLeaders() {},
 
     async submit() {
-      console.log(this.memberDetails);
+      let date = this.memberDetails.dataEntrada.slice(4) + '-' + this.memberDetails.dataEntrada.slice(2, 4) + '-' + this.memberDetails.dataEntrada.slice(0, 2)
+      console.log(date)
       await this.memberController
-        .createMember(this.$api, this.memberDetails)
+        .createMember(this.$api, this.memberDetails, date)
         .then(res => {
           console.log(res);
+          this.setSnackbar("Membro cadastrado com sucesso!", "success");
           this.memberDetails = {};
           this.$emit("close");
           this.$emit("getMembers");

@@ -4,7 +4,9 @@ import router from "./router";
 import vuetify from "./plugins/vuetify";
 import VueResource from "vue-resource";
 import axios from "axios"
+import VueTheMask from 'vue-the-mask'
 
+Vue.use(VueTheMask)
 Vue.use(VueResource);
 
 
