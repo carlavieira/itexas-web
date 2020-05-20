@@ -55,50 +55,29 @@
           </v-col>
 
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-text-field
-              v-model="memberDetails.password1"
-              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-              :rules="[rulesPassword.required, rulesPassword.min]"
-              :type="show1 ? 'text' : 'password'"
-              prepend-icon="mdi-key"
-              name="password"
-              label="Senha*"
-              hint="At least 8 characters"
-              counter
-              required
-              @click:append="show1 = !show1"
-            ></v-text-field>
-          </v-col>
-
-          <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-text-field
-              v-model="memberDetails.password2"
-              :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
-              prepend-icon="mdi-key"
-              :rules="[rulesPassword.required, passwordConfirmationRule]"
-              :type="show2 ? 'text' : 'password'"
-              name="password2"
-              label="Confirme a senha"
-              hint="At least 8 characters"
-              required
-              @click:append="show2 = !show2"
-            ></v-text-field>
-          </v-col>
-
-          <v-col class="col-12" sm="6" md="6" lg="6">
             <v-select
+              item-text="full_name"
+              item-value="id"
+              v-model="memberDetails.post"
               label="Cargo"
               name="post"
               prepend-icon="mdi-briefcase"
+              :items="posts"
               required
+              no-data-text="Sem cargos cadastrados"
             ></v-select>
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-select
+              item-text="abbreviation"
+              item-value="id"
+              v-model="memberDetails.department"
               label="Área"
-              name="departament"
+              name="department"
               prepend-icon="mdi-border-none-variant"
+              :items="departments"
               required
+              no-data-text="Sem áreas cadastradas"
             ></v-select>
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
@@ -106,6 +85,8 @@
               label="Líder"
               name="leader"
               prepend-icon="mdi-account-star"
+              :items="leaders"
+              no-data-text="Sem líderes cadastrados"
             ></v-select>
           </v-col>
           <v-col class="col-12" sm="6" md="6" lg="6">
@@ -122,59 +103,21 @@
               v-model="memberDetails.phone"
               name="phone"
               label="Celular (xx) xxxxx-xxxx"
-              mask="(##)#####-####"
-              return-masked-value
               prepend-icon="mdi-cellphone-iphone"
               no-gutters
             ></v-text-field>
           </v-col>
-          <!--
           <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-file-input
-              name="profile-picture"
-              accept="image/png, image/jpeg, image/bmp"
-              placeholder="Selecionar Foto"
-              prepend-icon="mdi-camera"
-              label="Avatar"
-            ></v-file-input>
-          </v-col>
-          -->
-
-          <!-- Data de Entrada (Calendário) -->
-          <v-col class="col-12" sm="6" md="6" lg="6">
-            <v-dialog
-              ref="dialog2"
-              v-model="modal1"
-              :return-value.sync="date"
-              persistent
-              width="290px"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="date"
-                  label="Data de entrada na AIESEC"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="date"
-                color="red lighten-1"
-                locale="pt-br"
-                scrollable
-              >
-                <v-spacer></v-spacer>
-                <v-btn text color="primary" @click="modal1 = false"
-                  >Voltar</v-btn
-                >
-                <v-btn text color="primary" @click="$refs.dialog2.save(date)"
-                  >OK</v-btn
-                >
-              </v-date-picker>
-            </v-dialog>
+            <v-text-field
+              v-model="memberDetails.date_joined"
+              name="date_joined"
+              label="Data de entrada"
+              prepend-icon="mdi-calendar"
+              no-gutters
+            ></v-text-field>
           </v-col>
         </v-row>
+
         <v-layout row align-center justify-end>
           <v-btn
             class="ma-2"
@@ -182,8 +125,7 @@
             depressed
             :disabled="!valid"
             color="success"
-            >Cadastrar</v-btn
-          >
+          >Cadastrar</v-btn>
         </v-layout>
       </v-form>
     </v-card>
@@ -192,87 +134,106 @@
 
 <script>
 import memberController from "../../controllers/MemberController";
+import postController from "../../controllers/PostController";
+import departmentController from "../../controllers/DepartmentsController";
+
 export default {
   data() {
     return {
       name: "",
       memberController,
+      postController,
+      departmentController,
       valid: true,
       nameRules: [
-        (v) => !!v || "Campo obrigatório",
-        (v) => (v && v.length <= 20) || "Nome deve ter até 20 caracteres",
+        v => !!v || "Campo obrigatório",
+        v => (v && v.length <= 20) || "Nome deve ter até 20 caracteres"
       ],
       emailRules: [
-        (v) => !!v || "Campo Obrigatótio",
-        (v) => /.+@.+\..+/.test(v) || "E-mail inválido",
+        v => !!v || "Campo Obrigatótio",
+        v => /.+@.+\..+/.test(v) || "E-mail inválido"
       ],
-      rulesPassword: {
-        required: (value) => !!value || "Campo Obrigatório.",
-        min: (v) => (v && v.length >= 8) || "Mínimo 8 caracteres",
-      },
       select: null,
       date: new Date().toISOString().substr(0, 10),
       modal1: false,
-      trip: {
-        name: "",
-        location: null,
-        start: null,
-        end: null,
-      },
       show1: false,
       show2: false,
+      posts: [],
+      departments: [],
+      leaders: [],
       memberDetails: {
-        first_name: null,
-        last_name: null,
-        nickname: null,
-        email: null,
-        password1: null,
-        password2: null,
-        slack: null,
-        phone: null,
-        date_joined: "2020-05-10",
-      },
+        first_name: "",
+        last_name: "",
+        nickname: "",
+        email: "",
+        post: null,
+        department: null,
+        leader: null,
+        slack: "",
+        photo: null,
+        phone: "",
+        date_joined: "",
+        is_active: true,
+        is_staff: false
+      }
     };
   },
 
+  created() {
+    this.getDepartments();
+    this.getPosts();
+    this.getLeaders();
+  },
+
   props: {
-    show: Boolean,
+    show: Boolean
   },
 
   methods: {
-    clear() {
-      this.$refs.form.reset();
-      this.celular = "";
+    async getPosts() {
+      await this.postController
+        .getPosts(this.$api)
+        .then(res => {
+          this.posts = res.data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
+
+    async getDepartments() {
+      await this.departmentController
+        .getDepartments(this.$api)
+        .then(res => {
+          this.departments = res.data
+          console.log(this.departments)
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+
+    async getLeaders() {},
 
     async submit() {
       console.log(this.memberDetails);
-      this.memberDetails.date_joined=this.date;
       await this.memberController
         .createMember(this.$api, this.memberDetails)
-        .then((res) => {
+        .then(res => {
           console.log(res);
           this.memberDetails = {};
           this.$emit("close");
           this.$emit("getMembers");
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
     },
 
     validate() {
       this.$refs.form.validate();
-    },
-  },
-
-  computed: {
-    passwordConfirmationRule() {
-      return () =>
-        this.memberDetails.password1 === this.memberDetails.password2 ||
-        "As senhas devem coincidir";
-    },
-  },
+    }
+  }
 };
 </script>
 

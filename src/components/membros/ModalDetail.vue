@@ -2,24 +2,24 @@
   <v-dialog max-width="800px" persistent v-model="show">
     <v-card class="pa-5">
       <v-layout row class="px-3">
+         <v-btn
+          v-if="!editMember && (this.$route.name == 'membersAdm')"
+          color="red"
+          @click.stop="dialog = true"
+          title="Excluir"
+          class="ma-2"
+        >
+          <v-icon color="white">mdi-delete</v-icon>
+        </v-btn>
         <v-btn
-          v-if="!editMember && (this.$route.name == 'members')"
+          v-if="!editMember && (this.$route.name == 'membersAdm')"
           color="black"
+          class="ma-2"
           @click="editMember = true"
           title="Editar"
         >
           <v-icon color="white">mdi-account-edit</v-icon>
         </v-btn>
-
-        <v-btn
-          color="red"
-          @click.stop="dialog = true"
-          class="ml-2"
-          title="Excluir"
-        >
-          <v-icon color="white">mdi-delete</v-icon>
-        </v-btn>
-
         <v-dialog v-model="dialog" max-width="500" min-h>
           <v-card>
             <v-card-title style="font-size: 16px !important" class="headline"
@@ -235,25 +235,19 @@ export default {
       const [year, month, day] = date.split("-");
       return `${day}/${month}/${year}`;
     },
+
     parseDate(date) {
       if (!date) return null;
 
       const [month, day, year] = date.split("/");
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     },
+
     async sendEdit() {
-      delete this.member.post;
-      delete this.member.department;
-      delete this.member.leader;
-      delete this.member.photo;
-
-      console.log(this.member);
-
       await this.memberController
         .editMember(this.$api, this.member)
         .then((res) => {
           console.log(res);
-          this.member = {};
           this.$emit("close");
           this.$emit("getMembers");
         })
@@ -261,6 +255,7 @@ export default {
           console.log(err);
         });
     },
+
     async deleteMember() {
       await this.memberController
         .deleteMember(this.$api, this.member)

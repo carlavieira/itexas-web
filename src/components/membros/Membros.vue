@@ -49,6 +49,7 @@
     </v-row>
     <NovoMembro
       :show="btnMembro"
+      v-if="btnMembro"
       @close="btnMembro = false, getMembers()"
       @getMembers="getMembers()"
     ></NovoMembro>
