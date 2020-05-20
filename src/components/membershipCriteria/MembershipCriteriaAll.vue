@@ -24,7 +24,6 @@
         <span v-if="item.dayMonth">{{ formatDate(item.dayMonth) }}</span>
       </template>
       <template v-slot:item.officeHoursCriteria="{ item }">
-        <!-- {{ formatPercentage(item.officeHoursCriteria) }} -->
          <v-chip
           v-if="item.officeHoursCriteria == 100.00"
           class="ma-2"
@@ -32,17 +31,19 @@
           text-color="green"
         >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
         <v-chip
-          v-if="item.officeHoursCriteria < 80.00"
+          v-else-if="item.officeHoursCriteria < 80.00"
           class="ma-2"
           color="white"
           text-color="red"
         >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
-        <span
-          v-else-if="item.officeHoursCriteria > 80.00 && officeHoursCriteria < 100.00"
-        >{{formatPercentage(item.officeHoursCriteria)}}</span>
+        <v-chip
+            v-else
+            class="ma-2"
+            color="white"
+            text-color="black"
+        >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
       </template>
       <template v-slot:item.meetingsCriteria="{ item }">
-        <!-- {{ formatPercentage(item.meetingsCriteria) }} -->
          <v-chip
           v-if="item.meetingsCriteria == 100.00"
           class="ma-2"
