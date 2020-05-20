@@ -5,7 +5,7 @@
         <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">
           {{ text }}</v-snackbar
         >
-        <v-card flat color="branco" class="px-8 pt-5 pb-12 form mx-auto">
+        <v-card flat color="white" class="px-8 pt-5 pb-12 form mx-auto">
           <v-form ref="form" v-if="loginPage">
             <v-img src="../assets/rrrrr.png" width="100px" class="mt-3 mb-5 mx-auto" />
             <v-form class="pt-6" >
@@ -168,11 +168,9 @@ export default {
 <style scoped>
 .container {
   height: 100%;
-  background-color: #fbf9fc;
-  /* padding-top: -10px;
-  background-image: url("../assets/19185.jpg");
-  background-repeat: no-repeat;
-  background-size: cover; */
+  background-color: white;
+  background-image: url("../assets/graphic.png");
+  background-position: bottom;
 }
 .form {
   width: 60%;
