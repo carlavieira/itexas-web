@@ -22,9 +22,13 @@ export default {
       });
   },
 
-  createMember(api, memberDetails) {
+  createMember(api, memberDetails, date) {
+    memberDetails.date_joined = date
+      
+    console.log(memberDetails)
+
     return api
-      .post("rest-auth/registration/", memberDetails)
+      .post("manage-member/", memberDetails)
       .then((res) => res.data)
       .catch((e) => {
         throw e;
@@ -48,6 +52,7 @@ export default {
         throw e;
       });
   },
+
   getAllLiderandos(api, id) {
     return api
       .get(`list-members/?leader=${id}`)

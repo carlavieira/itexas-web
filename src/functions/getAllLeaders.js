@@ -12,6 +12,7 @@ export default {
       posts.map(async (post) => {
         const members = await memberController.getMembersInPost(api, post.id)
         members.map((member) => {
+          if (member.leader.name)
           membersInPost.push(member)
         })
       });

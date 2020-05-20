@@ -1,5 +1,7 @@
 <template>
   <v-container>
+    <v-snackbar right v-model="snackbar" :color="color" :timeout="timeout">{{ text }}</v-snackbar>
+
     <v-row class="px-4">
       <h2>Membros</h2>
       <v-spacer></v-spacer>
@@ -49,8 +51,9 @@
     </v-row>
     <NovoMembro
       :show="btnMembro"
-      @close="btnMembro = false, getMembers()"
-      @getMembers="getMembers()"
+      v-if="btnMembro"
+      @close="btnMembro = false, reload(false)"
+      @getMembers="reload(true)"
     ></NovoMembro>
     <modalDetail
       v-if="showDetail"
@@ -96,6 +99,10 @@ export default {
       membros: [],
       userDetail: null,
       showDetail: false,
+      snackbar: false,
+      text: "",
+      timeout: 3000,
+      color: ""
     };
   },
 
@@ -104,6 +111,19 @@ export default {
       this.userDetail = user;
       this.showDetail = true;
     },
+
+    setSnackbar(text, color) {
+      this.text = text;
+      this.color = color;
+      this.snackbar = true;
+    },
+
+    async reload(status){
+      if(status)
+        this.setSnackbar("Membro cadastrado com sucesso", "success")
+      this.membros = this.setFullName(await this.getMembers());
+    },
+
     async getMembers() {
       const members = await this.memberController.getAllMembers(this.$api);
       members.forEach((member) => {
@@ -111,9 +131,9 @@ export default {
           member.leader = { first_name: "-" };
         }
       });
-
       return members;
     },
+
     setFullName(array) {
       const newArray = new Array();
       array.map((item) => {
