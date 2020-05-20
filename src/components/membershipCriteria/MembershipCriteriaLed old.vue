@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row class="px-4 pb-3">
-      <h2>Critério de Membresia</h2>
+      <h2>Critério de Membresia dos Meus Liderados</h2>
       <v-spacer></v-spacer>
     </v-row>
     <v-divider class="pb-3"></v-divider>
@@ -9,23 +9,19 @@
       no-data-text="Nenhum resultado até o momento"
       no-results-text="Nenhum resultado até o momento"
       :headers="header"
-      :items="membresia"
+      :items="filterLed"
     >
-      <template v-slot:item.member="{ item }">{{
+      <template v-slot:item.member="{ item }">
+        {{
         item.member.first_name + " " + item.member.last_name
-      }}</template>
-      <template v-slot:item.member.leader="{ item }">
-        <span v-if="item.member.leader">
-          {{ item.member.leader.first_name }}
-        </span>
-        <span v-else> - </span>
+        }}
       </template>
       <template v-slot:item.dayMonth="{ item }">
         <span v-if="item.dayMonth">{{ formatDate(item.dayMonth) }}</span>
       </template>
+
       <template v-slot:item.officeHoursCriteria="{ item }">
-        <!-- {{ formatPercentage(item.officeHoursCriteria) }} -->
-         <v-chip
+        <v-chip
           v-if="item.officeHoursCriteria == 100.00"
           class="ma-2"
           color="white"
@@ -41,9 +37,9 @@
           v-else-if="item.officeHoursCriteria > 80.00 && officeHoursCriteria < 100.00"
         >{{formatPercentage(item.officeHoursCriteria)}}</span>
       </template>
+
       <template v-slot:item.meetingsCriteria="{ item }">
-        <!-- {{ formatPercentage(item.meetingsCriteria) }} -->
-         <v-chip
+        <v-chip
           v-if="item.meetingsCriteria == 100.00"
           class="ma-2"
           color="white"
@@ -55,13 +51,11 @@
           color="white"
           text-color="red"
         >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
-        <v-chip
-          v-else
-          class="ma-2"
-          color="white"
-          text-color="black"
-        >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
+        <span
+          v-else-if="item.meetingsCriteria > 75.00 && meetingsCriteria < 100.00"
+        >{{formatPercentage(item.meetingsCriteria)}}</span>
       </template>
+
       <template v-slot:item.eventsCriteria="{ item }">
         <v-chip
           v-if="item.eventsCriteria == 100.00"
@@ -75,13 +69,11 @@
           color="white"
           text-color="red"
         >{{formatPercentage(item.eventsCriteria)}}</v-chip>
-        <v-chip
-          v-else
-          class="ma-2"
-          color="white"
-          text-color="black"
-        >{{formatPercentage(item.eventsCriteria)}}</v-chip>
+        <span
+          v-else-if="item.eventsCriteria > 50.00 && eventsCriteria < 100.00"
+        >{{formatPercentage(item.eventsCriteria)}}</span>
       </template>
+
       <template v-slot:item.status="{ item }">
         <v-chip
           v-if="item.status = 'Risco'"
@@ -90,11 +82,7 @@
           text-color="white"
           small
         >{{item.status}}</v-chip>
-        <v-chip
-          class="ma-2"
-          color="green"
-          text-color="white"
-          v-else>{{item.status}}</v-chip>
+        <span v-else>{{item.status}}</span>
       </template>
     </v-data-table>
   </v-container>
@@ -109,17 +97,15 @@ export default {
     return {
       MembershipCriteriaController,
       header: [
-        { text: "Nome", value: "member", align: "center" },
-        { text: "Área", value: "member.department.name", align: "center" },
-        { text: "Líder", value: "member.leader", align: "center" },
-        { text: "Referência", value: "dayMonth", align: "center" },
-        { text: "Office Hours", value: "officeHoursCriteria", align: "center" },
-        { text: "Reuniões", value: "meetingsCriteria", align: "center" },
-        { text: "Eventos", value: "eventsCriteria", align: "center" },
-        { text: "Status", value: "status", align: "center" },
+        { text: "Nome", value: "member" },
+        { text: "Referência", value: "dayMonth" },
+        { text: "Office Hours", value: "officeHoursCriteria" },
+        { text: "Reuniões", value: "meetingsCriteria" },
+        { text: "Eventos", value: "eventsCriteria" },
+        { text: "Status", value: "status" }
       ],
-      membresia: [],
-      showModal: false,
+      filterLed: [],
+      showModal: false
     };
   },
 
@@ -132,13 +118,30 @@ export default {
       await this.MembershipCriteriaController.listMembershipCriteria(this.$api)
         .then((res) => {
           this.membresia = res.data;
+          this.filter()
         })
         .catch((err) => {
           console.log(err);
         });
     },
 
+    filter(){
+      this.membresia.forEach(criteria => { 
+        if (criteria.member.leader){
+          if (criteria.member.leader.id == localStorage.getItem("user_id")){
+            this.filterLed.push(criteria)
+          }
+          else if (criteria.member.leader.leader.id){
+              if (criteria.member.leader.leader.id == localStorage.getItem("user_id")){
+                this.filterLed.push(criteria)
+              }
+          }
+        }
+      })
+    },
+
     formatPercentage(item) {
+      console.log(item);
       if (item > 100) {
         return 100 + " %";
       } else return item + " %";
@@ -146,7 +149,7 @@ export default {
 
     formatDate(item) {
       return moment(item).format("MM/YYYY");
-    },
-  },
+    }
+  }
 };
 </script>

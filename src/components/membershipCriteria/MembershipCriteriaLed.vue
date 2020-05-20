@@ -9,19 +9,23 @@
       no-data-text="Nenhum resultado até o momento"
       no-results-text="Nenhum resultado até o momento"
       :headers="header"
-      :items="filterLed"
+      :items="membresia"
     >
-      <template v-slot:item.member="{ item }">
-        {{
+      <template v-slot:item.member="{ item }">{{
         item.member.first_name + " " + item.member.last_name
-        }}
+      }}</template>
+      <template v-slot:item.member.leader="{ item }">
+        <span v-if="item.member.leader">
+          {{ item.member.leader.first_name }}
+        </span>
+        <span v-else> - </span>
       </template>
       <template v-slot:item.dayMonth="{ item }">
         <span v-if="item.dayMonth">{{ formatDate(item.dayMonth) }}</span>
       </template>
-
       <template v-slot:item.officeHoursCriteria="{ item }">
-        <v-chip
+        <!-- {{ formatPercentage(item.officeHoursCriteria) }} -->
+         <v-chip
           v-if="item.officeHoursCriteria == 100.00"
           class="ma-2"
           color="white"
@@ -37,9 +41,9 @@
           v-else-if="item.officeHoursCriteria > 80.00 && officeHoursCriteria < 100.00"
         >{{formatPercentage(item.officeHoursCriteria)}}</span>
       </template>
-
       <template v-slot:item.meetingsCriteria="{ item }">
-        <v-chip
+        <!-- {{ formatPercentage(item.meetingsCriteria) }} -->
+         <v-chip
           v-if="item.meetingsCriteria == 100.00"
           class="ma-2"
           color="white"
@@ -51,11 +55,13 @@
           color="white"
           text-color="red"
         >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
-        <span
-          v-else-if="item.meetingsCriteria > 75.00 && meetingsCriteria < 100.00"
-        >{{formatPercentage(item.meetingsCriteria)}}</span>
+        <v-chip
+          v-else
+          class="ma-2"
+          color="white"
+          text-color="black"
+        >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
       </template>
-
       <template v-slot:item.eventsCriteria="{ item }">
         <v-chip
           v-if="item.eventsCriteria == 100.00"
@@ -69,11 +75,13 @@
           color="white"
           text-color="red"
         >{{formatPercentage(item.eventsCriteria)}}</v-chip>
-        <span
-          v-else-if="item.eventsCriteria > 50.00 && eventsCriteria < 100.00"
-        >{{formatPercentage(item.eventsCriteria)}}</span>
+        <v-chip
+          v-else
+          class="ma-2"
+          color="white"
+          text-color="black"
+        >{{formatPercentage(item.eventsCriteria)}}</v-chip>
       </template>
-
       <template v-slot:item.status="{ item }">
         <v-chip
           v-if="item.status = 'Risco'"
@@ -82,7 +90,11 @@
           text-color="white"
           small
         >{{item.status}}</v-chip>
-        <span v-else>{{item.status}}</span>
+        <v-chip
+          class="ma-2"
+          color="green"
+          text-color="white"
+          v-else>{{item.status}}</v-chip>
       </template>
     </v-data-table>
   </v-container>
@@ -104,7 +116,7 @@ export default {
         { text: "Eventos", value: "eventsCriteria" },
         { text: "Status", value: "status" }
       ],
-      filterLed: [],
+      membresia: [],
       showModal: false
     };
   },
@@ -115,30 +127,17 @@ export default {
 
   methods: {
     async listMembershipCriteria() {
-      await this.MembershipCriteriaController.listMembershipCriteria(this.$api)
+      await this.MembershipCriteriaController.listLedMembershipCriteria(this.$api)
         .then((res) => {
+          console.log(res.data)
           this.membresia = res.data;
-          this.filter()
         })
         .catch((err) => {
           console.log(err);
         });
     },
 
-    filter(){
-      this.membresia.forEach(criteria => { 
-        if (criteria.member.leader){
-          if (criteria.member.leader.id == localStorage.getItem("user_id")){
-            this.filterLed.push(criteria)
-          }
-          else if (criteria.member.leader.leader.id){
-              if (criteria.member.leader.leader.id == localStorage.getItem("user_id")){
-                this.filterLed.push(criteria)
-              }
-          }
-        }
-      })
-    },
+    
 
     formatPercentage(item) {
       console.log(item);

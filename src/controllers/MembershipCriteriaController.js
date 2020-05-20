@@ -1,4 +1,5 @@
 const url = "list-membership-criteria/";
+const ledUrl = "list-led-membership-criteria/"
 
 export default {
     listMembershipCriteria(api) {
@@ -22,4 +23,15 @@ export default {
             return e;
           });
     },
+
+    listLedMembershipCriteria(api) {
+      return api
+      .get(ledUrl)
+      .then(res => {
+        return res;
+      })
+      .catch(e => {
+        return e
+      });
+  },
 }
