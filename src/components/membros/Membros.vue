@@ -34,6 +34,7 @@
             :search="search"
             :sort-by="'full_name'"
             :sort-desc="false"
+            @click:row="memberShow"
           >
             <template v-slot:item.member="{ item }">{{
               item.full_name
@@ -42,18 +43,13 @@
               <span v-if="item.leader"> {{ item.leader.first_name }} </span>
               <span v-else> - </span>
             </template>
-            <template v-slot:item.actions="{ item }">
-              <v-icon small @click="memberShow(item)"
-                >mdi-account-details</v-icon
-              >
-            </template>
           </v-data-table>
         </v-card>
       </v-flex>
     </v-row>
     <NovoMembro
       :show="btnMembro"
-      @close="btnMembro = false"
+      @close="btnMembro = false, getMembers()"
       @getMembers="getMembers()"
     ></NovoMembro>
     <modalDetail
@@ -95,8 +91,7 @@ export default {
         },
         { text: "Cargo", value: "post.abbreviation" },
         { text: "Área", value: "department.abbreviation" },
-        { text: "Líder", value: "leader" },
-        { text: "Detalhes", value: "actions", sortable: false },
+        { text: "Líder", value: "leader" }
       ],
       membros: [],
       userDetail: null,
@@ -106,13 +101,11 @@ export default {
 
   methods: {
     memberShow(user) {
-      console.log(user);
       this.userDetail = user;
       this.showDetail = true;
     },
     async getMembers() {
       const members = await this.memberController.getAllMembers(this.$api);
-      console.log(members);
       members.forEach((member) => {
         if (!member.leader) {
           member.leader = { first_name: "-" };
