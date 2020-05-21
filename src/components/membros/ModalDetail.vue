@@ -192,6 +192,66 @@
               hide-details
             ></v-select>
           </v-layout>
+
+          <v-layout justify-left col-xs-12 col-sm-6>
+            <v-text-field
+              outlined
+              v-if="!editMember"
+              prepend-inner-icon="mdi-calendar"
+              label="Data de Entrada"
+              v-model="date"
+              :disabled="!editMember"
+              hide-details
+            ></v-text-field>
+            <v-menu
+              v-if="editMember"
+              v-model="menuData"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="member.date_joined"
+                  outlined
+                  label="Data de Entrada"
+                  prepend-inner-icon="mdi-calendar"
+                  readonly
+                  hide-details
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker locale="pt-br" v-model="member.date_joined" @input="menuData = false"></v-date-picker>
+            </v-menu>
+          </v-layout>
+
+          <v-layout justify-left col-xs-12 col-sm-6>
+            <v-switch
+              v-if="editMember"
+              v-model="member.is_staff"
+              color="tertiary"
+              label="Administrador"
+            ></v-switch>
+            <v-switch
+              :disabled="!editMember"
+              v-if="!editMember"
+              v-model="member.is_staff"
+              color="tertiary"
+              label="Administrador"
+            ></v-switch>
+            <v-spacer></v-spacer>
+
+            <v-switch v-if="editMember" v-model="member.is_active" color="tertiary" label="Ativo"></v-switch>
+            <v-switch
+              :disabled="!editMember"
+              v-if="!editMember"
+              v-model="member.is_active"
+              color="tertiary"
+              label="Ativo"
+            ></v-switch>
+          </v-layout>
         </v-layout>
 
         <v-layout row align-center v-if="editMember">
@@ -209,6 +269,7 @@ import memberController from "../../controllers/MemberController";
 import postController from "../../controllers/PostController";
 import departmentController from "../../controllers/DepartmentsController";
 import getAllLeaders from "../../functions/getAllLeaders";
+import moment from "moment";
 
 export default {
   data() {
@@ -222,14 +283,11 @@ export default {
       posts: [],
       departments: [],
       leaders: [],
-      member: null
+      member: null,
+      date: null,
+      menuData: false,
+      dateEdit: null
     };
-  },
-
-  computed: {
-    computedDateFormatted() {
-      return this.formatDate(this.date);
-    }
   },
 
   props: {
@@ -238,16 +296,12 @@ export default {
   },
 
   async created() {
-    this.member = this.Member
+    this.member = this.Member;
+    console.log(this.member);
+    this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
     await this.getDepartments();
     await this.getPosts();
     await this.getLeaders();
-  },
-
-  watch: {
-    date(val) {
-      this.dateFormatted = this.formatDate(this.date);
-    }
   },
 
   methods: {
@@ -284,53 +338,38 @@ export default {
           console.log(e);
         });
     },
-    
-    formatDate(date) {
-      if (!date) return null;
-
-      const [year, month, day] = date.split("-");
-      return `${day}/${month}/${year}`;
-    },
-
-    parseDate(date) {
-      if (!date) return null;
-
-      const [month, day, year] = date.split("/");
-      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-    },
 
     async sendEdit() {
-      let memberEdit = this.member
+      let memberEdit = this.member;
       await this.memberController
         .editMember(this.$api, memberEdit)
         .then(res => {
           console.log(res);
-          this.member = res
-          this.setObjects()
-          this.$emit("getMembers")
+          this.member = res;
+          this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
+          this.setObjects();
+          this.$emit("getMembers");
         })
         .catch(err => {
           console.log(err);
         });
     },
 
-    setObjects(){
+    setObjects() {
       this.posts.forEach(post => {
-        if(post.id == this.member.post)
-          this.member.post = post
-      })
+        if (post.id == this.member.post) this.member.post = post;
+      });
 
       this.departments.forEach(department => {
-        if(department.id == this.member.department)
-          this.member.department = department
-      })
+        if (department.id == this.member.department)
+          this.member.department = department;
+      });
 
       this.leaders.forEach(leader => {
-        if(leader.id == this.member.leader)
-          this.member.leader = leader
-      })
+        if (leader.id == this.member.leader) this.member.leader = leader;
+      });
 
-      this.editMember = false
+      this.editMember = false;
     },
 
     async deleteMember() {
