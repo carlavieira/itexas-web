@@ -407,7 +407,6 @@ export default {
 
     async onChangeImage(e) {
       this.showImage = window.URL.createObjectURL(e.target.files[0])
-      console.log(e.target.files[0])
       this.member.photo = e.target.files[0]
     },
   }
