@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-snackbar right v-model="snackbar" :color="color" :timeout="timeout">{{ text }}</v-snackbar>
+    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{ text }}</v-snackbar>
 
     <v-row class="px-4">
       <h2>Membros</h2>
@@ -52,14 +52,15 @@
     <NovoMembro
       :show="btnMembro"
       v-if="btnMembro"
-      @close="btnMembro = false, reload(false)"
-      @getMembers="reload(true)"
+      @close="btnMembro = false, reload('reload')"
+      @getMembers="reload('create')"
     ></NovoMembro>
     <modalDetail
       v-if="showDetail"
       :show="showDetail"
-      :member="userDetail"
-      @close="showDetail = false"
+      :Member="userDetail"
+      @getMembers="reload('edit')"
+      @close="showDetail = false, reload('reload')"
     ></modalDetail>
   </v-container>
 </template>
@@ -119,8 +120,10 @@ export default {
     },
 
     async reload(status){
-      if(status)
+      if(status == 'create')
         this.setSnackbar("Membro cadastrado com sucesso", "success")
+      if(status == 'edit')
+        this.setSnackbar("Membro editado com sucesso", "success")
       this.membros = this.setFullName(await this.getMembers());
     },
 
