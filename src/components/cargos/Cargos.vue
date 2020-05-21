@@ -153,6 +153,35 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="deletePostDialog" persistent max-width="500" min-h>
+        <v-card>
+          <v-card-title style="font-size: 16px !important" class="headline">
+            <p>Deseja realmente deletar esta cargo?</p>
+            <span style="font-size: 14px" class=" font-weight-light">
+              Isso fará com que todos integrantes da {{ deletedItem }} fiquem
+              sem cargo.
+            </span>
+          </v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              color="red darken-1"
+              text
+              @click="
+                deletePostDialog = false;
+                deleteItem();
+              "
+            >
+              DELETAR CARGO
+            </v-btn>
+
+            <v-btn text @click="deletePostDialog = false">
+              Voltar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
 
     <v-data-table
