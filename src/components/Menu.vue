@@ -208,7 +208,6 @@ export default {
         this.$api,
         localStorage.getItem("user_id")
       );
-      console.log(this.member);
     },
 
     setSnackbar(text, color) {

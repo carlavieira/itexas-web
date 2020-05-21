@@ -40,7 +40,7 @@
               <span>{{ formatTypeMeeting(item.type) }}</span>
             </template>
             <template v-slot:item.member="{ item }">
-              <span>{{ item.member.first_name }}</span>
+              <span> {{ getMember(item) }} </span>
             </template>
             <template v-slot:item.date="{ item }">
               <span>{{ formatDate(item.date) }}</span>
@@ -125,8 +125,9 @@ export default {
   },
   
   methods: {
+    getMember: item => `${item.member.first_name} ${item.member.last_name}`,
     getHeaders() {
-      if (this.$route.name == "reuniao") {
+      if (this.$route.name == "reuniaoAdm") {
         return [
           {
             text: "Nome",
@@ -166,7 +167,6 @@ export default {
     },
 
     formatPercentage(item) {
-      console.log(item);
       if (item > 100) {
         return 100 + " %";
       } else return item + " %";
@@ -182,10 +182,8 @@ export default {
     },
 
     async getMeeting() {
-      if (this.$route.name == "reuniao") {
-        const res = await this.meetingController.getAllMeeting(this.$api);
-        this.reunioes = res;
-      } else if (this.$route.name == "minhas-reunioes") {
+
+      if (this.$route.name == "minhas-reunioes") {
         const memberID = localStorage.getItem("user_id");
         const minhasParticipacoes = await this.participationController.getMemberParticipationMeeting(
           this.$api,
@@ -193,12 +191,16 @@ export default {
         );
         const minhasReunioes = [];
         minhasParticipacoes.forEach(participacao => {
-          participacao.meeting.attendance = participacao.attendance
+          participacao.meeting.attendance = participacao.attendance;
           minhasReunioes.push(participacao.meeting);
         });
         this.reunioes = minhasReunioes;
         console.log(this.reunioes)
-      }
+      } else if (this.$route.name == "reuniaoAdm") {
+        const res = await this.meetingController.getAllMeeting(this.$api);
+        this.reunioes = res;
+        console.log(this.reunioes)
+      } 
     },
     showSnackbar(snackbarDetails) {
       this.snackbar = true;
