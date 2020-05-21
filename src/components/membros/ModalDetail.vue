@@ -2,7 +2,7 @@
   <v-dialog max-width="800px" persistent v-model="show">
     <v-card class="pa-5">
       <v-layout row class="px-3">
-         <v-btn
+        <v-btn
           v-if="this.$route.name == 'membersAdm'"
           color="red"
           @click.stop="dialog = true"
@@ -21,13 +21,13 @@
         >
           <v-icon color="white">mdi-account-edit</v-icon>
         </v-btn>
-        
+
         <v-dialog v-model="dialog" max-width="500" min-h>
           <v-card>
-            <v-card-title style="font-size: 16px !important" class="headline"
-              >Deseja realmente deletar {{ member.first_name }}
-              {{ member.last_name }}?</v-card-title
-            >
+            <v-card-title style="font-size: 16px !important" class="headline">
+              Deseja realmente deletar {{ member.first_name }}
+              {{ member.last_name }}?
+            </v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
 
@@ -38,13 +38,9 @@
                   dialog = false;
                   deleteMember();
                 "
-              >
-                Sim
-              </v-btn>
+              >Sim</v-btn>
 
-              <v-btn color="red darken-1" text @click="dialog = false">
-                Não
-              </v-btn>
+              <v-btn color="red darken-1" text @click="dialog = false">Não</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -62,12 +58,11 @@
             </v-btn>
           </v-layout>
         </v-avatar>
-        <span v-if="!editMember" class="title font-weight-medium mt-3"
-          >{{ member.first_name }} {{ member.last_name }}</span
-        >
-        <span v-if="!editMember" class="subheading font-weight-regular"
-          >( {{ member.nickname }} )</span
-        >
+        <span
+          v-if="!editMember"
+          class="title font-weight-medium mt-3"
+        >{{ member.first_name }} {{ member.last_name }}</span>
+        <span v-if="!editMember" class="subheading font-weight-regular">( {{ member.nickname }} )</span>
         <v-layout row mt-3 justify-space-around style="width: 100%;">
           <v-layout justify-left col-xs-12 col-sm-6 v-if="editMember">
             <v-text-field
@@ -126,72 +121,81 @@
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
               outlined
+              v-if="!editMember"
               prepend-inner-icon="mdi-briefcase"
-              v-model="member.post"
+              v-model="member.post.abbreviation"
               :disabled="!editMember"
               label="Cargo"
               hide-details
             ></v-text-field>
+            <v-select
+              v-if="editMember"
+              item-text="full_name"
+              item-value="id"
+              v-model="member.post.id"
+              label="Cargo"
+              name="post"
+              outlined
+              prepend-inner-icon="mdi-briefcase"
+              :items="posts"
+              required
+              hide-details
+              no-data-text="Sem cargos cadastrados"
+            ></v-select>
           </v-layout>
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
+              v-if="!editMember"
               outlined
               prepend-inner-icon="mdi-border-none-variant"
-              v-model="member.area"
+              v-model="member.department.abbreviation"
               label="Area"
               :disabled="!editMember"
               hide-details
             ></v-text-field>
+            <v-select
+              v-if="editMember"
+              item-text="abbreviation"
+              item-value="id"
+              v-model="member.department.id"
+              label="Área"
+              name="department"
+              prepend-inner-icon="mdi-border-none-variant"
+              :items="departments"
+              required
+              outlined
+              no-data-text="Sem áreas cadastradas"
+              hide-details
+            ></v-select>
           </v-layout>
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
               outlined
+              v-if="!editMember"
               prepend-inner-icon="mdi-account-star"
               label="Líder"
               v-model="member.leader.first_name"
               :disabled="!editMember"
               hide-details
             ></v-text-field>
-          </v-layout>
-
-          <v-layout justify-left col-xs-12 col-sm-6>
-            <v-menu
-              ref="menu1"
-              v-model="menu1"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              offset-y
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="dateFormatted"
-                  label="Data de entrada na AIESEC"
-                  persistent-hint
-                  prepend-inner-icon="mdi-calendar"
-                  v-on="on"
-                  outlined
-                  :disabled="!editMember"
-                  hide-details
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="date"
-                no-title
-                @input="menu1 = false"
-              ></v-date-picker>
-            </v-menu>
-            <!--
-              <p>
-                Date in ISO format: <strong>{{ date }}</strong>
-              </p>
-              -->
+            <v-select
+              v-if="editMember"
+              :item-text="leader_full_name"
+              item-value="id"
+              :items="leaders"
+              v-model="member.leader.id"
+              outlined
+              label="Líder"
+              name="member"
+              prepend-inner-icon="mdi-account-star"
+              no-data-text="Sem líderes cadastrados"
+              hide-details
+            ></v-select>
           </v-layout>
         </v-layout>
 
         <v-layout row align-center v-if="editMember">
-          <v-btn class="ma-2" @click="sendEdit()" depressed color="success"
-            >Salvar</v-btn
-          >
+          <v-btn class="ma-2" @click="sendEdit()" depressed color="success">Salvar</v-btn>
         </v-layout>
       </v-layout>
     </v-card>
@@ -202,35 +206,85 @@
 
 <script>
 import memberController from "../../controllers/MemberController";
+import postController from "../../controllers/PostController";
+import departmentController from "../../controllers/DepartmentsController";
+import getAllLeaders from "../../functions/getAllLeaders";
+
 export default {
-  data: (vm) => ({
-    date: new Date().toISOString().substr(0, 10),
-    dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
-    menu1: false,
-    menu2: false,
-    editMember: false,
-    memberController,
-    dialog: false,
-  }),
+  data() {
+    return {
+      editMember: false,
+      memberController,
+      postController,
+      departmentController,
+      getAllLeaders,
+      dialog: false,
+      posts: [],
+      departments: [],
+      leaders: [],
+      member: null
+    };
+  },
 
   computed: {
     computedDateFormatted() {
       return this.formatDate(this.date);
-    },
+    }
   },
 
   props: {
     show: Boolean,
-    member: Object,
+    Member: Object
+  },
+
+  async created() {
+    this.member = this.Member
+    await this.getDepartments();
+    await this.getPosts();
+    await this.getLeaders();
   },
 
   watch: {
     date(val) {
       this.dateFormatted = this.formatDate(this.date);
-    },
+    }
   },
 
   methods: {
+    leader_full_name: item => `${item.first_name} ${item.last_name}`,
+    async getPosts() {
+      await this.postController
+        .getPosts(this.$api)
+        .then(res => {
+          this.posts = res.data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+
+    async getDepartments() {
+      await this.departmentController
+        .getDepartments(this.$api)
+        .then(res => {
+          this.departments = res.data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+
+    async getLeaders() {
+      await this.memberController
+        .getAllMembers(this.$api)
+        .then(res => {
+          this.leaders = res;
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+    
     formatDate(date) {
       if (!date) return null;
 
@@ -246,33 +300,52 @@ export default {
     },
 
     async sendEdit() {
-      console.log(this.member)
+      let memberEdit = this.member
       await this.memberController
-        .editMember(this.$api, this.member)
-        .then((res) => {
+        .editMember(this.$api, memberEdit)
+        .then(res => {
           console.log(res);
-          this.$emit("close");
-          this.$emit("getMembers");
+          this.member = res
+          this.setObjects()
+          this.$emit("getMembers")
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
+    },
+
+    setObjects(){
+      this.posts.forEach(post => {
+        if(post.id == this.member.post)
+          this.member.post = post
+      })
+
+      this.departments.forEach(department => {
+        if(department.id == this.member.department)
+          this.member.department = department
+      })
+
+      this.leaders.forEach(leader => {
+        if(leader.id == this.member.leader)
+          this.member.leader = leader
+      })
+
+      this.editMember = false
     },
 
     async deleteMember() {
       await this.memberController
         .deleteMember(this.$api, this.member)
-        .then((res) => {
+        .then(res => {
           console.log(res);
-          this.member = {};
           this.$emit("close");
           this.$emit("getMembers");
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

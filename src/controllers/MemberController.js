@@ -36,6 +36,9 @@ export default {
   },
 
   editMember(api, memberDetails) {
+    memberDetails.post = memberDetails.post.id
+    memberDetails.department = memberDetails.department.id
+    memberDetails.leader = memberDetails.leader.id
     return api
       .put(`manage-member/${memberDetails.id}/`, memberDetails)
       .then((res) => res.data)
