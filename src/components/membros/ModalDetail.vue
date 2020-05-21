@@ -51,13 +51,28 @@
         </v-btn>
       </v-layout>
       <v-layout column mx-2 justify-center align-center>
-        <v-avatar size="130px" class="avatar">
-          <v-layout size="130px" class="shadow-avatar" v-if="editMember">
-            <v-btn icon class="float" v-if="editMember">
+        <v-avatar size="130px" class="avatar" color="indigo">
+          <img
+            v-if="showImage"
+            :src="showImage"
+            class="adjust"
+          >
+          <span v-if="!showImage" class="white--text headline">{{ abb }}</span>
+           
+             <v-btn icon class="float" v-if="editMember">
+               <label for="changeImage">
               <v-icon>mdi-camera</v-icon>
-            </v-btn>
-          </v-layout>
-        </v-avatar>
+               </label>
+             </v-btn>
+           
+           <input
+            id="changeImage"
+            type="file"
+            style="display:none;"
+            accept="image/*"
+            @change="onChangeImage"
+           />
+          </v-avatar>
         <span
           v-if="!editMember"
           class="title font-weight-medium mt-3"
@@ -286,7 +301,9 @@ export default {
       member: null,
       date: null,
       menuData: false,
-      dateEdit: null
+      dateEdit: null,
+      abb: null,
+      showImage: null,
     };
   },
 
@@ -299,6 +316,9 @@ export default {
     this.member = this.Member;
     console.log(this.member);
     this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
+    this.abb = this.member.first_name.slice(0,1) + this.member.last_name.slice(0,1)
+    if(this.member.photo)
+      this.showImage = window.URL.createObjectURL(this.member.photo)
     await this.getDepartments();
     await this.getPosts();
     await this.getLeaders();
@@ -383,7 +403,13 @@ export default {
         .catch(err => {
           console.log(err);
         });
-    }
+    },
+
+    async onChangeImage(e) {
+      this.showImage = window.URL.createObjectURL(e.target.files[0])
+      console.log(e.target.files[0])
+      this.member.photo = e.target.files[0]
+    },
   }
 };
 </script>
@@ -392,6 +418,11 @@ export default {
 .float {
   width: 130px;
   height: 130px;
+  position: fixed;
+}
+
+.float:hover{
+  background-color: rgba(51, 51, 51, 0.5);
 }
 
 .float:hover i.v-icon.v-icon {
@@ -402,24 +433,9 @@ i.v-icon.v-icon {
   color: transparent;
 }
 
-.avatar {
-  background-image: url(https://i.imgur.com/EvaCfem.png);
-  background-position: center center;
-  width: 130px;
-  height: 130px;
-  background-size: contain;
+.adjust{
+  width:auto;
+  height: 100%;
 }
 
-.shadow-avatar {
-  width: 130px;
-  height: 130px;
-}
-
-.shadow-avatar:hover {
-  background-color: rgba(0, 0, 0, 0.2);
-  -webkit-transition: background-color 300ms linear;
-  -ms-transition: background-color 200ms linear;
-  transition: background-color 200ms linear;
-  cursor: pointer;
-}
 </style>
