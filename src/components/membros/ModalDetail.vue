@@ -238,7 +238,7 @@ export default {
   },
 
   async created() {
-    this.member = this.Member
+    this.member = this.Member;
     await this.getDepartments();
     await this.getPosts();
     await this.getLeaders();
@@ -284,7 +284,7 @@ export default {
           console.log(e);
         });
     },
-    
+
     formatDate(date) {
       if (!date) return null;
 
@@ -300,39 +300,36 @@ export default {
     },
 
     async sendEdit() {
-
-      let memberEdit = this.member
+      let memberEdit = this.member;
 
       await this.memberController
         .editMember(this.$api, memberEdit)
         .then(res => {
           console.log(res);
-          this.member = res
-          this.setObjects()
-          this.$emit("getMembers")
+          this.member = res;
+          this.setObjects();
+          this.$emit("getMembers");
         })
         .catch(err => {
           console.log(err);
         });
     },
 
-    setObjects(){
+    setObjects() {
       this.posts.forEach(post => {
-        if(post.id == this.member.post)
-          this.member.post = post
-      })
+        if (post.id == this.member.post) this.member.post = post;
+      });
 
       this.departments.forEach(department => {
-        if(department.id == this.member.department)
-          this.member.department = department
-      })
+        if (department.id == this.member.department)
+          this.member.department = department;
+      });
 
       this.leaders.forEach(leader => {
-        if(leader.id == this.member.leader)
-          this.member.leader = leader
-      })
+        if (leader.id == this.member.leader) this.member.leader = leader;
+      });
 
-      this.editMember = false
+      this.editMember = false;
     },
 
     async deleteMember() {

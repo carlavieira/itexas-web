@@ -14,9 +14,9 @@ import membershipCriteriaLed from "../components/membershipCriteria/MembershipCr
 import perfil from "../components/Perfil.vue";
 import officeHours from "../components/officeHours/OfficeHours.vue";
 import officeHoursAdm from "../components/officeHours/OfficeHoursAdm.vue";
-/* import cargos from "../components/cargos/Cargos.vue"; */
+import cargos from "../components/cargos/Cargos.vue";
 import areas from "../components/areas/Areas.vue";
-import tabelaTeste from "../components/cargos/TabelaTeste.vue"
+
 
 
 Vue.use(VueRouter);
@@ -68,7 +68,7 @@ const routes = [
         name: "membershipCriteriaAdm",
         component: membershipCriteriaAll,
       },
-      { path: "/adm/cargos", name: "cargosAdm", component: tabelaTeste },
+      { path: "/adm/cargos", name: "cargosAdm", component: cargos },
       { path: "/adm/areas", name: "areasAdm", component: areas },
     ]
   }
