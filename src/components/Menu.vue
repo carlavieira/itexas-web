@@ -19,8 +19,8 @@
 
       <v-list-item link @click="$router.push('/membro/perfil')">
         <v-list-item-content>
-          <span class="px-3 white--text body-2">{{member.first_name}}</span>
-          <span
+          <span  v-if="member" class="px-3 white--text body-2">{{member.first_name}}</span>
+          <span v-if="member.post && member.department"
             class="px-3 white--text body-2"
           >{{member.post.abbreviation}} de {{member.department.abbreviation}}</span>
         </v-list-item-content>
