@@ -140,14 +140,14 @@ export default {
       this.color = snackbarDetails.color;
     },
     getHeaders() {
-      if (this.$route.name == "eventos") {
+      if (this.$route.name == "eventosAdm") {
         return [
           {
             text: "Nome",
             align: "center",
             value: "type",
           },
-          { text: "Responsável", value: "member", align: "right" },
+          { text: "Responsável", value: "member", align: "center" },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "% de Presença", value: "engagement", align: "center" },
@@ -169,7 +169,7 @@ export default {
       }
     },
     async getEvents() {
-      if (this.$route.name == "eventos") {
+      if (this.$route.name == "eventosAdm") {
         const res = await this.eventController.getAllEvents(this.$api);
         this.eventos = res.data;
       } else if (this.$route.name == "meus-eventos") {
