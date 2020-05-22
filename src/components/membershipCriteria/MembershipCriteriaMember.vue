@@ -32,9 +32,8 @@
           v-else-if="item.officeHoursCriteria > 80.00 && officeHoursCriteria < 100.00"
         >{{formatPercentage(item.officeHoursCriteria)}}</span>
       </template>
-
       <template v-slot:item.meetingsCriteria="{ item }">
-        <v-chip
+         <v-chip
           v-if="item.meetingsCriteria == 100.00"
           class="ma-2"
           color="white"
@@ -46,11 +45,13 @@
           color="white"
           text-color="red"
         >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
-        <span
-          v-else-if="item.meetingsCriteria > 75.00 && meetingsCriteria < 100.00"
-        >{{formatPercentage(item.meetingsCriteria)}}</span>
+        <v-chip
+          v-else
+          class="ma-2"
+          color="white"
+          text-color="black"
+        >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
       </template>
-
       <template v-slot:item.eventsCriteria="{ item }">
         <v-chip
           v-if="item.eventsCriteria == 100.00"
