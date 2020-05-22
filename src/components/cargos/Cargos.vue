@@ -210,7 +210,6 @@
                   <th>Líder</th>
                   <th>Area</th>
                   <th>Data de Entrada</th>
-                  <th>Detalhes</th>
                 </tr>
               </thead>
               <tbody>
@@ -219,9 +218,6 @@
                   <td>{{ member.leader.first_name }}</td>
                   <td>{{ member.department.abbreviation }}</td>
                   <td>{{ member.date_joined }}</td>
-                  <td>
-                    <v-icon small>mdi-account-details</v-icon>
-                  </td>
                 </tr>
               </tbody>
             </template>
