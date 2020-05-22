@@ -76,7 +76,7 @@
                 Edição da Área
               </h3>
               <v-spacer></v-spacer>
-              <v-btn @click="editDepartmenttDialog = false" title="Fechar" icon>
+              <v-btn @click="editDepartmentDialog = false" title="Fechar" icon>
                 <v-icon color="grey">mdi-close</v-icon>
               </v-btn>
             </v-row>
