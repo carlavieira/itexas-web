@@ -140,6 +140,10 @@ export default {
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     modal1: false,
     modal2: false,
+    rules: {
+      type: [(v) => !!v || "Selecione um tipo de evento"],
+      leader: [(v) => !!v || "Selecione o líder na evento."],
+    },
     time: null,
     e7: null,
     select: null,
@@ -149,16 +153,16 @@ export default {
     type: null,
     leader: "",
     leaders: [],
+    snackbarDetail: {
+      color: "success",
+      text: "Reunião cadastrada com sucesso",
+    },
     types: [
       { name: "Reunião Geral", value: "RG" },
       { name: "Assembléia", value: "AS" },
       { name: "Conferência", value: "CF" },
       { name: "Outros", value: "OU" },
     ],
-    rules: {
-      type: [(v) => !!v || "Selecione um tipo de reunião"],
-      leader: [(v) => !!v || "Selecione o líder na reunião."],
-    },
     participantes: [],
   }),
 
@@ -205,9 +209,27 @@ export default {
       eventDetails.member = this.leader;
 
       console.log(eventDetails);
+      if (this.validate()) {
+        return await this.eventController
+          .createEvent(this.$api, eventDetails)
+          .then((res) => {
+            console.log(res);
+            this.$emit("getAllEvents");
 
-      return await this.eventController.createEvent(this.$api, eventDetails);
+            setTimeout(() => {
+              this.$emit("close");
+              this.$emit("showSnackbar", this.snackbarDetail);
+            }, 1000);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     },
+    validate() {
+      return this.$refs.form.validate();
+    },
+
     ListaParticipantes(participantes) {
       this.participantes = [];
       this.participantes = participantes;

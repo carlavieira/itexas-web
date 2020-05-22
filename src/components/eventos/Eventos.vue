@@ -68,7 +68,13 @@
         </v-card>
       </v-flex>
     </v-row>
-    <NovoEvento :show="btnEvento" @close="btnEvento = false"></NovoEvento>
+    <NovoEvento
+      :show="btnEvento"
+      @close="btnEvento = false"
+      v-on:showSnackbar="showSnackbar"
+      @getAllEvents="getEvents()"
+    >
+    </NovoEvento>
     <modalDetail
       v-if="showDetail"
       :show="showDetail"
@@ -166,6 +172,8 @@ export default {
       }
     },
     async getEvents() {
+      console.log("teste");
+      this.eventos = [];
       if (this.$route.name == "eventosAdm") {
         const res = await this.eventController.getAllEvents(this.$api);
         this.eventos = res.data;
