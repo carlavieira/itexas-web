@@ -52,14 +52,10 @@
               <span>{{ formatTime(item.time) }}</span>
             </template>
             <template v-slot:item.engagement="{ item }">
-                <span>{{ formatPercentage(item.engagement) }}</span>
+              <span>{{ formatPercentage(item.engagement) }}</span>
             </template>
             <template v-slot:item.attendance="{ item }">
-              <input
-                type="checkbox"
-                disabled
-                v-model="item.attendance"
-              />
+              <input type="checkbox" disabled v-model="item.attendance" />
             </template>
             <template v-slot:item.details="{ item }">
               <v-icon small @click="eventShow(item)"
@@ -125,7 +121,6 @@ export default {
       return `${hora[0]}:${hora[1]}`;
     },
     formatPercentage(item) {
-      console.log(item);
       if (item > 100) {
         return 100 + " %";
       } else return item + " %";
@@ -152,7 +147,7 @@ export default {
           { text: "Hora", value: "time", align: "center" },
           { text: "% de Presença", value: "engagement", align: "center" },
           { text: "Detalhes", value: "details", align: "center" },
-        ]
+        ];
       } else {
         return [
           {
@@ -163,9 +158,9 @@ export default {
           { text: "Responsável", value: "member", align: "center" },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
-          { text: "Presenca", value: "attendance", align: "center"},
+          { text: "Presenca", value: "attendance", align: "center" },
           { text: "Detalhes", value: "details", align: "center" },
-        ]
+        ];
       }
     },
     async getEvents() {
@@ -180,7 +175,7 @@ export default {
         );
         const meusEventos = [];
         minhasParticipacoes.forEach((participacao) => {
-          participacao.event.participacaoID = participacao.id
+          participacao.event.participacaoID = participacao.id;
           participacao.event.attendance = participacao.attendance;
           meusEventos.push(participacao.event);
         });
