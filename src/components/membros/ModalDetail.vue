@@ -22,11 +22,23 @@
           <v-icon color="black">mdi-account-edit</v-icon>
         </v-btn>
 
-        <v-btn v-if="editMember && !editHist" icon class="ma-2" @click="editMember = false" title="Voltar">
+        <v-btn
+          v-if="editMember && !editHist"
+          icon
+          class="ma-2"
+          @click="editMember = false"
+          title="Voltar"
+        >
           <v-icon color="grey">mdi-arrow-left</v-icon>
         </v-btn>
 
-        <v-btn v-if="!editMember && editHist" icon class="ma-2" @click="editHist = false" title="Voltar">
+        <v-btn
+          v-if="!editMember && editHist"
+          icon
+          class="ma-2"
+          @click="editHist = false"
+          title="Voltar"
+        >
           <v-icon color="grey">mdi-arrow-left</v-icon>
         </v-btn>
 
@@ -58,7 +70,7 @@
           <v-icon color="grey">mdi-close</v-icon>
         </v-btn>
       </v-layout>
-      <v-layout column mx-2 justify-center align-center  v-if="!editHist">
+      <v-layout column mx-2 justify-center align-center v-if="!editHist">
         <v-avatar size="130px" class="avatar" color="indigo">
           <img v-if="showImage" :src="showImage" class="adjust" />
           <span v-if="!showImage" class="white--text headline">{{ abb }}</span>
@@ -285,21 +297,112 @@
       <v-divider v-if="!editHist && !editMember" class="ma-3"></v-divider>
 
       <v-layout v-if="!editMember" column>
-         <v-layout row class="mx-3 mb-2" align-center>
-           <span class="title font-weight-medium">Histórico</span>
-        <v-spacer></v-spacer>
+        <v-layout row class="mx-3" align-center>
+          <span class="title font-weight-medium">Histórico</span>
+          <span
+            v-if="editHist"
+            class="title font-weight-medium pl-1"
+          >- {{ member.first_name }} {{ member.last_name }}</span>
+          <v-spacer></v-spacer>
 
-        <v-btn
-          v-if="!editHist && this.$route.name == 'membersAdm'"
-          icon
-          class="ma-2"
-          @click="editHist = true"
-          title="Editar"
-        >
-          <v-icon color="black">mdi-account-edit</v-icon>
-        </v-btn>
-         </v-layout>
-        
+          <v-btn
+            v-if="!editHist && this.$route.name == 'membersAdm'"
+            icon
+            class="ma-2"
+            @click="editHist = true"
+            title="Editar"
+          >
+            <v-icon color="black">mdi-account-edit</v-icon>
+          </v-btn>
+        </v-layout>
+
+        <v-layout row mx-2 mb-4 mt-3 v-if="editHist">
+
+          <v-layout col-xs-6 col-sm-4 pa-1>
+            <v-select
+              label="Cargo"
+              name="post"
+              outlined
+              prepend-inner-icon="mdi-briefcase"
+              :items="posts"
+              required
+              hide-details
+              no-data-text="Sem cargos cadastrados"
+            ></v-select>
+          </v-layout>
+          <v-layout col-xs-6 col-sm-4 pa-1>
+            <v-select
+              label="Área"
+              name="department"
+              outlined
+              prepend-inner-icon="mdi-briefcase"
+              :items="departments"
+              required
+              hide-details
+              no-data-text="Sem áreas cadastrados"
+            ></v-select>
+          </v-layout>
+          <v-layout col-xs-6 col-sm-4 pa-1>
+            <v-menu
+              v-model="menuDataInicio"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  outlined
+                  label="Data de Início"
+                  prepend-inner-icon="mdi-calendar"
+                  readonly
+                  hide-details
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker locale="pt-br" @input="menuDataInicio = false"></v-date-picker>
+            </v-menu>
+          </v-layout>
+
+           <v-layout col-xs-6 col-sm-4 pa-1>
+            <v-menu
+              v-model="menuDataFim"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  outlined
+                  label="Data de Término"
+                  prepend-inner-icon="mdi-calendar"
+                  readonly
+                  hide-details
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker locale="pt-br" @input="menuDataFim = false"></v-date-picker>
+            </v-menu>
+          </v-layout>
+
+           <v-layout col-xs-6 col-sm-4 pa-1>
+             <v-text-field
+                  outlined
+                  label="Descrição"
+                  hide-details
+              ></v-text-field>
+           </v-layout>
+
+           <v-layout col-xs-6 col-sm-4 pa-1 align-end justify-end>
+             <v-btn class="success dark">
+               <span>Adicionar Histórico</span>
+             </v-btn>
+           </v-layout>
+        </v-layout>
+
         <v-card class="mx-3 mb-3">
           <v-data-table
             no-data-text="Membro não possui histórico cadastrado"
@@ -320,7 +423,7 @@ import memberController from "../../controllers/MemberController";
 import postController from "../../controllers/PostController";
 import departmentController from "../../controllers/DepartmentsController";
 import getAllLeaders from "../../functions/getAllLeaders";
-import backgroundController from "../../controllers/BackgroundController"
+import backgroundController from "../../controllers/BackgroundController";
 import moment from "moment";
 
 export default {
@@ -354,7 +457,9 @@ export default {
         { text: "Descrição", value: "description" }
       ],
       hist: [],
-      editHist: false
+      editHist: false,
+      menuDataInicio: false,
+      menuDataFim: false
     };
   },
 
@@ -391,7 +496,7 @@ export default {
     await this.getDepartments();
     await this.getPosts();
     await this.getLeaders();
-    await this.getBackground()
+    await this.getBackground();
   },
 
   methods: {
@@ -433,11 +538,12 @@ export default {
       await this.backgroundController
         .getBackground(this.$api, this.member.id)
         .then(res => {
-          this.hist = res.data
-          console.log(this.hist)
-        }).catch(e => {
-          console.log(e)
+          this.hist = res.data;
+          console.log(this.hist);
         })
+        .catch(e => {
+          console.log(e);
+        });
     },
 
     async sendEdit() {
