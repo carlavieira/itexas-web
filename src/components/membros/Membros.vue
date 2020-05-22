@@ -37,6 +37,7 @@
             :sort-by="'full_name'"
             :sort-desc="false"
             @click:row="memberShow"
+            class="dataTable"
           >
             <template v-slot:item.member="{ item }">{{
               item.full_name
@@ -148,3 +149,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.dataTable:hover{
+  cursor: pointer;
+}
+</style>
