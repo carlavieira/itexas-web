@@ -133,21 +133,14 @@
               hide-details
             ></v-text-field>
           </v-layout>
+
+
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
               outlined
-              v-if="!editMember && member.post"
+              v-if="!editMember"
               prepend-inner-icon="mdi-briefcase"
               v-model="member.post.abbreviation"
-              :disabled="!editMember"
-              label="Cargo"
-              hide-details
-            ></v-text-field>
-            <v-text-field
-              outlined
-              v-if="!editMember && !member.post"
-              prepend-inner-icon="mdi-briefcase"
-              v-model="member.post"
               :disabled="!editMember"
               label="Cargo"
               hide-details
@@ -167,21 +160,14 @@
               no-data-text="Sem cargos cadastrados"
             ></v-select>
           </v-layout>
+
+
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
-              v-if="!editMember && member.department"
+              v-if="!editMember"
               outlined
               prepend-inner-icon="mdi-border-none-variant"
               v-model="member.department.abbreviation"
-              label="Area"
-              :disabled="!editMember"
-              hide-details
-            ></v-text-field>
-            <v-text-field
-              v-if="!editMember && !member.department"
-              outlined
-              prepend-inner-icon="mdi-border-none-variant"
-              v-model="member.department"
               label="Area"
               :disabled="!editMember"
               hide-details
@@ -201,6 +187,8 @@
               hide-details
             ></v-select>
           </v-layout>
+
+
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
               outlined
@@ -343,6 +331,22 @@ export default {
 
   async created() {
     this.member = this.Member;
+
+    if(!this.member.post){
+      this.member.post = {
+          abbreviation: null,
+          full_name: null,
+          id: null,
+      }
+    }
+
+    if(!this.member.department){
+      this.member.department = {
+          abbreviation: null,
+          full_name: null,
+          id: null,
+      }
+    }
 
     console.log(this.member);
     this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
