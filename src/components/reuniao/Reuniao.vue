@@ -107,6 +107,7 @@ export default {
       timeout: 3000,
       color: "",
       reunioes: [],
+      userID: null,
       types: [
         { text: "REB", value: "REB" },
         { text: "Reunião de Área", value: "RA" },

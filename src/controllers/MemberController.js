@@ -86,4 +86,14 @@ export default {
         console.log(error);
       });
   },
+  getMembersInDepartment(api, departmentID) {
+    return api
+      .get(`list-members/?department=${departmentID}`)
+      .then(function (response) {
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 };

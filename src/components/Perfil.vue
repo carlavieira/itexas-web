@@ -5,6 +5,11 @@
         <v-icon color="black">mdi-account-edit</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
+      <v-btn outlined class="tertiary--text" @click="passwordDialog=true">
+        <span class="caption">
+          Mudar minha senha
+        </span>
+      </v-btn>
     </v-layout>
     <v-layout column mx-2 justify-center align-center>
       <v-avatar size="130px" class="avatar">
@@ -15,12 +20,13 @@
         </v-layout>
       </v-avatar>
       <span v-if="!editMember" class="title font-weight-medium mt-3"
-        >{{ member.first_name }} {{ member.last_name }}</span
-      >
+        >{{ member.first_name }} {{ member.last_name }}</span>
       <span v-if="!editMember" class="subheading font-weight-regular"
-        >( {{ member.nickname }} )</span
-      >
+        >( {{ member.nickname }} )</span>
       <v-layout row mt-3 justify-space-around style="width: 100%;">
+        <PasswordChange v-if="passwordDialog" :show="passwordDialog" @close="passwordDialog=false">
+
+        </PasswordChange>
         <v-layout justify-left col-xs-12 col-sm-6 v-if="editMember">
           <v-text-field
             label="Nome"
@@ -80,7 +86,7 @@
             outlined
             v-if="member.post"
             prepend-inner-icon="mdi-briefcase"
-            v-model="member.post.name"
+            v-model="member.post.full_name"
             :disabled="!editMember"
             label="Cargo"
             hide-details
@@ -91,7 +97,7 @@
             v-if="member.department"
             outlined
             prepend-inner-icon="mdi-border-none-variant"
-            v-model="member.department.name"
+            v-model="member.department.abbreviation"
             label="Area"
             :disabled="!editMember"
             hide-details
@@ -135,11 +141,6 @@
               @input="menu1 = false"
             ></v-date-picker>
           </v-menu>
-          <!--
-              <p>
-                Date in ISO format: <strong>{{ date }}</strong>
-              </p>
-              -->
         </v-layout>
       </v-layout>
 
@@ -156,8 +157,14 @@
 
 <script>
 import memberController from "../controllers/MemberController";
+import PasswordChange from "../components/PasswordChange.vue";
 import moment from 'moment';
 export default {
+
+  components: {
+    PasswordChange
+  },
+
   data(){
     return {
     menu1: false,
@@ -165,6 +172,7 @@ export default {
     editMember: false,
     memberController,
     dialog: false,
+    passwordDialog: false,
     member: {},
     date: ""
     }
