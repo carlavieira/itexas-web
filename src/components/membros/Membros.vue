@@ -5,7 +5,8 @@
     }}</v-snackbar>
 
     <v-row class="px-4">
-      <h2>Membros</h2>
+      <h2 v-if="$route.name == 'membersAdm'">Membros</h2>
+      <h2 v-else>Contact List</h2>
       <v-spacer></v-spacer>
       <v-btn
         v-if="$route.name == 'membersAdm'"
@@ -87,7 +88,11 @@ export default {
 
   async created() {
     //this.membros = await this.getMembers()
-    this.membros = this.setFullName(await this.getMembers());
+    if (this.$route.name == "membersAdm") {
+      this.membros = this.setFullName(await this.getMembers());
+    } else {
+      this.membros = this.activeMembers(await this.getMembers());
+    }
     //this.membros = this.setFullName(this.membros);
   },
 
@@ -150,7 +155,15 @@ export default {
       });
       return members;
     },
-
+    activeMembers(members) {
+      const activeMembers = new Array();
+      members.forEach((member) => {
+        if (member.is_active) {
+          activeMembers.push(member);
+        }
+      });
+      return activeMembers;
+    },
     setFullName(array) {
       const newArray = new Array();
       array.map((item) => {
