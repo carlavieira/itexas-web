@@ -1,7 +1,7 @@
 <template>
-  <v-container>
-    <v-row class="px-4 pb-3">
-      <h2>Áreas</h2>
+  <div>
+      <v-row class="px-4 pb-3">
+        <h2>Áreas</h2>
       <v-spacer></v-spacer>
       <v-btn
         @click="createDepartmentDialog = true"
@@ -13,10 +13,12 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
 
-      <v-dialog v-model="createDepartmentDialog" max-width="500" min-h>
+      <v-dialog v-model="createDepartmentDialog" max-width="700" min-h>
         <v-card>
-          <v-card-title style="font-size: 16px !important" class="headline"
-            >Cadastro de Área</v-card-title
+          <v-card-title
+            class="title-table pt-3 py-4 pb-0 headline"
+            style="font-size: 16px !important"
+            >Cadastro do Áreas</v-card-title
           >
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -66,16 +68,24 @@
         </v-card>
       </v-dialog>
 
-      <v-dialog v-model="editDepartmentDialog" max-width="700" min-h>
-        <v-card>
-          <v-card-title style="font-size: 16px !important" class="headline"
-            >Edição da Área</v-card-title
-          >
+      <v-dialog v-model="editDepartmentDialog" max-width="600" min-h>
+        <v-card style="background-color: #f5f5f5">
+          <v-container>
+            <v-row class="px-4 py-2">
+              <h3 class="headline font-weight-bold subtitle-1">
+                Edição da Área
+              </h3>
+              <v-spacer></v-spacer>
+              <v-btn @click="editDepartmenttDialog = false" title="Fechar" icon>
+                <v-icon color="grey">mdi-close</v-icon>
+              </v-btn>
+            </v-row>
+          </v-container>
           <v-card-actions>
             <v-spacer></v-spacer>
             <template>
-              <v-container fluid>
-                <v-row align="left">
+              <v-container fluid class="py-0">
+                <v-row>
                   <v-col class="d-flex" cols="12" sm="6">
                     <v-text-field
                       v-model="abbreviation"
@@ -85,7 +95,7 @@
                       outlined
                     ></v-text-field>
                   </v-col>
-                  <v-col class="d-flex" cols="12" sm="11">
+                  <v-col class="d-flex" cols="12" sm="6">
                     <v-text-field
                       v-model="departmentName"
                       label="Nome"
@@ -95,6 +105,33 @@
                     ></v-text-field>
                   </v-col>
                 </v-row>
+                
+                <template>
+                  <v-card>
+                    <v-card-title class="title-table pt-3 py-4 pb-0">
+                      Membros
+                    </v-card-title>
+                    <v-data-table
+                      v-model="selected"
+                      :headers="headers"
+                      :items="membersInTable"
+                      item-key="name"
+                      class="elevation-1"
+                      :hide-default-footer="true"
+                      :footer-props="{
+                        itemsPerPageOptions: [-1],
+                      }"
+                    >
+                      <template v-slot:item.name="{ item }">
+                        <span> {{ getFullName(item) }} </span>
+                      </template>
+                      <template v-slot:item.leader="{ item }">
+                        <span> {{ getFullNameLeader(item.leader) }} </span>
+                      </template>
+                    </v-data-table>
+                  </v-card>
+                </template>
+
                 <v-col class="d-flex" cols="12" sm="6">
                   <v-btn
                     color="green darken-1"
@@ -118,69 +155,98 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="deleteDepartmentDialog" persistent max-width="500" min-h>
+        <v-card>
+          <v-card-title style="font-size: 16px !important" class="headline">
+            <p>Deseja realmente deletar esta área?</p>
+            <span style="font-size: 14px" class=" font-weight-light">
+              Isso fará com que todos integrantes da {{ deletedItem }} fiquem
+              sem área.
+            </span>
+          </v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              color="red darken-1"
+              text
+              @click="
+                deleteDepartmentDialog = false;
+                deleteItem();
+              "
+            >
+              DELETAR CARGO
+            </v-btn>
+
+            <v-btn text @click="deleteDepartmentDialog = false">
+              Voltar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
-    <v-divider class="pb-3"></v-divider>
-    <v-card class="w-100">
-      <v-data-table
-        :sort-desc="[true, true]"
-        no-data-text="Nenhuma área adicionada"
-        no-results-text="Sem resultados para a busca"
-        :headers="header"
-        :items="departments"
-      >
-        <template v-slot:item.actions="{ item }">
-          <v-icon small @click="edit(item)">mdi-pencil</v-icon>
-          <v-icon class="pl-3" small @click="deleteDepartment(item)"
-            >mdi-delete</v-icon
-          >
-        </template>
-      </v-data-table>
-    </v-card>
 
-    <v-dialog v-model="deleteDepartmentDialog" max-width="500" min-h>
-      <v-card>
-        <v-card-title style="font-size: 16px !important" class="headline">
-          Deseja realmente deletar esta área? <br />
-          Isso fará com que todos integrantes da {{ deletedItem }} fiquem sem
-          área!
-        </v-card-title>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn
-            color="red darken-1"
-            text
-            @click="
-              deleteDepartmentDialog = false;
-              deleteItem();
-            "
-          >
-            DELETAR ÁREA
-          </v-btn>
-
-          <v-btn text @click="deleteDepartmentDialog = false">
-            Voltar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-container>
+    <v-data-table
+      class="elevation-1 tabela"
+      :headers="header"
+      :items="departments"
+      :single-expand="singleExpand"
+      :expanded.sync="expanded"
+      :hide-default-footer="true"
+      item-key="id"
+      show-expand
+    >
+      <template v-slot:item.actions="{ item }">
+        <v-icon small @click="edit(item)">mdi-pencil</v-icon>
+        <v-icon class="pl-3" small @click="deleteDepartment(item)">mdi-delete</v-icon>
+      </template>
+      <template v-slot:expanded-item="{ item }">
+        <td :colspan="5">
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr class="headerTable">
+                  <th>Nome</th>
+                  <th>Líder</th>
+                  <th>Area</th>
+                  <th>Data de Entrada</th>
+                  <th>Detalhes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="member in membersInDepartment[item.id]" :key="member.id">
+                  <td>{{ member.first_name }}</td>
+                  <td>{{ member.leader.first_name }}</td>
+                  <td>{{ member.department.abbreviation }}</td>
+                  <td>{{ member.date_joined }}</td>
+                  
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+        </td>
+      </template>
+    </v-data-table>
+  </div>
 </template>
-
 <script>
 import departmentController from "../../controllers/DepartmentsController";
+import memberController from "../../controllers/MemberController";
 
 export default {
-  components: {},
-
   data() {
     return {
+      expanded: [],
+      singleExpand: false,
       departmentController,
+      memberController,
       header: [
         { text: "Sigla", value: "abbreviation" },
-        { text: "Nome", value: "full_name" },
+        { text: "Título", value: "full_name" },
         { text: "Ações", value: "actions", sortable: false },
       ],
+      membersInDepartment: {},
+      membersInTable: [],
       createDepartmentDialog: false,
       editDepartmentDialog: false,
       deleteDepartmentDialog: false,
@@ -191,53 +257,71 @@ export default {
       type: null,
       showModal: false,
       tableDepartments: {},
-      search: "",
       deletedItem: "",
+      selected: [],
+      headers: [
+        {
+          text: "Nome",
+          align: "left",
+          sortable: false,
+          value: "name",
+        },
+        { text: "Líder", value: "leader" },
+      ],
     };
   },
-
   async created() {
-    await this.getDepartments();
+    await this.getDepartment();
   },
   methods: {
-    async getDepartments() {
+    async getDepartment() {
       await this.departmentController
         .getDepartments(this.$api)
         .then((res) => {
+          const allDepartment = res.data;
           this.departments = res.data;
+
+          allDepartment.forEach((department) => {
+            this.memberController
+              .getMembersInDepartment(this.$api, department.id)
+              .then((res) => {
+                this.membersInDepartment[department.id] = res;
+              });
+          });
+          console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    getFullName: (membro) => `${membro.first_name} ${membro.last_name}`,
+    getFullNameLeader: (leader) => `${leader.first_name} ${leader.last_name}`,
 
     async submit() {
       const department = {
         full_name: this.departmentName,
         abbreviation: this.abbreviation,
       };
-      await this.departmentController
-        .createDepartment(this.$api, department)
-        .then(this.getDepartments);
+      await this.departmentController.createDepartment(this.$api, department).then(this.getDepartments);
       this.showModal = true;
     },
 
     async edit(item) {
-      console.log(item);
       this.departmentName = item.full_name;
       this.abbreviation = item.abbreviation;
       this.editDepartmentDialog = true;
       this.departmentDetail = {
         id: item.id,
-        full_name: item.full_name,
-        abbreviation: item.abbreviation,
+        full_name: this.departmentName,
+        abbreviation: this.abbreviation,
       };
+      this.membersInTable = this.membersInDepartment[item.id];
     },
 
     async deleteDepartment(item) {
-      this.deletedItem = item.abbreviation;
-      this.departmentName = item.full_name;
       this.deleteDepartmentDialog = true;
+      this.deletedItem = item.full_name;
+      this.departmentName = item.full_name;
       this.departmentDetail = {
         id: item.id,
       };
@@ -259,3 +343,18 @@ export default {
   },
 };
 </script>
+<style scoped>
+th {
+  background-color: rgb(48, 48, 48);
+  color: white !important;
+}
+.v-data-table th {
+  height: 34px !important;
+}
+.v-data-table td {
+  height: 34px !important;
+}
+.title-table {
+  padding: 8px, 16px, 0 !important;
+}
+</style>
