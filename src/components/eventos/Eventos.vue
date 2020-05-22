@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">
-      {{ text }}</v-snackbar
-    >
+    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{
+      text
+    }}</v-snackbar>
     <v-row class="px-4">
       <h2 v-if="$route.name == 'eventosAdm'">Eventos</h2>
       <h2 v-else>Meus Eventos</h2>
@@ -38,6 +38,8 @@
             :headers="getHeaders()"
             :items="eventos"
             :search="search"
+            :sort-by="['date', 'time']"
+            :sort-desc="[true, true]"
           >
             <template v-slot:item.type="{ item }">
               <span> {{ formatTypeEvent(item.type) }} </span>
@@ -52,14 +54,10 @@
               <span>{{ formatTime(item.time) }}</span>
             </template>
             <template v-slot:item.engagement="{ item }">
-                <span>{{ formatPercentage(item.engagement) }}</span>
+              <span>{{ formatPercentage(item.engagement) }}</span>
             </template>
             <template v-slot:item.attendance="{ item }">
-              <input
-                type="checkbox"
-                disabled
-                v-model="item.attendance"
-              />
+              <input type="checkbox" disabled v-model="item.attendance" />
             </template>
             <template v-slot:item.details="{ item }">
               <v-icon small @click="eventShow(item)"
@@ -70,7 +68,13 @@
         </v-card>
       </v-flex>
     </v-row>
-    <NovoEvento :show="btnEvento" @close="btnEvento = false"></NovoEvento>
+    <NovoEvento
+      :show="btnEvento"
+      @close="btnEvento = false"
+      v-on:showSnackbar="showSnackbar"
+      @getAllEvents="getEvents()"
+    >
+    </NovoEvento>
     <modalDetail
       v-if="showDetail"
       :show="showDetail"
@@ -114,6 +118,7 @@ export default {
       timeout: 3000,
       color: "",
       eventos: [],
+      userID: null,
     };
   },
   methods: {
@@ -125,7 +130,6 @@ export default {
       return `${hora[0]}:${hora[1]}`;
     },
     formatPercentage(item) {
-      console.log(item);
       if (item > 100) {
         return 100 + " %";
       } else return item + " %";
@@ -140,19 +144,19 @@ export default {
       this.color = snackbarDetails.color;
     },
     getHeaders() {
-      if (this.$route.name == "eventos") {
+      if (this.$route.name == "eventosAdm") {
         return [
           {
             text: "Nome",
             align: "center",
             value: "type",
           },
-          { text: "Responsável", value: "member", align: "right" },
+          { text: "Responsável", value: "member", align: "center" },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "% de Presença", value: "engagement", align: "center" },
           { text: "Detalhes", value: "details", align: "center" },
-        ]
+        ];
       } else {
         return [
           {
@@ -163,13 +167,14 @@ export default {
           { text: "Responsável", value: "member", align: "center" },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
-          { text: "Presenca", value: "attendance", align: "center"},
+          { text: "Presenca", value: "attendance", align: "center" },
           { text: "Detalhes", value: "details", align: "center" },
-        ]
+        ];
       }
     },
     async getEvents() {
-      if (this.$route.name == "eventos") {
+      this.eventos = [];
+      if (this.$route.name == "eventosAdm") {
         const res = await this.eventController.getAllEvents(this.$api);
         this.eventos = res.data;
       } else if (this.$route.name == "meus-eventos") {
@@ -180,7 +185,7 @@ export default {
         );
         const meusEventos = [];
         minhasParticipacoes.forEach((participacao) => {
-          participacao.event.participacaoID = participacao.id
+          participacao.event.participacaoID = participacao.id;
           participacao.event.attendance = participacao.attendance;
           meusEventos.push(participacao.event);
         });

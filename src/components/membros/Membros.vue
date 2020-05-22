@@ -1,11 +1,15 @@
 <template>
   <v-container>
-    <v-snackbar right v-model="snackbar" :color="color" :timeout="timeout">{{ text }}</v-snackbar>
+    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{
+      text
+    }}</v-snackbar>
 
     <v-row class="px-4">
-      <h2>Membros</h2>
+      <h2 v-if="$route.name == 'membersAdm'">Membros</h2>
+      <h2 v-else>Contact List</h2>
       <v-spacer></v-spacer>
       <v-btn
+        v-if="$route.name == 'membersAdm'"
         @click="btnMembro = true"
         title="Cadastrar novo membro"
         small
@@ -37,10 +41,16 @@
             :sort-by="'full_name'"
             :sort-desc="false"
             @click:row="memberShow"
+            class="dataTable"
           >
-            <template v-slot:item.member="{ item }">{{
-              item.full_name
-            }}</template>
+            <template v-slot:item.name="{ item }">
+              <span class="font-weight-medium"
+                >{{ item.first_name }} {{ item.last_name }}
+              </span>
+              <span class="font-italic font-weight-light">
+                {{ showNickName(item) }}
+              </span>
+            </template>
             <template v-slot:item.leader="{ item }">
               <span v-if="item.leader"> {{ item.leader.first_name }} </span>
               <span v-else> - </span>
@@ -52,14 +62,15 @@
     <NovoMembro
       :show="btnMembro"
       v-if="btnMembro"
-      @close="btnMembro = false, reload(false)"
-      @getMembers="reload(true)"
+      @close="(btnMembro = false), reload('reload')"
+      @getMembers="reload('create')"
     ></NovoMembro>
     <modalDetail
       v-if="showDetail"
       :show="showDetail"
-      :member="userDetail"
-      @close="showDetail = false"
+      :Member="userDetail"
+      @getMembers="reload('edit')"
+      @close="(showDetail = false), reload('reload')"
     ></modalDetail>
   </v-container>
 </template>
@@ -77,24 +88,33 @@ export default {
 
   async created() {
     //this.membros = await this.getMembers()
-    this.membros = this.setFullName(await this.getMembers());
+    if (this.$route.name == "membersAdm") {
+      this.membros = this.setFullName(await this.getMembers());
+    } else {
+      this.membros = this.activeMembers(await this.getMembers());
+    }
     //this.membros = this.setFullName(this.membros);
   },
 
   data() {
     return {
       btnMembro: false,
+      showNickName: (membro) => {
+        if (membro.nickname) {
+          return `(${membro.nickname})`;
+        }
+      },
       memberController,
       search: "",
       headersMembros: [
         {
           text: "Nome",
           align: "start",
-          value: "full_name",
+          value: "name",
         },
         { text: "Cargo", value: "post.abbreviation" },
         { text: "Área", value: "department.abbreviation" },
-        { text: "Líder", value: "leader" }
+        { text: "Líder", value: "leader" },
       ],
       membros: [],
       userDetail: null,
@@ -102,7 +122,7 @@ export default {
       snackbar: false,
       text: "",
       timeout: 3000,
-      color: ""
+      color: "",
     };
   },
 
@@ -118,9 +138,11 @@ export default {
       this.snackbar = true;
     },
 
-    async reload(status){
-      if(status)
-        this.setSnackbar("Membro cadastrado com sucesso", "success")
+    async reload(status) {
+      if (status == "create")
+        this.setSnackbar("Membro cadastrado com sucesso", "success");
+      if (status == "edit")
+        this.setSnackbar("Membro editado com sucesso", "success");
       this.membros = this.setFullName(await this.getMembers());
     },
 
@@ -133,7 +155,15 @@ export default {
       });
       return members;
     },
-
+    activeMembers(members) {
+      const activeMembers = new Array();
+      members.forEach((member) => {
+        if (member.is_active) {
+          activeMembers.push(member);
+        }
+      });
+      return activeMembers;
+    },
     setFullName(array) {
       const newArray = new Array();
       array.map((item) => {
@@ -145,3 +175,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.dataTable:hover {
+  cursor: pointer;
+}
+</style>

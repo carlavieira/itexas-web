@@ -123,7 +123,10 @@
           <v-btn
             class="ma-2"
             style="float: left"
-            v-on:click.native="submit();defaultLeader()"
+            v-on:click.native="
+              submit();
+              defaultLeader();
+            "
             depressed
             color="success"
             >Cadastrar</v-btn
@@ -161,7 +164,7 @@ export default {
     time: "00:00",
     e7: null,
     select: null,
-    leader: "",
+    leader: () => parseInt(localStorage.getItem("user_id")),
     leaders: [],
     memberController,
     snackbarDetail: {
@@ -267,11 +270,14 @@ export default {
         await this.memberController.getAllMembers(this.$api)
       );
       this.leaders = this.setFullName(this.leaders);
-      this.leader
+      this.leader;
     },
 
     async defaultLeader() {
-      this.leader = await this.memberController.getMemberById(this.$api, localStorage.getItem("user_id"))
+      this.leader = await this.memberController.getMemberById(
+        this.$api,
+        localStorage.getItem("user_id")
+      );
     },
 
     ListaParticipantes(participantes) {

@@ -303,14 +303,21 @@ export default {
     },
     async sendEdit() {
       /* Edit Meeting */
-      this.meeting.date = this.date;
-      this.meeting.time = this.time;
-      console.log(this.meeting);
+      let meetingEdit = this.meeting;
+      meetingEdit.date = this.date;
+      meetingEdit.time = this.time;
+      meetingEdit.memberID = this.meeting.member;
+      /*Verifica se memberID é um objeto membro, caso seja, receberá o id do Membro*/
+      if (meetingEdit.memberID === Object(meetingEdit.memberID)) {
+        meetingEdit.memberID = meetingEdit.memberID.id;
+      }
       await this.meetingController
-        .editMeeting(this.$api, this.meeting)
+        .editMeeting(this.$api, meetingEdit)
         .then((res) => {
           console.log(res);
           this.$emit("getAllMeeting");
+          this.snackbarDetail.text = "Reunião editada com sucesso";
+          this.snackbarDetail.color = "warning";
 
           setTimeout(() => {
             this.$emit("close");

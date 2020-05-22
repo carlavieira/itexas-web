@@ -1,23 +1,22 @@
 let url = "manage-posts/";
 
 export default {
-
   getPosts(api) {
     return api
       .get(url)
-      .then(res => {
-        return res
-      }).catch(e => {
-        throw e;
+      .then((res) => {
+        return res;
       })
+      .catch((e) => {
+        throw e;
+      });
   },
 
   createPost(api, data) {
-
     return api
       .post(url, data)
       .then((res) => {
-        return res
+        return res;
       })
       .catch((e) => {
         throw e;
@@ -33,13 +32,13 @@ export default {
       });
   },
 
-  deletePost(api, data) {
+  deletePost(api, idPost) {
+    console.log(idPost);
     return api
-      .delete(url + `${data}/`)
+      .delete(url + `${idPost}`)
       .then((res) => res.data)
       .catch((e) => {
         throw e;
       });
   },
-
-}
+};

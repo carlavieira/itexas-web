@@ -35,9 +35,8 @@
           text-color="black"
         >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
       </template>
-
       <template v-slot:item.meetingsCriteria="{ item }">
-        <v-chip
+         <v-chip
           v-if="item.meetingsCriteria == 100.00"
           class="ma-2"
           color="white"
@@ -56,7 +55,6 @@
           text-color="black"
         >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
       </template>
-
       <template v-slot:item.eventsCriteria="{ item }">
         <v-chip
           v-if="item.eventsCriteria == 100.00"

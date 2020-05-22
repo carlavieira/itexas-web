@@ -136,29 +136,33 @@ import memberController from "../../controllers/MemberController";
 
 export default {
   data: (vm) => ({
+    eventController,
+    memberController,
     date: new Date().toISOString().substr(0, 10),
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     modal1: false,
     modal2: false,
+    rules: {
+      type: [(v) => !!v || "Selecione um tipo de evento"],
+      leader: [(v) => !!v || "Selecione o líder na evento."],
+    },
     time: null,
     e7: null,
     select: null,
     valid: true,
-    eventController,
-    memberController,
     type: null,
-    leader: "",
+    leader: null,
     leaders: [],
+    snackbarDetail: {
+      color: "success",
+      text: "Evento cadastrado com sucesso",
+    },
     types: [
       { name: "Reunião Geral", value: "RG" },
       { name: "Assembléia", value: "AS" },
       { name: "Conferência", value: "CF" },
       { name: "Outros", value: "OU" },
     ],
-    rules: {
-      type: [(v) => !!v || "Selecione um tipo de reunião"],
-      leader: [(v) => !!v || "Selecione o líder na reunião."],
-    },
     participantes: [],
   }),
 
@@ -168,6 +172,7 @@ export default {
 
   async created() {
     await this.populaSelectLider();
+    this.defaultLeader();
   },
 
   computed: {
@@ -196,6 +201,12 @@ export default {
       const [month, day, year] = date.split("/");
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     },
+    async defaultLeader() {
+      this.leader = await this.memberController.getMemberById(
+        this.$api,
+        localStorage.getItem("user_id")
+      );
+    },
     async submit() {
       const eventDetails = new Object();
 
@@ -205,9 +216,28 @@ export default {
       eventDetails.member = this.leader;
 
       console.log(eventDetails);
+      if (this.validate()) {
+        return await this.eventController
+          .createEvent(this.$api, eventDetails)
+          .then((res) => {
+            console.log(res);
+            this.$emit("getAllEvents");
 
-      return await this.eventController.createEvent(this.$api, eventDetails);
+            setTimeout(() => {
+              this.$emit("close");
+              this.$emit("showSnackbar", this.snackbarDetail);
+              this.leader = [];
+            }, 1000);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     },
+    validate() {
+      return this.$refs.form.validate();
+    },
+
     ListaParticipantes(participantes) {
       this.participantes = [];
       this.participantes = participantes;

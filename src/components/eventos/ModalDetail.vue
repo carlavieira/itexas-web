@@ -165,20 +165,12 @@
 
         <v-layout flex justify-center>
           <div class="my-2" v-if="event.attendance == false">
-            <v-btn
-              small
-              color="success"
-              @click="mudarPresenca(event)"
-              dark
+            <v-btn small color="success" @click="mudarPresenca(event)" dark
               >Marcar Presença</v-btn
             >
           </div>
           <div v-if="event.attendance == true" class="my-2">
-            <v-btn
-              small
-              color="error"
-              @click="mudarPresenca(event)"
-              dark
+            <v-btn small color="error" @click="mudarPresenca(event)" dark
               >Desmarcar Presença</v-btn
             >
           </div>
@@ -277,18 +269,23 @@ export default {
   methods: {
     async sendEdit() {
       /* Edit Event */
-      this.event.date = this.date;
-      console.log(this.date);
-      console.log(this.event);
+      let eventEdit = this.event;
+      eventEdit.date = this.date;
+      eventEdit.memberID = this.event.member;
+
+      /*Verifica se memberID é um objeto membro, caso seja, receberá o id do Membro*/
+      if (eventEdit.memberID === Object(eventEdit.memberID)) {
+        eventEdit.memberID = eventEdit.memberID.id;
+      }
+
       await this.eventController
-        .editEvent(this.$api, this.event)
+        .editEvent(this.$api, eventEdit)
         .then((res) => {
           console.log(res);
-          this.$emit("getAllEvents");
-
           this.snackbarDetail.text = "Evento editado com sucesso";
           this.snackbarDetail.color = "warning";
           setTimeout(() => {
+            this.$emit("getAllEvents");
             this.$emit("close");
             this.$emit("showSnackbar", this.snackbarDetail);
           }, 1000);
@@ -329,7 +326,6 @@ export default {
       }
     },
     ListaParticipantes(participantes) {
-      console.log("update");
       this.participantes = [];
       this.participantes = participantes.participantesWithName;
       this.participantesToDelete = participantes.participantesDeleted;
@@ -339,11 +335,10 @@ export default {
         .deleteEvent(this.$api, this.event)
         .then((res) => {
           console.log(res);
-          this.$emit("getAllEvents");
-
           this.snackbarDetail.text = "Evento deletado com sucesso";
           this.snackbarDetail.color = "error";
           setTimeout(() => {
+            this.$emit("getAllEvents");
             this.$emit("close");
             this.$emit("showSnackbar", this.snackbarDetail);
           }, 1000);
@@ -353,7 +348,6 @@ export default {
         });
     },
     async mudarPresenca(evento) {
-      console.log(evento)
       const participationDetail = {
         attendance: !evento.attendance,
         event: evento.id,

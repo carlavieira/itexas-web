@@ -84,6 +84,7 @@
         <v-layout justify-left col-xs-12 col-sm-6>
           <v-text-field
             outlined
+            v-if="member.post"
             prepend-inner-icon="mdi-briefcase"
             v-model="member.post.full_name"
             :disabled="!editMember"
@@ -93,6 +94,7 @@
         </v-layout>
         <v-layout justify-left col-xs-12 col-sm-6>
           <v-text-field
+            v-if="member.department"
             outlined
             prepend-inner-icon="mdi-border-none-variant"
             v-model="member.department.abbreviation"
@@ -104,6 +106,7 @@
         <v-layout justify-left col-xs-12 col-sm-6>
           <v-text-field
             outlined
+            v-if="member.leader"
             prepend-inner-icon="mdi-account-star"
             label="Líder"
             v-model="member.leader.first_name"

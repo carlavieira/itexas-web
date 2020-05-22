@@ -14,10 +14,8 @@ import membershipCriteriaLed from "../components/membershipCriteria/MembershipCr
 import perfil from "../components/Perfil.vue";
 import officeHours from "../components/officeHours/OfficeHours.vue";
 import officeHoursAdm from "../components/officeHours/OfficeHoursAdm.vue";
-/* import cargos from "../components/cargos/Cargos.vue"; */
+import cargos from "../components/cargos/Cargos.vue";
 import areas from "../components/areas/Areas.vue";
-import tabelaTeste from "../components/cargos/TabelaTeste.vue"
-
 
 Vue.use(VueRouter);
 
@@ -37,19 +35,32 @@ const routes = [
         name: "minhas-reunioes",
         component: reuniao,
       },
-      { path: "/membro/meus-eventos", name: "meus-eventos", component: eventos },
+      {
+        path: "/membro/meus-eventos",
+        name: "meus-eventos",
+        component: eventos,
+      },
       { path: "/membro/calendario", name: "calendario", component: calendario },
+      {
+        path: "/membro/contact-list",
+        name: "contact-list",
+        component: members,
+      },
       { path: "/membro/perfil", name: "perfil", component: perfil },
-      { path: "/membro/officeHours", name: "officeHours", component: officeHours },
+      {
+        path: "/membro/officeHours",
+        name: "officeHours",
+        component: officeHours,
+      },
       {
         path: "/membro/meu-criterio",
         name: "membershipCriteriamembro",
-        component: membershipCriteriaMember
+        component: membershipCriteriaMember,
       },
       {
         path: "/membro/meus-liderados",
         name: "membershipCriteriaLed",
-        component: membershipCriteriaLed
+        component: membershipCriteriaLed,
       },
     ],
   },
@@ -60,7 +71,11 @@ const routes = [
     component: menu,
     children: [
       { path: "/adm/membros", name: "membersAdm", component: members },
-      { path: "/adm/officeHours", name: "officeHoursAdm", component: officeHoursAdm },
+      {
+        path: "/adm/officeHours",
+        name: "officeHoursAdm",
+        component: officeHoursAdm,
+      },
       { path: "/adm/reuniao", name: "reuniaoAdm", component: reuniao },
       { path: "/adm/eventos", name: "eventosAdm", component: eventos },
       {
@@ -68,11 +83,11 @@ const routes = [
         name: "membershipCriteriaAdm",
         component: membershipCriteriaAll,
       },
-      { path: "/adm/cargos", name: "cargosAdm", component: tabelaTeste },
+      { path: "/adm/cargos", name: "cargosAdm", component: cargos },
       { path: "/adm/areas", name: "areasAdm", component: areas },
-    ]
-  }
-]
+    ],
+  },
+];
 
 const router = new VueRouter({
   mode: "history",
