@@ -26,8 +26,9 @@ export default {
   },
 
   editEvent(api, eventDetails) {
+    eventDetails.member = eventDetails.memberID;
     let url = `manage-event/${eventDetails.id}/`;
-    eventDetails.member = eventDetails.member.id;
+    console.log(eventDetails);
     const response = api
       .put(url, eventDetails)
       .then(function(response) {

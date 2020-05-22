@@ -121,7 +121,6 @@ export default {
       return `${hora[0]}:${hora[1]}`;
     },
     formatPercentage(item) {
-      console.log(item);
       if (item > 100) {
         return 100 + " %";
       } else return item + " %";
