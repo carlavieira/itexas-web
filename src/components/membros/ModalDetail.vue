@@ -133,6 +133,8 @@
               hide-details
             ></v-text-field>
           </v-layout>
+
+
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
               outlined
@@ -158,6 +160,8 @@
               no-data-text="Sem cargos cadastrados"
             ></v-select>
           </v-layout>
+
+
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
               v-if="!editMember"
@@ -183,6 +187,8 @@
               hide-details
             ></v-select>
           </v-layout>
+
+
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
               outlined
@@ -325,6 +331,22 @@ export default {
 
   async created() {
     this.member = this.Member;
+
+    if(!this.member.post){
+      this.member.post = {
+          abbreviation: null,
+          full_name: null,
+          id: null,
+      }
+    }
+
+    if(!this.member.department){
+      this.member.department = {
+          abbreviation: null,
+          full_name: null,
+          id: null,
+      }
+    }
 
     console.log(this.member);
     this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
