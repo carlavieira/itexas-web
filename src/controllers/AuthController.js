@@ -51,5 +51,16 @@ export default {
       .catch((err) => {
         throw err;
       });
+  },
+  passwordChange(api, email, password1, password2){
+    let url = "http://itexas.pythonanywhere.com/rest-auth/password/change/";
+    const response = api.post(url, email, password1, password2)
+      .then(function (response) {
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    return response;
   }
 };
