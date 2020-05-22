@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">
-      {{ text }}</v-snackbar
-    >
+    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{
+      text
+    }}</v-snackbar>
     <v-row class="px-4">
       <h2 v-if="$route.name == 'eventosAdm'">Eventos</h2>
       <h2 v-else>Meus Eventos</h2>
@@ -70,6 +70,7 @@
     </v-row>
     <NovoEvento
       :show="btnEvento"
+      :userID="userID"
       @close="btnEvento = false"
       v-on:showSnackbar="showSnackbar"
       @getAllEvents="getEvents()"
@@ -103,6 +104,7 @@ export default {
   async created() {
     let res = this.getEvents();
     this.eventos = res.data;
+    this.userID = parseInt(localStorage.getItem("user_id"));
   },
 
   data() {
@@ -118,6 +120,7 @@ export default {
       timeout: 3000,
       color: "",
       eventos: [],
+      userID: null,
     };
   },
   methods: {

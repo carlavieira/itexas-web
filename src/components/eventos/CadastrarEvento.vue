@@ -155,7 +155,7 @@ export default {
     leaders: [],
     snackbarDetail: {
       color: "success",
-      text: "Reunião cadastrada com sucesso",
+      text: "Evento cadastrado com sucesso",
     },
     types: [
       { name: "Reunião Geral", value: "RG" },
@@ -168,10 +168,12 @@ export default {
 
   props: {
     show: Boolean,
+    userID: Number,
   },
 
   async created() {
     await this.populaSelectLider();
+    this.leader = this.userID;
   },
 
   computed: {
@@ -219,6 +221,7 @@ export default {
             setTimeout(() => {
               this.$emit("close");
               this.$emit("showSnackbar", this.snackbarDetail);
+              this.leader = [];
             }, 1000);
           })
           .catch((err) => {

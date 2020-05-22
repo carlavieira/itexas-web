@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">{{
+    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{
       text
     }}</v-snackbar>
     <v-row class="px-4">
