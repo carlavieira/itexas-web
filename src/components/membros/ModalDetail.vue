@@ -136,9 +136,18 @@
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
               outlined
-              v-if="!editMember"
+              v-if="!editMember && member.post"
               prepend-inner-icon="mdi-briefcase"
               v-model="member.post.abbreviation"
+              :disabled="!editMember"
+              label="Cargo"
+              hide-details
+            ></v-text-field>
+            <v-text-field
+              outlined
+              v-if="!editMember && !member.post"
+              prepend-inner-icon="mdi-briefcase"
+              v-model="member.post"
               :disabled="!editMember"
               label="Cargo"
               hide-details
@@ -160,10 +169,19 @@
           </v-layout>
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
-              v-if="!editMember"
+              v-if="!editMember && member.department"
               outlined
               prepend-inner-icon="mdi-border-none-variant"
               v-model="member.department.abbreviation"
+              label="Area"
+              :disabled="!editMember"
+              hide-details
+            ></v-text-field>
+            <v-text-field
+              v-if="!editMember && !member.department"
+              outlined
+              prepend-inner-icon="mdi-border-none-variant"
+              v-model="member.department"
               label="Area"
               :disabled="!editMember"
               hide-details
