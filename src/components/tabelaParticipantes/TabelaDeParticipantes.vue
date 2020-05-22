@@ -184,9 +184,7 @@ export default {
       });
       /*this.setFullName(this.membros);*/
 
-      await function teste() {
-        teste();
-        console.log("teste");
+      setTimeout(() => {
         for (let key1 in this.participantesWithName) {
           for (let key2 in this.membros) {
             if (
@@ -211,7 +209,7 @@ export default {
         ) {
           return val != null;
         });
-      };
+      }, 2000);
     },
     setFullName(array) {
       const newArray = new Array();

@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">{{ text }}</v-snackbar>
+    <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">{{
+      text
+    }}</v-snackbar>
     <v-row class="px-4">
       <h2 v-if="$route.name == 'reuniaoAdm'">Reuniões</h2>
       <h2 v-else>Minhas Reuniões</h2>
@@ -35,6 +37,8 @@
             :headers="getHeaders()"
             :items="reunioes"
             :search="search"
+            :sort-by="['date', 'time']"
+            :sort-desc="[true, true]"
           >
             <template v-slot:item.type="{ item }">
               <span>{{ formatTypeMeeting(item.type) }}</span>
@@ -55,7 +59,9 @@
               <input type="checkbox" disabled v-model="item.attendance" />
             </template>
             <template v-slot:item.details="{ item }">
-              <v-icon small @click="meetingShow(item)">mdi-dots-horizontal</v-icon>
+              <v-icon small @click="meetingShow(item)"
+                >mdi-dots-horizontal</v-icon
+              >
             </template>
           </v-data-table>
         </v-card>
@@ -106,14 +112,14 @@ export default {
         { text: "Reunião de Área", value: "RA" },
         { text: "Reunião de Time", value: "RT" },
         { text: "Reunião de LR", value: "LR" },
-        { text: "Reunião de Corner", value: "CN" }
-      ]
+        { text: "Reunião de Corner", value: "CN" },
+      ],
     };
   },
 
   components: {
     NovaReuniao,
-    modalDetail
+    modalDetail,
   },
 
   async created() {
@@ -121,33 +127,33 @@ export default {
   },
 
   methods: {
-    getMember: item => `${item.member.first_name} ${item.member.last_name}`,
+    getMember: (item) => `${item.member.first_name} ${item.member.last_name}`,
     getHeaders() {
       if (this.$route.name == "reuniaoAdm") {
         return [
           {
             text: "Nome",
             align: "center",
-            value: "type"
+            value: "type",
           },
           { text: "Responsável", value: "member", align: "center" },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "% de Presença", value: "engagement", align: "center" },
-          { text: "Detalhes", value: "details", align: "center" }
+          { text: "Detalhes", value: "details", align: "center" },
         ];
       } else {
         return [
           {
             text: "Nome",
             align: "center",
-            value: "type"
+            value: "type",
           },
           { text: "Responsável", value: "member", align: "center" },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "Presenca", value: "attendance", align: "center" },
-          { text: "Detalhes", value: "details", align: "center" }
+          { text: "Detalhes", value: "details", align: "center" },
         ];
       }
     },
@@ -177,31 +183,29 @@ export default {
     },
 
     async getMeeting() {
-      if (this.$route.name == "minhas-reunioes") {
+      if (this.$route.name == "reuniaoAdm") {
+        const res = await this.meetingController.getAllMeeting(this.$api);
+        this.reunioes = res;
+      } else if (this.$route.name == "minhas-reunioes") {
         const memberID = localStorage.getItem("user_id");
         const minhasParticipacoes = await this.participationController.getMemberParticipationMeeting(
           this.$api,
           memberID
         );
         const minhasReunioes = [];
-        minhasParticipacoes.forEach(participacao => {
+        minhasParticipacoes.forEach((participacao) => {
           participacao.meeting.attendance = participacao.attendance;
           minhasReunioes.push(participacao.meeting);
         });
         this.reunioes = minhasReunioes;
-        console.log(this.reunioes);
-      } else if (this.$route.name == "reuniaoAdm") {
-        const res = await this.meetingController.getAllMeeting(this.$api);
-        this.reunioes = res;
-        console.log(this.reunioes);
       }
     },
     showSnackbar(snackbarDetails) {
       this.snackbar = true;
       this.text = snackbarDetails.text;
       this.color = snackbarDetails.color;
-    }
-  }
+    },
+  },
 };
 </script>
 
