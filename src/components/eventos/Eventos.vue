@@ -70,7 +70,6 @@
     </v-row>
     <NovoEvento
       :show="btnEvento"
-      :userID="userID"
       @close="btnEvento = false"
       v-on:showSnackbar="showSnackbar"
       @getAllEvents="getEvents()"
@@ -104,7 +103,6 @@ export default {
   async created() {
     let res = this.getEvents();
     this.eventos = res.data;
-    this.userID = parseInt(localStorage.getItem("user_id"));
   },
 
   data() {
@@ -175,7 +173,6 @@ export default {
       }
     },
     async getEvents() {
-      console.log("teste");
       this.eventos = [];
       if (this.$route.name == "eventosAdm") {
         const res = await this.eventController.getAllEvents(this.$api);

@@ -136,6 +136,8 @@ import memberController from "../../controllers/MemberController";
 
 export default {
   data: (vm) => ({
+    eventController,
+    memberController,
     date: new Date().toISOString().substr(0, 10),
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     modal1: false,
@@ -148,10 +150,8 @@ export default {
     e7: null,
     select: null,
     valid: true,
-    eventController,
-    memberController,
     type: null,
-    leader: "",
+    leader: null,
     leaders: [],
     snackbarDetail: {
       color: "success",
@@ -168,12 +168,11 @@ export default {
 
   props: {
     show: Boolean,
-    userID: Number,
   },
 
   async created() {
     await this.populaSelectLider();
-    this.leader = this.userID;
+    this.defaultLeader();
   },
 
   computed: {
@@ -201,6 +200,12 @@ export default {
 
       const [month, day, year] = date.split("/");
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    },
+    async defaultLeader() {
+      this.leader = await this.memberController.getMemberById(
+        this.$api,
+        localStorage.getItem("user_id")
+      );
     },
     async submit() {
       const eventDetails = new Object();
