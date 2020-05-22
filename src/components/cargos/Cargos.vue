@@ -15,7 +15,9 @@
 
       <v-dialog v-model="createPostDialog" persistent max-width="700" min-h>
         <v-card>
-          <v-card-title style="font-size: 16px !important" class="headline"
+          <v-card-title
+            class="title-table pt-3 py-4 pb-0 headline"
+            style="font-size: 16px !important"
             >Cadastro do Cargo</v-card-title
           >
           <v-card-actions>
@@ -32,7 +34,7 @@
                       outlined
                     ></v-text-field>
                   </v-col>
-                  <v-col class="d-flex" cols="12" sm="11">
+                  <v-col class="d-flex" cols="12" sm="6">
                     <v-text-field
                       v-model="postName"
                       label="Nome"
