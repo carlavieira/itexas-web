@@ -3,6 +3,8 @@
     :headers="headers"
     :items="participantesWithName"
     class="elevation-1"
+    :sort-by="'full_name'"
+    :sort-desc="false"
   >
     <template v-slot:item.participante="{ item }">
       {{ item.full_name }}

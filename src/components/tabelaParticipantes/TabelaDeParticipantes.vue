@@ -2,6 +2,8 @@
   <v-data-table
     :headers="headers"
     :items="participantesWithName"
+    :sort-by="'full_name'"
+    :sort-desc="false"
     class="elevation-1"
   >
     <template v-slot:item.participante="{ item }">{{
@@ -177,11 +179,14 @@ export default {
       this.membros = await this.memberController.getAllMembers(this.$api);
       this.participantesDiferent = [];
       this.membros.forEach((item) => {
-        this.participantesDiferent.push(item);
+        (item.full_name = `${item.first_name} ${item.last_name}`),
+          this.participantesDiferent.push(item);
       });
-      this.setFullName(this.membros);
+      /*this.setFullName(this.membros);*/
 
-      setTimeout(() => {
+      await function teste() {
+        teste();
+        console.log("teste");
         for (let key1 in this.participantesWithName) {
           for (let key2 in this.membros) {
             if (
@@ -206,10 +211,7 @@ export default {
         ) {
           return val != null;
         });
-        this.participantesDiferent = this.ordenaOrdemCrescente(
-          this.participantesDiferent
-        );
-      }, 1000);
+      };
     },
     setFullName(array) {
       const newArray = new Array();
@@ -238,6 +240,7 @@ export default {
           this.$api,
           eventId
         );
+        console.log(this.participantes);
       } else if (this.typeEvent == "event") {
         this.participantes = await this.participationController.getParticipantsInEvent(
           this.$api,
