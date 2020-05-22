@@ -38,6 +38,8 @@
             :headers="getHeaders()"
             :items="eventos"
             :search="search"
+            :sort-by="['date', 'time']"
+            :sort-desc="[true, true]"
           >
             <template v-slot:item.type="{ item }">
               <span> {{ formatTypeEvent(item.type) }} </span>
