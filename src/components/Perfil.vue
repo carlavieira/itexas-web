@@ -24,7 +24,7 @@
       <span v-if="!editMember" class="subheading font-weight-regular"
         >( {{ member.nickname }} )</span>
       <v-layout row mt-3 justify-space-around style="width: 100%;">
-        <PasswordChange v-if="passwordDialog" :show="passwordDialog" @close="passwordDialog=false">
+        <PasswordChange v-if="passwordDialog" :show="passwordDialog" @close="passwordDialog=false" :email="member.email">
 
         </PasswordChange>
         <v-layout justify-left col-xs-12 col-sm-6 v-if="editMember">

@@ -210,7 +210,6 @@
                   <th>Líder</th>
                   <th>Area</th>
                   <th>Data de Entrada</th>
-                  <th>Detalhes</th>
                 </tr>
               </thead>
               <tbody>

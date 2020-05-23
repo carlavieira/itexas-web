@@ -7,7 +7,7 @@
           <v-icon color="grey">mdi-close</v-icon>
         </v-btn>
       </v-layout>
-      <v-form ref="form" v-model="valid">
+      <v-form ref="form">
         <v-layout text-center wrap>
           <v-flex xs12></v-flex>
           <v-flex xs12 mb-4>
@@ -15,28 +15,38 @@
           </v-flex>
           <v-flex offset-md-3 xs6>
             <v-text-field
-              :value="userPasswor"
+              v-model="new_password1"
+              :append-icon="showPWD1 ? 'mdi-eye' : 'mdi-eye-off'"
+              :rules="[rules.required, rules.min]"
+              :type="showPWD1 ? 'text' : 'password'"
+              name="password"
               label="Entre com a nova senha"
-              hint="Your password passed! Password rules are not meant to be broken!"
-              :append-icon="value ? 'mdi-eye' : 'mdi-eye-off'"
-              @click:append="() => (value = !value)"
-              :type="value ? 'password' : 'text'"
-              :rules="[rules.password]"
-              @input="(_) => (userPassword = _)"
+              hint="Pelo menos 8 caracteres"
+              counter
+              @click:append="showPWD1 = !showPWD1"
             ></v-text-field>
-          </v-flex>
-          <v-flex offset-md-3 xs6>
+
             <v-text-field
-              :value="userPassword2"
+              v-model="new_password2"
+              :append-icon="showPWD2 ? 'mdi-eye' : 'mdi-eye-off'"
+              :rules="[rules.required, rules.min, passwordConfirmationRule]"
+              :type="showPWD2 ? 'text' : 'password'"
+              name="input-10-1"
               label="Repita a senha"
-              hint="Your password passed! Password rules are not meant to be broken!"
-              :append-icon="value ? 'mdi-eye' : 'mdi-eye-off'"
-              @click:append="() => (value = !value)"
-              :type="value ? 'password' : 'text'"
-              :rules="[rules.password]"
-              @input="(_) => (userPassword = _)"
+              hint="Os campos devem ser iguais"
+              counter
+              @click:append="showPWD2 = !showPWD2"
             ></v-text-field>
           </v-flex>
+          <v-col class="d-flex" cols="12" sm="6">
+            <v-btn color="green darken-1" text @click="passwordChange()"
+              >Enviar</v-btn
+            >
+
+            <v-btn color="red darken-1" text @click="$emit('close')"
+              >Cancelar</v-btn
+            >
+          </v-col>
         </v-layout>
       </v-form>
     </v-card>
@@ -46,25 +56,54 @@
 <script>
 import AuthController from "../controllers/AuthController.js";
 export default {
-  data: () => ({
-    AuthController,
-    userPassword: "",
-    userPassword2: "",
-    valid: true,
-    value: true,
-    rules: {
-      required: (value) => !!value || "Required.",
-      password: (value) => {
-        const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&])(?=.{8,})/;
-        return (
-          pattern.test(value) ||
-          "Min. 8 characters with at least one capital letter, a number and a special character."
-        );
+  data() {
+    return {
+      AuthController,
+      showPWD1: false,
+      showPWD2: false,
+      new_password1: "",
+      new_password2: "",
+
+      rules: {
+        required: (value) => !!value || "Você deve preencher os dois campos!",
+        min: (v) =>
+          v.length >= 8 || "A senha deve ter no mínimo de 8 caracteres",
       },
+    };
+  },
+  computed: {
+    passwordConfirmationRule() {
+      return (
+        this.new_password1 === this.new_password2 || "Senhas devem ser iguais"
+      );
     },
-  }),
+  },
   props: {
     show: Boolean,
+    email: String,
+  },
+  methods: {
+    async passwordChange() {
+      const passwords = {
+        new_password1: this.new_password1,
+        new_password2: this.new_password2,
+      };
+      if (this.validarFormularioPasswordChange()) {
+        await this.AuthController.passwordChange(this.$api, passwords)
+          .then((res) => {
+            console.log(res);
+            // if(res.status === 200) {
+            //   this.$emit("close")
+            // }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
+    validarFormularioPasswordChange() {
+      return this.$refs.form.validate();
+    },
   },
 };
 </script>
