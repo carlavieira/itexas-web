@@ -184,7 +184,7 @@
         ></tabelaParticipante>
 
         <tabelaParticipanteView
-          v-if="!editEvent && $route.name == 'eventos'"
+          v-if="!editEvent && $route.name == 'eventosAdm'"
           :typeEvent="'event'"
           :objForm="event"
         ></tabelaParticipanteView>
