@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="show">
+  <v-dialog v-model="show" style="width:600px" class="croquete">
     <v-card class="pa-3">
         <v-layout row class="px-3" justify-space-between>
         <h2>Alteração de senha</h2>
@@ -22,8 +22,10 @@
               :type="showPWD1 ? 'text' : 'password'"
               name="password"
               label="Entre com a nova senha"
-              hint="Pelo menos 8 caracteres"
+              hint=""
               counter
+              outlined
+              dense
               @click:append="showPWD1 = !showPWD1"
             ></v-text-field>
 
@@ -34,8 +36,10 @@
               :type="showPWD2 ? 'text' : 'password'"
               name="input-10-1"
               label="Repita a senha"
-              hint="Os campos devem ser iguais"
+              hint=""
               counter
+              outlined
+              dense
               @click:append="showPWD2 = !showPWD2"
             ></v-text-field>
           </v-flex>
@@ -121,3 +125,9 @@ export default {
   }
 };
 </script>
+
+<style>
+  .v-dialog {
+    width: 600px
+  }
+</style>
