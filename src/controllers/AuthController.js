@@ -52,14 +52,14 @@ export default {
         throw err;
       });
   },
-  passwordChange(api, email, password1, password2){
+  passwordChange(api, passwords){
     let url = "http://itexas.pythonanywhere.com/rest-auth/password/change/";
-    const response = api.post(url, email, password1, password2)
+    const response = api.post(url, passwords)
       .then(function (response) {
-        return response.data;
+        return response;
       })
       .catch(function (error) {
-        console.log(error);
+        throw error;
       });
     return response;
   }
