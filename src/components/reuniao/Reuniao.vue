@@ -60,11 +60,6 @@
             <template v-slot:item.attendance="{ item }">
               <input type="checkbox" disabled v-model="item.attendance" />
             </template>
-            <template v-slot:item.details="{ item }">
-              <v-icon small @click="meetingShow(item)"
-                >mdi-dots-horizontal</v-icon
-              >
-            </template>
           </v-data-table>
         </v-card>
       </v-flex>
@@ -143,7 +138,6 @@ export default {
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "% de Presença", value: "engagement", align: "center" },
-          { text: "Detalhes", value: "details", align: "center" },
         ];
       } else {
         return [
@@ -156,7 +150,6 @@ export default {
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "Presenca", value: "attendance", align: "center" },
-          { text: "Detalhes", value: "details", align: "center" },
         ];
       }
     },

@@ -1,6 +1,5 @@
-
 <template>
-    <v-container>
+  <v-container>
     <v-row class="px-4 pb-3">
       <h2>Critério de Membresia dos Meus Liderados</h2>
       <v-spacer></v-spacer>
@@ -27,77 +26,73 @@
         </template>
         <template v-slot:item.officeHoursCriteria="{ item }">
           <v-chip
-            v-if="item.officeHoursCriteria == 100.00"
+            v-if="item.officeHoursCriteria == 100.0"
             class="ma-2"
             color="white"
             text-color="green"
-          >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
+            >{{ formatPercentage(item.officeHoursCriteria) }}</v-chip
+          >
           <v-chip
-            v-else-if="item.officeHoursCriteria < 80.00"
+            v-else-if="item.officeHoursCriteria < 80.0"
             class="ma-2"
             color="white"
             text-color="red"
-          >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
-          <v-chip
-            v-else
-            class="ma-2"
-            color="white"
-            text-color="black"
-          >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
+            >{{ formatPercentage(item.officeHoursCriteria) }}</v-chip
+          >
+          <v-chip v-else class="ma-2" color="white" text-color="black">{{
+            formatPercentage(item.officeHoursCriteria)
+          }}</v-chip>
         </template>
         <template v-slot:item.meetingsCriteria="{ item }">
           <v-chip
-            v-if="item.meetingsCriteria == 100.00"
+            v-if="item.meetingsCriteria == 100.0"
             class="ma-2"
             color="white"
             text-color="green"
-          >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
+            >{{ formatPercentage(item.meetingsCriteria) }}</v-chip
+          >
           <v-chip
-            v-else-if="item.meetingsCriteria < 75.00"
+            v-else-if="item.meetingsCriteria < 75.0"
             class="ma-2"
             color="white"
             text-color="red"
-          >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
-          <v-chip
-            v-else
-            class="ma-2"
-            color="white"
-            text-color="black"
-          >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
+            >{{ formatPercentage(item.meetingsCriteria) }}</v-chip
+          >
+          <v-chip v-else class="ma-2" color="white" text-color="black">{{
+            formatPercentage(item.meetingsCriteria)
+          }}</v-chip>
         </template>
         <template v-slot:item.eventsCriteria="{ item }">
           <v-chip
-            v-if="item.eventsCriteria == 100.00"
+            v-if="item.eventsCriteria == 100.0"
             class="ma-2"
             color="white"
             text-color="green"
-          >{{formatPercentage(item.eventsCriteria)}}</v-chip>
+            >{{ formatPercentage(item.eventsCriteria) }}</v-chip
+          >
           <v-chip
-            v-else-if="item.eventsCriteria < 50.00"
+            v-else-if="item.eventsCriteria < 50.0"
             class="ma-2"
             color="white"
             text-color="red"
-          >{{formatPercentage(item.eventsCriteria)}}</v-chip>
-          <v-chip
-            v-else
-            class="ma-2"
-            color="white"
-            text-color="black"
-          >{{formatPercentage(item.eventsCriteria)}}</v-chip>
+            >{{ formatPercentage(item.eventsCriteria) }}</v-chip
+          >
+          <v-chip v-else class="ma-2" color="white" text-color="black">{{
+            formatPercentage(item.eventsCriteria)
+          }}</v-chip>
         </template>
         <template v-slot:item.status="{ item }">
           <v-chip
-            v-if="item.status = 'Risco'"
+            v-if="(item.status = 'Risco')"
             class="ma-2"
             color="red"
             text-color="white"
             small
-          >{{item.status}}</v-chip>
-          <v-chip
-            class="ma-2"
-            color="green"
-            text-color="white"
-            v-else>{{item.status}}</v-chip>
+            >{{ item.status }}</v-chip
+          >
+          <v-chip class="ma-2" color="green" text-color="white" v-else>{{
+            item.status
+          }}</v-chip>
         </template>
       </v-data-table>
     </v-card>
@@ -118,10 +113,10 @@ export default {
         { text: "Office Hours", value: "officeHoursCriteria" },
         { text: "Reuniões", value: "meetingsCriteria" },
         { text: "Eventos", value: "eventsCriteria" },
-        { text: "Status", value: "status" }
+        { text: "Status", value: "status" },
       ],
       membresia: [],
-      showModal: false
+      showModal: false,
     };
   },
 
@@ -131,9 +126,11 @@ export default {
 
   methods: {
     async listMembershipCriteria() {
-      await this.MembershipCriteriaController.listLedMembershipCriteria(this.$api)
+      await this.MembershipCriteriaController.listLedMembershipCriteria(
+        this.$api
+      )
         .then((res) => {
-          console.log(res.data)
+          console.log(res.data);
           this.membresia = res.data;
         })
         .catch((err) => {
@@ -141,10 +138,7 @@ export default {
         });
     },
 
-    
-
     formatPercentage(item) {
-      console.log(item);
       if (item > 100) {
         return 100 + " %";
       } else return item + " %";
@@ -152,7 +146,7 @@ export default {
 
     formatDate(item) {
       return moment(item).format("MM/YYYY");
-    }
-  }
+    },
+  },
 };
 </script>
