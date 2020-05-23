@@ -24,78 +24,74 @@
         <span v-if="item.dayMonth">{{ formatDate(item.dayMonth) }}</span>
       </template>
       <template v-slot:item.officeHoursCriteria="{ item }">
-         <v-chip
-          v-if="item.officeHoursCriteria == 100.00"
+        <v-chip
+          v-if="item.officeHoursCriteria == 100.0"
           class="ma-2"
           color="white"
           text-color="green"
-        >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
+          >{{ formatPercentage(item.officeHoursCriteria) }}</v-chip
+        >
         <v-chip
-          v-else-if="item.officeHoursCriteria < 80.00"
+          v-else-if="item.officeHoursCriteria < 80.0"
           class="ma-2"
           color="white"
           text-color="red"
-        >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
-        <v-chip
-            v-else
-            class="ma-2"
-            color="white"
-            text-color="black"
-        >{{formatPercentage(item.officeHoursCriteria)}}</v-chip>
+          >{{ formatPercentage(item.officeHoursCriteria) }}</v-chip
+        >
+        <v-chip v-else class="ma-2" color="white" text-color="black">{{
+          formatPercentage(item.officeHoursCriteria)
+        }}</v-chip>
       </template>
       <template v-slot:item.meetingsCriteria="{ item }">
-         <v-chip
-          v-if="item.meetingsCriteria == 100.00"
+        <v-chip
+          v-if="item.meetingsCriteria == 100.0"
           class="ma-2"
           color="white"
           text-color="green"
-        >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
+          >{{ formatPercentage(item.meetingsCriteria) }}</v-chip
+        >
         <v-chip
-          v-else-if="item.meetingsCriteria < 75.00"
+          v-else-if="item.meetingsCriteria < 75.0"
           class="ma-2"
           color="white"
           text-color="red"
-        >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
-        <v-chip
-          v-else
-          class="ma-2"
-          color="white"
-          text-color="black"
-        >{{formatPercentage(item.meetingsCriteria)}}</v-chip>
+          >{{ formatPercentage(item.meetingsCriteria) }}</v-chip
+        >
+        <v-chip v-else class="ma-2" color="white" text-color="black">{{
+          formatPercentage(item.meetingsCriteria)
+        }}</v-chip>
       </template>
       <template v-slot:item.eventsCriteria="{ item }">
         <v-chip
-          v-if="item.eventsCriteria == 100.00"
+          v-if="item.eventsCriteria == 100.0"
           class="ma-2"
           color="white"
           text-color="green"
-        >{{formatPercentage(item.eventsCriteria)}}</v-chip>
+          >{{ formatPercentage(item.eventsCriteria) }}</v-chip
+        >
         <v-chip
-          v-else-if="item.eventsCriteria < 50.00"
+          v-else-if="item.eventsCriteria < 50.0"
           class="ma-2"
           color="white"
           text-color="red"
-        >{{formatPercentage(item.eventsCriteria)}}</v-chip>
-        <v-chip
-          v-else
-          class="ma-2"
-          color="white"
-          text-color="black"
-        >{{formatPercentage(item.eventsCriteria)}}</v-chip>
+          >{{ formatPercentage(item.eventsCriteria) }}</v-chip
+        >
+        <v-chip v-else class="ma-2" color="white" text-color="black">{{
+          formatPercentage(item.eventsCriteria)
+        }}</v-chip>
       </template>
       <template v-slot:item.status="{ item }">
         <v-chip
-          v-if="item.status = 'Risco'"
+          v-if="(item.status = 'Risco')"
           class="ma-2"
           color="red"
           text-color="white"
           small
-        >{{item.status}}</v-chip>
-        <v-chip
-          class="ma-2"
-          color="green"
-          text-color="white"
-          v-else>{{item.status}}</v-chip>
+          >{{ item.status }}</v-chip
+        >
+        <v-chip class="ma-2" color="green" text-color="white" v-else>{{
+          item.status
+        }}</v-chip>
       </template>
     </v-data-table>
   </v-container>
@@ -111,7 +107,11 @@ export default {
       MembershipCriteriaController,
       header: [
         { text: "Nome", value: "member", align: "center" },
-        { text: "Área", value: "member.department.name", align: "center" },
+        {
+          text: "Área",
+          value: "member.department.abbreviation",
+          align: "center",
+        },
         { text: "Líder", value: "member.leader", align: "center" },
         { text: "Referência", value: "dayMonth", align: "center" },
         { text: "Office Hours", value: "officeHoursCriteria", align: "center" },

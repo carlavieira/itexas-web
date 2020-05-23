@@ -88,11 +88,7 @@ export default {
 
   async created() {
     //this.membros = await this.getMembers()
-    if (this.$route.name == "membersAdm") {
-      this.membros = this.setFullName(await this.getMembers());
-    } else {
-      this.membros = this.activeMembers(await this.getMembers());
-    }
+    this.membros = this.setFullName(await this.getMembers());
     //this.membros = this.setFullName(this.membros);
   },
 
@@ -153,7 +149,11 @@ export default {
           member.leader = { first_name: "-" };
         }
       });
-      return members;
+      if (this.$route.name == "membersAdm") {
+        return members;
+      } else {
+        return this.activeMembers(members);
+      }
     },
     activeMembers(members) {
       const activeMembers = new Array();

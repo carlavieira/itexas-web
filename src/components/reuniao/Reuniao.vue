@@ -39,6 +39,8 @@
             :search="search"
             :sort-by="['date', 'time']"
             :sort-desc="[true, true]"
+            @click:row="meetingShow"
+            class="dataTable"
           >
             <template v-slot:item.type="{ item }">
               <span>{{ formatTypeMeeting(item.type) }}</span>
@@ -57,11 +59,6 @@
             </template>
             <template v-slot:item.attendance="{ item }">
               <input type="checkbox" disabled v-model="item.attendance" />
-            </template>
-            <template v-slot:item.details="{ item }">
-              <v-icon small @click="meetingShow(item)"
-                >mdi-dots-horizontal</v-icon
-              >
             </template>
           </v-data-table>
         </v-card>
@@ -107,6 +104,7 @@ export default {
       timeout: 3000,
       color: "",
       reunioes: [],
+      userID: null,
       types: [
         { text: "REB", value: "REB" },
         { text: "Reunião de Área", value: "RA" },
@@ -140,7 +138,6 @@ export default {
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "% de Presença", value: "engagement", align: "center" },
-          { text: "Detalhes", value: "details", align: "center" },
         ];
       } else {
         return [
@@ -153,7 +150,6 @@ export default {
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "Presenca", value: "attendance", align: "center" },
-          { text: "Detalhes", value: "details", align: "center" },
         ];
       }
     },
@@ -209,9 +205,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 v-snackbar {
   display: flex;
   text-align: center;
+}
+.dataTable:hover {
+  cursor: pointer;
 }
 </style>
