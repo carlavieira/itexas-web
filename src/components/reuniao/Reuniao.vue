@@ -39,6 +39,8 @@
             :search="search"
             :sort-by="['date', 'time']"
             :sort-desc="[true, true]"
+            @click:row="meetingShow"
+            class="dataTable"
           >
             <template v-slot:item.type="{ item }">
               <span>{{ formatTypeMeeting(item.type) }}</span>
@@ -210,9 +212,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 v-snackbar {
   display: flex;
   text-align: center;
+}
+.dataTable:hover {
+  cursor: pointer;
 }
 </style>
