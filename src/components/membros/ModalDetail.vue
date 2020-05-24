@@ -1,5 +1,5 @@
 <template>
-  <v-dialog max-width="800px" persistent v-model="show">
+  <v-dialog width="850px" persistent v-model="show">
     <v-card class="pa-5">
       <v-layout row class="px-3">
         <v-btn
@@ -309,17 +309,14 @@
             v-if="!editHist && this.$route.name == 'membersAdm'"
             icon
             class="ma-2"
-            @click="editHist = true"
+            @click="editHist = true, textBtnHist = 'Adicionar'"
             title="Editar"
           >
             <v-icon color="black">mdi-account-edit</v-icon>
           </v-btn>
         </v-layout>
 
-
-
         <v-layout row mx-2 mb-4 mt-3 v-if="editHist">
-
           <v-layout col-xs-6 col-sm-4 pa-1>
             <v-select
               label="Cargo"
@@ -327,7 +324,9 @@
               outlined
               prepend-inner-icon="mdi-briefcase"
               :items="posts"
+              v-model="histNewObj.post"
               item-text="abbreviation"
+              item-value="id"
               required
               hide-details
               no-data-text="Sem cargos cadastrados"
@@ -337,8 +336,10 @@
             <v-select
               label="Área"
               name="department"
+              v-model="histNewObj.department"
               outlined
               item-text="abbreviation"
+              item-value="id"
               prepend-inner-icon="mdi-briefcase"
               :items="departments"
               required
@@ -358,6 +359,7 @@
               <template v-slot:activator="{ on }">
                 <v-text-field
                   outlined
+                  v-model="histNewObj.start_date"
                   label="Data de Início"
                   prepend-inner-icon="mdi-calendar"
                   readonly
@@ -365,11 +367,15 @@
                   v-on="on"
                 ></v-text-field>
               </template>
-              <v-date-picker locale="pt-br" @input="menuDataInicio = false"></v-date-picker>
+              <v-date-picker
+                v-model="histNewObj.start_date"
+                locale="pt-br"
+                @input="menuDataInicio = false"
+              ></v-date-picker>
             </v-menu>
           </v-layout>
 
-           <v-layout col-xs-6 col-sm-4 pa-1>
+          <v-layout col-xs-6 col-sm-4 pa-1>
             <v-menu
               v-model="menuDataFim"
               :close-on-content-click="false"
@@ -385,26 +391,27 @@
                   prepend-inner-icon="mdi-calendar"
                   readonly
                   hide-details
+                  v-model="histNewObj.end_date"
                   v-on="on"
                 ></v-text-field>
               </template>
-              <v-date-picker locale="pt-br" @input="menuDataFim = false"></v-date-picker>
+              <v-date-picker
+                v-model="histNewObj.end_date"
+                locale="pt-br"
+                @input="menuDataFim = false"
+              ></v-date-picker>
             </v-menu>
           </v-layout>
 
-           <v-layout col-xs-6 col-sm-4 pa-1>
-             <v-text-field
-                  outlined
-                  label="Descrição"
-                  hide-details
-              ></v-text-field>
-           </v-layout>
+          <v-layout col-xs-6 col-sm-4 pa-1>
+            <v-text-field v-model="histNewObj.description" outlined label="Descrição" hide-details></v-text-field>
+          </v-layout>
 
-           <v-layout col-xs-6 col-sm-4 pa-1 align-end justify-end>
-             <v-btn class="success dark">
-               <span>Adicionar</span>
-             </v-btn>
-           </v-layout>
+          <v-layout col-xs-6 col-sm-4 pa-1 align-end justify-end>
+            <v-btn class="success dark" @click="changeHist()">
+              <span>{{ textBtnHist }}</span>
+            </v-btn>
+          </v-layout>
         </v-layout>
 
         <v-card class="mx-3 mb-3">
@@ -413,7 +420,18 @@
             :headers="headersHist"
             :items="hist"
             hide-default-footer
-          ></v-data-table>
+          >
+            <template v-slot:item.start_date="{ item }">
+              <span>{{ formatDate(item) }}</span>
+            </template>
+            <template v-slot:item.end_date="{ item }">
+              <span>{{ formatDate(item) }}</span>
+            </template>
+            <template v-slot:item.actions="{ item }" v-if="editHist">
+              <v-icon small @click="editHist(item)">mdi-pencil</v-icon>
+              <v-icon class="pl-3" small @click="deleteHist(item)">mdi-delete</v-icon>
+            </template>
+          </v-data-table>
         </v-card>
       </v-layout>
     </v-card>
@@ -453,17 +471,27 @@ export default {
         {
           text: "Cargo",
           align: "start",
-          value: "post"
+          value: "post.abbreviation"
         },
-        { text: "Área", value: "department" },
+        { text: "Área", value: "department.abbreviation" },
         { text: "Data Início", value: "start_date" },
         { text: "Data Fim", value: "end_date" },
-        { text: "Descrição", value: "description" }
+        { text: "Descrição", value: "description" },
+        { text: "Ações", value: "actions" }
       ],
       hist: [],
       editHist: false,
       menuDataInicio: false,
-      menuDataFim: false
+      menuDataFim: false,
+      histNewObj: {
+        member: null,
+        start_date: null,
+        end_date: null,
+        post: null,
+        department: null,
+        description: ""
+      },
+      textBtnHist: ""
     };
   },
 
@@ -600,6 +628,36 @@ export default {
     async onChangeImage(e) {
       this.showImage = window.URL.createObjectURL(e.target.files[0]);
       this.member.photo = e.target.files[0];
+    },
+
+    formatDate(date) {
+      return moment(date).format("DD/MM/YYYY");
+    },
+
+    changeHist() {
+      if (this.textBtnHist == "Adicionar") this.newHist();
+      if (this.textBtnHist == "Editar") this.editHist();
+    },
+
+    async newHist() {
+      this.histNewObj.member = this.member.id;
+      await this.backgroundController
+        .createBackround(this.$api, this.histNewObj)
+        .then(res => {
+          console.log(res);
+          this.getBackground();
+          this.histNewObj = {
+            member: null,
+            start_date: null,
+            end_date: null,
+            post: null,
+            department: null,
+            description: ""
+          };
+        })
+        .catch(e => {
+          console.log(e);
+        });
     }
   }
 };

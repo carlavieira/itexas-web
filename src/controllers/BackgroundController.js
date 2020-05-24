@@ -10,6 +10,16 @@ export default {
             }).catch(e => {
                 throw e;
             })
+    },
+
+    createBackround(api, obj){
+        return api 
+            .post("manage-backgrounds/", obj)
+            .then(res => {
+                return res
+            }).catch(e => {
+                throw e
+            })
     }
 
 }
