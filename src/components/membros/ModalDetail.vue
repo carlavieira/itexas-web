@@ -765,4 +765,9 @@ i.v-icon.v-icon {
   width: auto;
   height: 100%;
 }
+
+.v-v-input--is-disabled.theme--light.v-card {
+
+  color: red !important;
+}
 </style>
