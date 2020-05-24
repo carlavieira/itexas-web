@@ -38,8 +38,8 @@
             :headers="headersMembros"
             :items="membros"
             :search="search"
-            :sort-by="'full_name'"
-            :sort-desc="false"
+            :sort-by="['is_active', 'full_name']"
+            :sort-desc="[true, false]"
             @click:row="memberShow"
             class="dataTable"
           >
@@ -111,7 +111,7 @@ export default {
         {
           text: "Nome",
           align: "start",
-          value: "name",
+          value: "full_name",
         },
         { text: "Cargo", value: "post.abbreviation" },
         { text: "Área", value: "department.abbreviation" },
