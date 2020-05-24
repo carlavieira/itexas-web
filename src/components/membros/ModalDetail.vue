@@ -1,5 +1,8 @@
 <template>
   <v-dialog width="850px" persistent v-model="show">
+    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{
+      text
+    }}</v-snackbar>
     <v-card class="pa-5">
       <v-layout row class="px-3">
         <v-btn
@@ -61,6 +64,26 @@
               >Sim</v-btn>
 
               <v-btn color="red darken-1" text @click="dialog = false">Não</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="deleteB" max-width="500" min-h>
+          <v-card>
+            <v-card-title style="font-size: 16px !important" class="headline">
+              Deseja realmente deletar o histórico?
+            </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="red darken-1" text @click="dialog = false">Não</v-btn>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="
+                  deleteB = false;
+                  deleteBack();
+                "
+              >Sim</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -422,14 +445,14 @@
             hide-default-footer
           >
             <template v-slot:item.start_date="{ item }">
-              <span>{{ formatDate(item) }}</span>
+              <span>{{ formatDate(item.start_date) }}</span>
             </template>
             <template v-slot:item.end_date="{ item }">
-              <span>{{ formatDate(item) }}</span>
+              <span>{{ formatDate(item.end_date) }}</span>
             </template>
             <template v-slot:item.actions="{ item }" v-if="editHist">
-              <v-icon small @click="editHist(item)">mdi-pencil</v-icon>
-              <v-icon class="pl-3" small @click="deleteHist(item)">mdi-delete</v-icon>
+              <v-icon small @click="editBackPrepare(item)">mdi-pencil</v-icon>
+              <v-icon class="pl-3" small @click="deleteB = true, itemToDelete = item.id">mdi-delete</v-icon>
             </template>
           </v-data-table>
         </v-card>
@@ -491,7 +514,13 @@ export default {
         department: null,
         description: ""
       },
-      textBtnHist: ""
+      textBtnHist: "",
+      snackbar: false,
+      text: "",
+      timeout: 3000,
+      color: "",
+      deleteB: false,
+      itemToDelete: null
     };
   },
 
@@ -630,22 +659,29 @@ export default {
       this.member.photo = e.target.files[0];
     },
 
-    formatDate(date) {
-      return moment(date).format("DD/MM/YYYY");
+    formatDate(item) {
+      return moment(item).format("DD/MM/YYYY");
+    },
+
+    editBackPrepare(item){
+      console.log(item)
+      this.textBtnHist = "Editar"
+      this.histNewObj = item
     },
 
     changeHist() {
-      if (this.textBtnHist == "Adicionar") this.newHist();
-      if (this.textBtnHist == "Editar") this.editHist();
+      if (this.textBtnHist == "Adicionar") this.newBack();
+      if (this.textBtnHist == "Editar") this.editBack();
     },
 
-    async newHist() {
+    async newBack() {
       this.histNewObj.member = this.member.id;
       await this.backgroundController
         .createBackround(this.$api, this.histNewObj)
         .then(res => {
           console.log(res);
           this.getBackground();
+          this.setSnackbar("Histórico Adicionado!", "success")
           this.histNewObj = {
             member: null,
             start_date: null,
@@ -657,8 +693,51 @@ export default {
         })
         .catch(e => {
           console.log(e);
+           this.setSnackbar("Erro ao adicionar histórico.", "error")
         });
-    }
+    },
+
+    async editBack(){
+      this.histNewObj.member = this.member.id;
+      await this.backgroundController.editBackground(this.$api, this.histNewObj)
+      .then(res => {
+        console.log(res);
+          this.getBackground();
+          this.setSnackbar("Histórico Editado!", "success")
+          this.textBtnHist = "Adicionar"
+          this.histNewObj = {
+            member: null,
+            start_date: null,
+            end_date: null,
+            post: null,
+            department: null,
+            description: ""
+          };
+      }).catch(e =>{
+        console.log(e)
+        this.setSnackbar("Erro ao editar histórico.", "error")
+      })
+    },
+    
+    async deleteBack(){
+      await this.backgroundController.deleteBackground(this.$api, this.itemToDelete)
+      .then(res => {
+        console.log(res);
+          this.getBackground();
+          this.setSnackbar("Histórico Excluído!", "success")
+      }).catch(e =>{
+        console.log(e)
+        this.setSnackbar("Erro ao excluir histórico.", "error")
+      })
+    },
+
+    setSnackbar(text, color) {
+      this.text = text;
+      this.color = color;
+      this.snackbar = true;
+    },
+
+
   }
 };
 </script>
