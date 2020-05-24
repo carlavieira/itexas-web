@@ -55,6 +55,11 @@
               <span v-if="item.leader"> {{ item.leader.first_name }} </span>
               <span v-else> - </span>
             </template>
+            <template v-slot:item.is_active="{ item }">
+              <v-icon small v-if="item.is_active" class="success--text">mdi-brightness-1</v-icon>
+              <v-icon small v-if="!item.is_active" class="error--text">mdi-brightness-1</v-icon>
+
+            </template>
           </v-data-table>
         </v-card>
       </v-flex>
@@ -111,6 +116,7 @@ export default {
         { text: "Cargo", value: "post.abbreviation" },
         { text: "Área", value: "department.abbreviation" },
         { text: "Líder", value: "leader" },
+        { text: "Ativo", value: "is_active" }
       ],
       membros: [],
       userDetail: null,

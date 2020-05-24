@@ -316,6 +316,8 @@
           </v-btn>
         </v-layout>
 
+
+
         <v-layout row mx-2 mb-4 mt-3 v-if="editHist">
 
           <v-layout col-xs-6 col-sm-4 pa-1>
@@ -325,6 +327,7 @@
               outlined
               prepend-inner-icon="mdi-briefcase"
               :items="posts"
+              item-text="abbreviation"
               required
               hide-details
               no-data-text="Sem cargos cadastrados"
@@ -335,6 +338,7 @@
               label="Área"
               name="department"
               outlined
+              item-text="abbreviation"
               prepend-inner-icon="mdi-briefcase"
               :items="departments"
               required
@@ -398,7 +402,7 @@
 
            <v-layout col-xs-6 col-sm-4 pa-1 align-end justify-end>
              <v-btn class="success dark">
-               <span>Adicionar Histórico</span>
+               <span>Adicionar</span>
              </v-btn>
            </v-layout>
         </v-layout>
