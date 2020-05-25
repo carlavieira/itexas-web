@@ -8,7 +8,7 @@ export default {
     request.email = email;
     request.password = senha;
 
-    let url = "http://itexas.herokuapp.com/rest-auth/login/";
+    let url = "https://itexas.herokuapp.com/rest-auth/login/";
 
     return http
       .post(url, request)
@@ -25,7 +25,7 @@ export default {
   },
 
   logout(http) {
-    let url = "http://itexas.herokuapp.com/rest-auth/logout/";
+    let url = "https://itexas.herokuapp.com/rest-auth/logout/";
 
     return http
       .post(url)
@@ -42,7 +42,7 @@ export default {
   },
 
   sendEmail(http, email){
-    let url = "http://itexas.herokuapp.com/rest-auth/password/reset/";
+    let url = "https://itexas.herokuapp.com/rest-auth/password/reset/";
     return http
       .post(url, { email })
       .then((res) => {
@@ -53,7 +53,7 @@ export default {
       });
   },
   passwordChange(api, passwords){
-    let url = "http://itexas.herokuapp.com/rest-auth/password/change/";
+    let url = "https://itexas.herokuapp.com/rest-auth/password/change/";
     const response = api.post(url, passwords)
       .then(function (response) {
         return response;
