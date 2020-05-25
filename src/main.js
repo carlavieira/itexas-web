@@ -11,7 +11,7 @@ Vue.use(VueResource);
 
 
 Vue.prototype.$api = axios.create({
-  baseURL: 'http://itexas.pythonanywhere.com/',
+  baseURL: 'http://itexas.herokuapp.com/',
   headers: {
     Authorization: `JWT ${localStorage.getItem("access_token")}`  
   }
