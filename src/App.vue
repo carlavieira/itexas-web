@@ -56,4 +56,8 @@ th .v-data-table__checkbox {
 .selectAddMember .v-text-field__details {
   display: none;
 }
+
+.layout.row {
+  flex-wrap: wrap !important;
+}
 </style>
