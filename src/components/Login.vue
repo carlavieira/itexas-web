@@ -152,8 +152,7 @@ export default {
 
     async login() {
       await this.authController.login( this.$http, this.email, this.senha)
-        .then(res => {
-          console.log(res)
+        .then(() => {
           this.setSnackbar("Login efetuado", "success")
         }).catch(error => {
           console.log(error)

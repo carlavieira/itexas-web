@@ -12,10 +12,11 @@ export default {
 
     return http
       .post(url, request)
-      .then((res) => {
+      .then(res => {
         localStorage.setItem("access_token", res.data.token);
         localStorage.setItem("user_id", res.data.user.id);
         localStorage.setItem("is_staff", res.data.user.is_staff);
+      }).then(res => {
         router.push("/membro/dashboard")
         return res;
       })
