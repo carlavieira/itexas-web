@@ -10,7 +10,7 @@ Vue.use(VueTheMask);
 Vue.use(VueResource);
 
 Vue.prototype.$api = axios.create({
-  baseURL: "http://itexas.herokuapp.com/",
+  baseURL: "https://itexas.herokuapp.com/",
   headers: {
     Authorization: `JWT ${localStorage.getItem("access_token")}`,
   },
