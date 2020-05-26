@@ -16,10 +16,10 @@ export default {
         localStorage.setItem("access_token", res.data.token);
         localStorage.setItem("user_id", res.data.user.id);
         localStorage.setItem("is_staff", res.data.user.is_staff);
-      }).then(res => {
+      }).setTimeout(res => { 
         router.push("/membro/dashboard")
-        return res;
-      })
+        return res
+      }, 2000)
       .catch(err => {
        throw err;
       });
