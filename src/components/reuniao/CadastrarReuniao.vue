@@ -164,7 +164,7 @@ export default {
     time: "00:00",
     e7: null,
     select: null,
-    leader: () => parseInt(localStorage.getItem("user_id")),
+    leader: null,
     leaders: [],
     memberController,
     snackbarDetail: {
@@ -216,6 +216,11 @@ export default {
       meetingDetails.time = this.time;
       meetingDetails.type = this.type;
       meetingDetails.member = this.leader;
+
+      /*Verifica se memberID é um objeto membro, caso seja, receberá o id do Membro*/
+      if (meetingDetails.member === Object(meetingDetails.member)) {
+        meetingDetails.member = meetingDetails.member.id;
+      }
 
       meetingDetails.participantes = JSON.parse(
         JSON.stringify(this.participantes)
