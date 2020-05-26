@@ -18,6 +18,7 @@ export default {
   createMeeting(api, meetingDetails) {
     let url = "manage-meetings/";
     console.log(meetingDetails);
+    meetingDetails.member = meetingDetails.memberID;
 
     const response = api
       .post(url, meetingDetails)
