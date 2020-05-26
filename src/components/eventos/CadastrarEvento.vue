@@ -215,6 +215,11 @@ export default {
       eventDetails.type = this.type;
       eventDetails.member = this.leader;
 
+      /*Verifica se memberID é um objeto membro, caso seja, receberá o id do Membro*/
+      if (eventDetails.member === Object(eventDetails.member)) {
+        eventDetails.member = eventDetails.member.id;
+      }
+
       console.log(eventDetails);
       if (this.validate()) {
         return await this.eventController
