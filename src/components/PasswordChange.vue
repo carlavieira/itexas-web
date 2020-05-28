@@ -1,7 +1,7 @@
 <template>
-  <v-dialog v-model="show">
+  <v-dialog persistent max-width="630px" v-model="show">
     <v-card class="pa-3">
-      <v-layout row class="px-3" justify-space-between>
+      <v-layout row class="px-6 py-2" justify-space-between>
         <h2>Alteração de senha</h2>
         <v-btn @click="$emit('close')" title="Fechar" icon>
           <v-icon color="grey">mdi-close</v-icon>
@@ -13,8 +13,9 @@
           <v-flex xs12 mb-4>
             <!-- <h1 class="title font-weight-medium mb-3">Mudar minha senha</h1> -->
           </v-flex>
-          <v-flex offset-md-3 xs6>
+          <v-flex class="container-text-field" cols="12" sm="6">
             <v-text-field
+              style="width: 400px"
               v-model="new_password1"
               :append-icon="showPWD1 ? 'mdi-eye' : 'mdi-eye-off'"
               :rules="[rules.required, rules.min]"
@@ -22,11 +23,14 @@
               name="password"
               label="Entre com a nova senha"
               hint="Pelo menos 8 caracteres"
+              outlined
+              dense
               counter
               @click:append="showPWD1 = !showPWD1"
             ></v-text-field>
 
             <v-text-field
+              style="width: 400px"
               v-model="new_password2"
               :append-icon="showPWD2 ? 'mdi-eye' : 'mdi-eye-off'"
               :rules="[rules.required, rules.min, passwordConfirmationRule]"
@@ -35,6 +39,8 @@
               label="Repita a senha"
               hint="Os campos devem ser iguais"
               counter
+              outlined
+              dense
               @click:append="showPWD2 = !showPWD2"
             ></v-text-field>
           </v-flex>
@@ -63,7 +69,6 @@ export default {
       showPWD2: false,
       new_password1: "",
       new_password2: "",
-
       rules: {
         required: (value) => !!value || "Você deve preencher os dois campos!",
         min: (v) =>
@@ -107,3 +112,10 @@ export default {
   },
 };
 </script>
+<style scoped>
+.container-text-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
