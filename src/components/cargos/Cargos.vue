@@ -12,7 +12,9 @@
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
-
+      <!--
+         adicionar o persistent para não fechar o dialog caso clique fora dele
+      -->
       <v-dialog v-model="createPostDialog" persistent max-width="700" min-h>
         <v-card>
           <v-card-title
@@ -213,6 +215,7 @@
                 </tr>
               </thead>
               <tbody class="pa-2">
+                <!-- Verificação se possui membro no cargo -->
                 <template v-if="membersInPost[item.id].length != 0">
                   <tr v-for="member in membersInPost[item.id]" :key="member.id">
                     <td>{{ member.first_name }}</td>
@@ -221,6 +224,7 @@
                     <td>{{ member.date_joined }}</td>
                   </tr>
                 </template>
+
                 <template v-else class="py-2 px-4">
                   Sem membros cadastrados nesse cargo.
                 </template>
@@ -288,8 +292,11 @@ export default {
             this.memberController
               .getMembersInPost(this.$api, post.id)
               .then((res) => {
-                //console.log(res);
                 this.membersInPost[post.id] = res;
+                /*
+                  Verificação para saber se há membros sem líderes,
+                  caso tenha, adicionar leader
+                */
                 let postMemberslength = this.membersInPost[post.id].length;
                 if (postMemberslength != 0) {
                   for (let i = 0; i < postMemberslength; i++) {
@@ -303,7 +310,6 @@ export default {
                 }
               });
           });
-          console.log(this.membersInPost);
         })
         .catch((err) => {
           console.log(err);
@@ -317,9 +323,12 @@ export default {
         full_name: this.postName,
         abbreviation: this.abbreviation,
       };
-      await this.postController
-        .createPost(this.$api, post)
-        .then(this.getPosts(), (this.postName = ""), (this.abbreviation = ""));
+      await this.postController.createPost(this.$api, post).then(
+        /* Atualizar pagina e limpar as text-fields */
+        this.getPosts(),
+        (this.postName = ""),
+        (this.abbreviation = "")
+      );
       this.showModal = true;
     },
 
