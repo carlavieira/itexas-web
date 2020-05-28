@@ -22,10 +22,9 @@
               :type="showPWD1 ? 'text' : 'password'"
               name="password"
               label="Entre com a nova senha"
-              hint="Pelo menos 8 caracteres"
+              counter
               outlined
               dense
-              counter
               @click:append="showPWD1 = !showPWD1"
             ></v-text-field>
 
@@ -37,7 +36,7 @@
               :type="showPWD2 ? 'text' : 'password'"
               name="input-10-1"
               label="Repita a senha"
-              hint="Os campos devem ser iguais"
+              hint=""
               counter
               outlined
               dense

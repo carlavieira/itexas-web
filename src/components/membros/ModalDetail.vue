@@ -1,5 +1,8 @@
 <template>
-  <v-dialog max-width="800px" persistent v-model="show">
+  <v-dialog width="850px" persistent v-model="show">
+    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{
+      text
+    }}</v-snackbar>
     <v-card class="pa-5">
       <v-layout row class="px-3">
         <v-btn
@@ -61,6 +64,26 @@
               >Sim</v-btn>
 
               <v-btn color="red darken-1" text @click="dialog = false">Não</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="deleteB" max-width="500" min-h>
+          <v-card>
+            <v-card-title style="font-size: 16px !important" class="headline">
+              Deseja realmente deletar o histórico?
+            </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="red darken-1" text @click="deleteB = false">Não</v-btn>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="
+                  deleteB = false;
+                  deleteBack();
+                "
+              >Sim</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -309,7 +332,7 @@
             v-if="!editHist && this.$route.name == 'membersAdm'"
             icon
             class="ma-2"
-            @click="editHist = true"
+            @click="editHist = true, textBtnHist = 'Adicionar'"
             title="Editar"
           >
             <v-icon color="black">mdi-account-edit</v-icon>
@@ -317,7 +340,6 @@
         </v-layout>
 
         <v-layout row mx-2 mb-4 mt-3 v-if="editHist">
-
           <v-layout col-xs-6 col-sm-4 pa-1>
             <v-select
               label="Cargo"
@@ -325,6 +347,9 @@
               outlined
               prepend-inner-icon="mdi-briefcase"
               :items="posts"
+              v-model="histNewObj.post"
+              item-text="abbreviation"
+              item-value="id"
               required
               hide-details
               no-data-text="Sem cargos cadastrados"
@@ -334,7 +359,10 @@
             <v-select
               label="Área"
               name="department"
+              v-model="histNewObj.department"
               outlined
+              item-text="abbreviation"
+              item-value="id"
               prepend-inner-icon="mdi-briefcase"
               :items="departments"
               required
@@ -354,6 +382,7 @@
               <template v-slot:activator="{ on }">
                 <v-text-field
                   outlined
+                  v-model="histNewObj.start_date"
                   label="Data de Início"
                   prepend-inner-icon="mdi-calendar"
                   readonly
@@ -361,11 +390,15 @@
                   v-on="on"
                 ></v-text-field>
               </template>
-              <v-date-picker locale="pt-br" @input="menuDataInicio = false"></v-date-picker>
+              <v-date-picker
+                v-model="histNewObj.start_date"
+                locale="pt-br"
+                @input="menuDataInicio = false"
+              ></v-date-picker>
             </v-menu>
           </v-layout>
 
-           <v-layout col-xs-6 col-sm-4 pa-1>
+          <v-layout col-xs-6 col-sm-4 pa-1>
             <v-menu
               v-model="menuDataFim"
               :close-on-content-click="false"
@@ -381,26 +414,27 @@
                   prepend-inner-icon="mdi-calendar"
                   readonly
                   hide-details
+                  v-model="histNewObj.end_date"
                   v-on="on"
                 ></v-text-field>
               </template>
-              <v-date-picker locale="pt-br" @input="menuDataFim = false"></v-date-picker>
+              <v-date-picker
+                v-model="histNewObj.end_date"
+                locale="pt-br"
+                @input="menuDataFim = false"
+              ></v-date-picker>
             </v-menu>
           </v-layout>
 
-           <v-layout col-xs-6 col-sm-4 pa-1>
-             <v-text-field
-                  outlined
-                  label="Descrição"
-                  hide-details
-              ></v-text-field>
-           </v-layout>
+          <v-layout col-xs-6 col-sm-4 pa-1>
+            <v-text-field v-model="histNewObj.description" outlined label="Descrição" hide-details></v-text-field>
+          </v-layout>
 
-           <v-layout col-xs-6 col-sm-4 pa-1 align-end justify-end>
-             <v-btn class="success dark">
-               <span>Adicionar Histórico</span>
-             </v-btn>
-           </v-layout>
+          <v-layout col-xs-6 col-sm-4 pa-1 align-end justify-end>
+            <v-btn class="success dark" @click="changeHist()">
+              <span>{{ textBtnHist }}</span>
+            </v-btn>
+          </v-layout>
         </v-layout>
 
         <v-card class="mx-3 mb-3">
@@ -409,7 +443,18 @@
             :headers="headersHist"
             :items="hist"
             hide-default-footer
-          ></v-data-table>
+          >
+            <template v-slot:item.start_date="{ item }">
+              <span>{{ formatDate(item.start_date) }}</span>
+            </template>
+            <template v-slot:item.end_date="{ item }">
+              <span>{{ formatDate(item.end_date) }}</span>
+            </template>
+            <template v-slot:item.actions="{ item }" v-if="editHist">
+              <v-icon small @click="editBackPrepare(item)">mdi-pencil</v-icon>
+              <v-icon class="pl-3" small @click="deleteB = true, itemToDelete = item.id">mdi-delete</v-icon>
+            </template>
+          </v-data-table>
         </v-card>
       </v-layout>
     </v-card>
@@ -449,17 +494,33 @@ export default {
         {
           text: "Cargo",
           align: "start",
-          value: "post"
+          value: "post.abbreviation"
         },
-        { text: "Área", value: "department" },
+        { text: "Área", value: "department.abbreviation" },
         { text: "Data Início", value: "start_date" },
         { text: "Data Fim", value: "end_date" },
-        { text: "Descrição", value: "description" }
+        { text: "Descrição", value: "description" },
+        { text: "Ações", value: "actions" }
       ],
       hist: [],
       editHist: false,
       menuDataInicio: false,
-      menuDataFim: false
+      menuDataFim: false,
+      histNewObj: {
+        member: null,
+        start_date: null,
+        end_date: null,
+        post: null,
+        department: null,
+        description: ""
+      },
+      textBtnHist: "",
+      snackbar: false,
+      text: "",
+      timeout: 3000,
+      color: "",
+      deleteB: false,
+      itemToDelete: null
     };
   },
 
@@ -596,7 +657,87 @@ export default {
     async onChangeImage(e) {
       this.showImage = window.URL.createObjectURL(e.target.files[0]);
       this.member.photo = e.target.files[0];
-    }
+    },
+
+    formatDate(item) {
+      return moment(item).format("DD/MM/YYYY");
+    },
+
+    editBackPrepare(item){
+      console.log(item)
+      this.textBtnHist = "Editar"
+      this.histNewObj = item
+    },
+
+    changeHist() {
+      if (this.textBtnHist == "Adicionar") this.newBack();
+      if (this.textBtnHist == "Editar") this.editBack();
+    },
+
+    async newBack() {
+      this.histNewObj.member = this.member.id;
+      await this.backgroundController
+        .createBackround(this.$api, this.histNewObj)
+        .then(res => {
+          console.log(res);
+          this.getBackground();
+          this.setSnackbar("Histórico Adicionado!", "success")
+          this.histNewObj = {
+            member: null,
+            start_date: null,
+            end_date: null,
+            post: null,
+            department: null,
+            description: ""
+          };
+        })
+        .catch(e => {
+          console.log(e);
+           this.setSnackbar("Erro ao adicionar histórico.", "error")
+        });
+    },
+
+    async editBack(){
+      this.histNewObj.member = this.member.id;
+      await this.backgroundController.editBackground(this.$api, this.histNewObj)
+      .then(res => {
+        console.log(res);
+          this.getBackground();
+          this.setSnackbar("Histórico Editado!", "success")
+          this.textBtnHist = "Adicionar"
+          this.histNewObj = {
+            member: null,
+            start_date: null,
+            end_date: null,
+            post: null,
+            department: null,
+            description: ""
+          };
+      }).catch(e =>{
+        console.log(e)
+        this.setSnackbar("Erro ao editar histórico.", "error")
+      })
+    },
+    
+    async deleteBack(){
+      await this.backgroundController.deleteBackground(this.$api, this.itemToDelete)
+      .then(res => {
+        console.log(res);
+          this.getBackground();
+          this.setSnackbar("Histórico Excluído!", "success")
+      }).catch(e =>{
+        console.log(e)
+        this.setSnackbar("Erro ao excluir histórico.", "error")
+      })
+    },
+
+    setSnackbar(text, color) {
+      this.text = text;
+      this.color = color;
+      this.snackbar = true;
+    },
+
+
   }
 };
 </script>
@@ -623,5 +764,10 @@ i.v-icon.v-icon {
 .adjust {
   width: auto;
   height: 100%;
+}
+
+.v-v-input--is-disabled.theme--light.v-card {
+
+  color: red !important;
 }
 </style>

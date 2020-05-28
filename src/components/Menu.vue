@@ -115,7 +115,7 @@
       <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{
         text
       }}</v-snackbar>
-      <router-view :key="$route.fullPath"></router-view>
+      <router-view @reload="changeStatus()" :key="$route.fullPath"></router-view>
     </div>
   </div>
 </template>
