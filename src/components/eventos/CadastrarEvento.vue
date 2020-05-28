@@ -146,7 +146,7 @@ export default {
       type: [(v) => !!v || "Selecione um tipo de evento"],
       leader: [(v) => !!v || "Selecione o líder na evento."],
     },
-    time: null,
+    time: "00:00",
     e7: null,
     select: null,
     valid: true,
@@ -214,6 +214,11 @@ export default {
       eventDetails.time = this.time;
       eventDetails.type = this.type;
       eventDetails.member = this.leader;
+
+      /*Verifica se memberID é um objeto membro, caso seja, receberá o id do Membro*/
+      if (eventDetails.member === Object(eventDetails.member)) {
+        eventDetails.member = eventDetails.member.id;
+      }
 
       console.log(eventDetails);
       if (this.validate()) {

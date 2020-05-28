@@ -8,24 +8,27 @@ export default {
     request.email = email;
     request.password = senha;
 
-    let url = "http://itexas.pythonanywhere.com/rest-auth/login/";
+    let url = "https://itexas.herokuapp.com/rest-auth/login/";
 
     return http
       .post(url, request)
       .then((res) => {
-        localStorage.setItem("access_token", res.data.token);
         localStorage.setItem("user_id", res.data.user.id);
+        localStorage.setItem("access_token", res.data.token);
         localStorage.setItem("is_staff", res.data.user.is_staff);
-        router.push("/membro/dashboard")
+        router.push("/membro/dashboard");
+        console.log(localStorage.getItem("user_id"));
+        console.log(localStorage.getItem("access_token"));
+        console.log(localStorage.getItem("is_staff"));
         return res;
       })
-      .catch(err => {
-       throw err;
+      .catch((err) => {
+        throw err;
       });
   },
 
   logout(http) {
-    let url = "http://itexas.pythonanywhere.com/rest-auth/logout/";
+    let url = "https://itexas.herokuapp.com/rest-auth/logout/";
 
     return http
       .post(url)
@@ -41,8 +44,8 @@ export default {
       });
   },
 
-  sendEmail(http, email){
-    let url = "http://itexas.pythonanywhere.com/rest-auth/password/reset/";
+  sendEmail(http, email) {
+    let url = "https://itexas.herokuapp.com/rest-auth/password/reset/";
     return http
       .post(url, { email })
       .then((res) => {
@@ -52,15 +55,16 @@ export default {
         throw err;
       });
   },
-  passwordChange(api, passwords){
-    let url = "http://itexas.pythonanywhere.com/rest-auth/password/change/";
-    const response = api.post(url, passwords)
-      .then(function (response) {
+  passwordChange(api, passwords) {
+    let url = "https://itexas.herokuapp.com/rest-auth/password/change/";
+    const response = api
+      .post(url, passwords)
+      .then(function(response) {
         return response;
       })
-      .catch(function (error) {
+      .catch(function(error) {
         throw error;
       });
     return response;
-  }
+  },
 };

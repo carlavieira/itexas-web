@@ -74,16 +74,7 @@
               </v-btn>
             </v-row>
           </v-form>
-
-          <br />
-          <v-alert
-            :value="alertError"
-            color="red"
-            dark
-            border="top"
-            icon="mdi-alert"
-            transition="scale-transition"
-          >{{ errorMessage }}</v-alert>
+         
         </v-card>
       </v-col>
     </v-row>
@@ -123,11 +114,11 @@ export default {
   methods: {
     async sendEmail(email){
       await this.authController.sendEmail(this.$http, email)
-      .then(res => {
-        console.log(res)
+      .then(() => {
         this.loginPage = true
-      }).catch(e => {
-        console.log(e)
+         this.setSnackbar("Email enviado com sucesso", "success")
+      }).catch(() => {
+         this.setSnackbar("Erro ao enviar email", "error")
       })
     },
 
@@ -136,27 +127,16 @@ export default {
       this.color = color
       this.snackbar = true
     },
-
-    showErrorAlert(message) {
-      this.alertError = true;
-      this.errorMessage = message;
-    },
-
-    hideErrorAlert() {
-      this.alertError = false;
-    },
-
+    
     validarFormularioLogin() {
       return this.$refs.form.validate();
     },
 
     async login() {
       await this.authController.login( this.$http, this.email, this.senha)
-        .then(res => {
-          console.log(res)
+        .then(() => {
           this.setSnackbar("Login efetuado", "success")
-        }).catch(error => {
-          console.log(error)
+        }).catch(() => {
           this.setSnackbar("Erro ao efetuar login", "error")
         })
       

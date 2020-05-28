@@ -212,13 +212,18 @@
                   <th>Data de Entrada</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr v-for="member in membersInPost[item.id]" :key="member.id">
-                  <td>{{ member.first_name }}</td>
-                  <td>{{ member.leader.first_name }}</td>
-                  <td>{{ member.department.abbreviation }}</td>
-                  <td>{{ member.date_joined }}</td>
-                </tr>
+              <tbody class="pa-2">
+                <template v-if="membersInPost[item.id].length != 0">
+                  <tr v-for="member in membersInPost[item.id]" :key="member.id">
+                    <td>{{ member.first_name }}</td>
+                    <td>{{ member.leader.first_name }}</td>
+                    <td>{{ member.department.abbreviation }}</td>
+                    <td>{{ member.date_joined }}</td>
+                  </tr>
+                </template>
+                <template v-else class="py-2 px-4">
+                  Sem membros cadastrados nesse cargo.
+                </template>
               </tbody>
             </template>
           </v-simple-table>
@@ -283,10 +288,22 @@ export default {
             this.memberController
               .getMembersInPost(this.$api, post.id)
               .then((res) => {
+                //console.log(res);
                 this.membersInPost[post.id] = res;
+                let postMemberslength = this.membersInPost[post.id].length;
+                if (postMemberslength != 0) {
+                  for (let i = 0; i < postMemberslength; i++) {
+                    if (!this.membersInPost[post.id][i].leader) {
+                      this.membersInPost[post.id][i].leader = {
+                        first_name: "-",
+                        last_name: "",
+                      };
+                    }
+                  }
+                }
               });
           });
-          console.log(res.data);
+          console.log(this.membersInPost);
         })
         .catch((err) => {
           console.log(err);
@@ -300,7 +317,9 @@ export default {
         full_name: this.postName,
         abbreviation: this.abbreviation,
       };
-      await this.postController.createPost(this.$api, post).then(this.getPosts);
+      await this.postController
+        .createPost(this.$api, post)
+        .then(this.getPosts(), (this.postName = ""), (this.abbreviation = ""));
       this.showModal = true;
     },
 

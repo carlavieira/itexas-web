@@ -3,19 +3,18 @@ import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
 import VueResource from "vue-resource";
-import axios from "axios"
-import VueTheMask from 'vue-the-mask'
+import axios from "axios";
+import VueTheMask from "vue-the-mask";
 
-Vue.use(VueTheMask)
+Vue.use(VueTheMask);
 Vue.use(VueResource);
 
-
 Vue.prototype.$api = axios.create({
-  baseURL: 'http://itexas.pythonanywhere.com/',
+  baseURL: "https://itexas.herokuapp.com/",
   headers: {
-    Authorization: `JWT ${localStorage.getItem("access_token")}`  
-  }
-})
+    Authorization: `JWT ${localStorage.getItem("access_token")}`,
+  },
+});
 
 new Vue({
   router,
@@ -23,5 +22,3 @@ new Vue({
   VueResource,
   render: (h) => h(App),
 }).$mount("#app");
-
-
