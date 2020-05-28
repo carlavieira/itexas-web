@@ -212,13 +212,18 @@
                   <th>Data de Entrada</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr v-for="member in membersInPost[item.id]" :key="member.id">
-                  <td>{{ member.first_name }}</td>
-                  <td>{{ member.leader.first_name }}</td>
-                  <td>{{ member.department.abbreviation }}</td>
-                  <td>{{ member.date_joined }}</td>
-                </tr>
+              <tbody class="pa-2">
+                <template v-if="membersInPost[item.id].length != 0">
+                  <tr v-for="member in membersInPost[item.id]" :key="member.id">
+                    <td>{{ member.first_name }}</td>
+                    <td>{{ member.leader.first_name }}</td>
+                    <td>{{ member.department.abbreviation }}</td>
+                    <td>{{ member.date_joined }}</td>
+                  </tr>
+                </template>
+                <template v-else class="py-2 px-4">
+                  Sem membros cadastrados nesse cargo.
+                </template>
               </tbody>
             </template>
           </v-simple-table>
