@@ -12,15 +12,18 @@ export default {
 
     return http
       .post(url, request)
-      .then(res =>  {
+      .then((res) => {
         localStorage.setItem("user_id", res.data.user.id);
         localStorage.setItem("access_token", res.data.token);
         localStorage.setItem("is_staff", res.data.user.is_staff);
-        router.push("/membro/dashboard")
-        return res
+        router.push("/membro/dashboard");
+        console.log(localStorage.getItem("user_id"));
+        console.log(localStorage.getItem("access_token"));
+        console.log(localStorage.getItem("is_staff"));
+        return res;
       })
-      .catch(err => {
-       throw err;
+      .catch((err) => {
+        throw err;
       });
   },
 
@@ -41,7 +44,7 @@ export default {
       });
   },
 
-  sendEmail(http, email){
+  sendEmail(http, email) {
     let url = "https://itexas.herokuapp.com/rest-auth/password/reset/";
     return http
       .post(url, { email })
@@ -52,15 +55,16 @@ export default {
         throw err;
       });
   },
-  passwordChange(api, passwords){
+  passwordChange(api, passwords) {
     let url = "https://itexas.herokuapp.com/rest-auth/password/change/";
-    const response = api.post(url, passwords)
-      .then(function (response) {
+    const response = api
+      .post(url, passwords)
+      .then(function(response) {
         return response;
       })
-      .catch(function (error) {
+      .catch(function(error) {
         throw error;
       });
     return response;
-  }
+  },
 };

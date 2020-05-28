@@ -283,10 +283,22 @@ export default {
             this.memberController
               .getMembersInPost(this.$api, post.id)
               .then((res) => {
+                //console.log(res);
                 this.membersInPost[post.id] = res;
+                let postMemberslength = this.membersInPost[post.id].length;
+                if (postMemberslength != 0) {
+                  for (let i = 0; i < postMemberslength; i++) {
+                    if (!this.membersInPost[post.id][i].leader) {
+                      this.membersInPost[post.id][i].leader = {
+                        first_name: "-",
+                        last_name: "",
+                      };
+                    }
+                  }
+                }
               });
           });
-          console.log(res.data);
+          console.log(this.membersInPost);
         })
         .catch((err) => {
           console.log(err);
@@ -300,7 +312,9 @@ export default {
         full_name: this.postName,
         abbreviation: this.abbreviation,
       };
-      await this.postController.createPost(this.$api, post).then(this.getPosts);
+      await this.postController
+        .createPost(this.$api, post)
+        .then(this.getPosts(), (this.postName = ""), (this.abbreviation = ""));
       this.showModal = true;
     },
 

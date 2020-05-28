@@ -194,6 +194,7 @@ export default {
           minhasReunioes.push(participacao.meeting);
         });
         this.reunioes = minhasReunioes;
+        console.log(this.reunioes);
       }
     },
     showSnackbar(snackbarDetails) {
