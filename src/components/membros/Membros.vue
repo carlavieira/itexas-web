@@ -38,8 +38,8 @@
             :headers="headersMembros"
             :items="membros"
             :search="search"
-            :sort-by="'full_name'"
-            :sort-desc="false"
+            :sort-by="['is_active', 'full_name']"
+            :sort-desc="[true, false]"
             @click:row="memberShow"
             class="dataTable"
           >
@@ -54,6 +54,11 @@
             <template v-slot:item.leader="{ item }">
               <span v-if="item.leader"> {{ item.leader.first_name }} </span>
               <span v-else> - </span>
+            </template>
+            <template v-slot:item.is_active="{ item }">
+              <v-icon small v-if="item.is_active" class="success--text">mdi-brightness-1</v-icon>
+              <v-icon small v-if="!item.is_active" class="error--text">mdi-brightness-1</v-icon>
+
             </template>
           </v-data-table>
         </v-card>
@@ -106,11 +111,12 @@ export default {
         {
           text: "Nome",
           align: "start",
-          value: "name",
+          value: "full_name",
         },
         { text: "Cargo", value: "post.abbreviation" },
         { text: "Área", value: "department.abbreviation" },
         { text: "Líder", value: "leader" },
+        { text: "Ativo", value: "is_active" }
       ],
       membros: [],
       userDetail: null,
