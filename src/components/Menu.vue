@@ -115,7 +115,7 @@
       <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{
         text
       }}</v-snackbar>
-      <router-view @reload="changeStatus()" :key="$route.fullPath"></router-view>
+      <router-view @reload="getMember()" :key="$route.fullPath"></router-view>
     </div>
   </div>
 </template>
@@ -238,7 +238,6 @@ export default {
 
   async created() {
     await this.getMember();
-    this.changeStatus();
   },
 
   methods: {
@@ -247,6 +246,7 @@ export default {
         this.$api,
         localStorage.getItem("user_id")
       );
+      this.changeStatus();
     },
 
     setSnackbar(text, color) {
