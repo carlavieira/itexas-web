@@ -44,12 +44,14 @@
             ></v-text-field>
           </v-flex>
           <v-col class="d-flex" cols="12" sm="6">
-            <v-btn color="green darken-1" text @click="passwordChange()"
-              >Enviar</v-btn
-            >
+            
 
             <v-btn color="red darken-1" text @click="$emit('close')"
               >Cancelar</v-btn
+            >
+
+            <v-btn color="green darken-1" text @click="passwordChange()"
+              >Enviar</v-btn
             >
           </v-col>
         </v-layout>
