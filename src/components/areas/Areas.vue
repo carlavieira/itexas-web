@@ -17,58 +17,56 @@
       </v-btn>
 
       <v-dialog v-model="createDepartmentDialog" max-width="700" min-h>
-        <v-card>
-          <v-card-title
-            class="title-table pt-3 py-4 pb-0 headline"
-            style="font-size: 16px !important"
-            >Cadastro do Áreas</v-card-title
-          >
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <template>
-              <v-container fluid>
-                <v-row>
+        <v-form ref="form">
+          <v-card>
+            <v-card-title
+              class="title-table pt-3 py-4 pb-0 headline"
+              style="font-size: 16px !important"
+              >Cadastro do Áreas</v-card-title
+            >
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <template>
+                <v-container fluid>
+                  <v-row>
+                    <v-col class="d-flex" cols="12" sm="6">
+                      <v-text-field
+                        v-model="abbreviation"
+                        label="Sigla"
+                        prepend-inner-icon="mdi-account"
+                        dense
+                        outlined
+                        :rules="[rules.abbreviationRequired]"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col class="d-flex" cols="12" sm="11">
+                      <v-text-field
+                        v-model="departmentName"
+                        label="Nome"
+                        :rules="[rules.nameRequired]"
+                        prepend-inner-icon="mdi-account"
+                        dense
+                        outlined
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
                   <v-col class="d-flex" cols="12" sm="6">
-                    <v-text-field
-                      v-model="abbreviation"
-                      label="Sigla"
-                      prepend-inner-icon="mdi-account"
-                      dense
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="12" sm="11">
-                    <v-text-field
-                      v-model="departmentName"
-                      label="Nome"
-                      prepend-inner-icon="mdi-account"
-                      dense
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-col class="d-flex" cols="12" sm="6">
-                  <v-btn
-                    color="green darken-1"
-                    text
-                    @click="
-                      createDepartmentDialog = false;
-                      submit();
-                    "
-                    >Cadastrar</v-btn
-                  >
+                    <v-btn color="green darken-1" text @click="submit()"
+                      >Cadastrar</v-btn
+                    >
 
-                  <v-btn
-                    color="red darken-1"
-                    text
-                    @click="createDepartmentDialog = false"
-                    >Cancelar</v-btn
-                  >
-                </v-col>
-              </v-container>
-            </template>
-          </v-card-actions>
-        </v-card>
+                    <v-btn
+                      color="red darken-1"
+                      text
+                      @click="createDepartmentDialog = false"
+                      >Cancelar</v-btn
+                    >
+                  </v-col>
+                </v-container>
+              </template>
+            </v-card-actions>
+          </v-card>
+        </v-form>
       </v-dialog>
 
       <v-dialog v-model="editDepartmentDialog" max-width="600" min-h>
@@ -92,6 +90,7 @@
                   <v-col class="d-flex" cols="12" sm="6">
                     <v-text-field
                       v-model="abbreviation"
+                      :rules="[rules.abbreviationRequired]"
                       label="Sigla"
                       prepend-inner-icon="mdi-account"
                       dense
@@ -101,6 +100,7 @@
                   <v-col class="d-flex" cols="12" sm="6">
                     <v-text-field
                       v-model="departmentName"
+                      :rules="[rules.nameRequired]"
                       label="Nome"
                       prepend-inner-icon="mdi-account"
                       dense
@@ -136,13 +136,7 @@
                 </template>
 
                 <v-col class="d-flex" cols="12" sm="6">
-                  <v-btn
-                    color="green darken-1"
-                    text
-                    @click="
-                      editDepartmentDialog = false;
-                      sendPutRequest();
-                    "
+                  <v-btn color="green darken-1" text @click="sendPutRequest()"
                     >Editar</v-btn
                   >
 
@@ -277,6 +271,10 @@ export default {
       color: "",
       text: "",
       timeout: 3000,
+      rules: {
+        abbreviationRequired: (value) => !!value || "Escreve uma sigla.",
+        nameRequired: (value) => !!value || "Escreve um nome.",
+      },
       headers: [
         {
           text: "Nome",
@@ -324,18 +322,21 @@ export default {
         full_name: this.departmentName,
         abbreviation: this.abbreviation,
       };
-      await this.departmentController
-        .createDepartment(this.$api, department)
-        .then(() => {
-          this.getDepartment(),
-            (this.departmentName = ""),
-            (this.abbreviation = "");
-          this.setSnackbar("Área criada com sucesso.", "success");
-        })
-        .catch(() => {
-          this.setSnackbar("Erro ao criar área.", "error");
-        });
-      this.showModal = true;
+      if (this.validarFormulario()) {
+        await this.departmentController
+          .createDepartment(this.$api, department)
+          .then(() => {
+            this.getDepartment(),
+              (this.departmentName = ""),
+              (this.abbreviation = "");
+            this.setSnackbar("Área criada com sucesso.", "success");
+            this.createDepartmentDialog = false;
+          })
+          .catch(() => {
+            this.setSnackbar("Erro ao criar área.", "error");
+          });
+        this.showModal = true;
+      }
     },
 
     async edit(item) {
@@ -362,18 +363,21 @@ export default {
     async sendPutRequest() {
       this.departmentDetail.full_name = this.departmentName;
       this.departmentDetail.abbreviation = this.abbreviation;
-      await this.departmentController
-        .editDepartment(this.$api, this.departmentDetail)
-        .then(() => {
-          this.getDepartment(),
-            (this.departmentName = ""),
-            (this.abbreviation = "");
-          this.setSnackbar("Área editada com sucesso.", "warning");
-        })
-        .catch(() => {
-          this.setSnackbar("Erro ao editar área.", "error");
-        });
-      this.showModal = true;
+      if (this.validarFormulario()) {
+        await this.departmentController
+          .editDepartment(this.$api, this.departmentDetail)
+          .then(() => {
+            this.getDepartment(),
+              (this.departmentName = ""),
+              (this.abbreviation = "");
+            this.setSnackbar("Área editada com sucesso.", "warning");
+            this.createDepartmentDialog = false;
+          })
+          .catch(() => {
+            this.setSnackbar("Erro ao editar área.", "error");
+          });
+        this.showModal = true;
+      }
     },
 
     async deleteItem() {
@@ -388,6 +392,9 @@ export default {
             this.setSnackbar("Erro ao deletar área.", "error");
         });
       this.showModal = true;
+    },
+    validarFormulario() {
+      return this.$refs.form.validate();
     },
   },
 };
