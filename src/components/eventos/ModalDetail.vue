@@ -71,7 +71,7 @@
           <v-select
             v-model="event.type"
             :items="types"
-            item-text="name"
+            item-text="display_name"
             item-value="value"
             label="Tipo do Evento"
             prepend-inner-icon="mdi-account-group"
@@ -246,6 +246,7 @@ export default {
   created() {
     this.hostName = `${this.event.member.first_name} ${this.event.member.last_name}`;
     this.populaSelectLider();
+    this.getTypeEvents();
     this.date = this.event.date;
     this.time = this.event.time;
   },
@@ -390,6 +391,9 @@ export default {
         await this.memberController.getAllMembers(this.$api)
       );
       this.leaders = this.setFullName(this.leaders);
+    },
+    async getTypeEvents() {
+      this.types = await eventController.getEventTypes(this.$api);
     },
     ordenaOrdemCrescente(array) {
       array.sort(function(item1, item2) {

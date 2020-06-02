@@ -13,7 +13,7 @@
             <v-select
               v-model="type"
               :items="types"
-              item-text="name"
+              item-text="display_name"
               item-value="value"
               :rules="rules.type"
               label="Nome do Evento"
@@ -157,12 +157,7 @@ export default {
       color: "success",
       text: "Evento cadastrado com sucesso",
     },
-    types: [
-      { name: "Reunião Geral", value: "RG" },
-      { name: "Assembléia", value: "AS" },
-      { name: "Conferência", value: "CF" },
-      { name: "Outros", value: "OU" },
-    ],
+    types: [],
     participantes: [],
   }),
 
@@ -173,6 +168,7 @@ export default {
   async created() {
     await this.populaSelectLider();
     this.defaultLeader();
+    this.getTypeEvents();
   },
 
   computed: {
@@ -262,6 +258,9 @@ export default {
       });
 
       return newArray;
+    },
+    async getTypeEvents() {
+      this.types = await eventController.getEventTypes(this.$api);
     },
 
     ordenaOrdemCrescente(array) {
