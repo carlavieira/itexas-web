@@ -20,6 +20,7 @@ export default {
         console.log(localStorage.getItem("user_id"));
         console.log(localStorage.getItem("access_token"));
         console.log(localStorage.getItem("is_staff"));
+        console.log(res);
         return res;
       })
       .catch((err) => {

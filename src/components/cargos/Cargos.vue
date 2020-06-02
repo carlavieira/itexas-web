@@ -120,9 +120,7 @@
                       item-key="name"
                       class="elevation-1"
                       :hide-default-footer="true"
-                      :footer-props="{
-                        itemsPerPageOptions: [-1],
-                      }"
+                      :rows-per-page-items="[20, 10, 30, 40]"
                     >
                       <template v-slot:item.name="{ item }">
                         <span> {{ getFullName(item) }} </span>

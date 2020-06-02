@@ -1,7 +1,7 @@
 <template>
   <div>
-      <v-row class="px-4 pb-3">
-        <h2>Áreas</h2>
+    <v-row class="px-4 pb-3">
+      <h2>Áreas</h2>
       <v-spacer></v-spacer>
       <v-btn
         @click="createDepartmentDialog = true"
@@ -24,7 +24,7 @@
             <v-spacer></v-spacer>
             <template>
               <v-container fluid>
-                <v-row align="left">
+                <v-row>
                   <v-col class="d-flex" cols="12" sm="6">
                     <v-text-field
                       v-model="abbreviation"
@@ -105,7 +105,7 @@
                     ></v-text-field>
                   </v-col>
                 </v-row>
-                
+
                 <template>
                   <v-card>
                     <v-card-title class="title-table pt-3 py-4 pb-0">
@@ -155,7 +155,12 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="deleteDepartmentDialog" persistent max-width="500" min-h>
+      <v-dialog
+        v-model="deleteDepartmentDialog"
+        persistent
+        max-width="500"
+        min-h
+      >
         <v-card>
           <v-card-title style="font-size: 16px !important" class="headline">
             <p>Deseja realmente deletar esta área?</p>
@@ -194,11 +199,16 @@
       :expanded.sync="expanded"
       :hide-default-footer="true"
       item-key="id"
+      :footer-props="{
+        itemsPerPageOptions: [-1],
+      }"
       show-expand
     >
       <template v-slot:item.actions="{ item }">
         <v-icon small @click="edit(item)">mdi-pencil</v-icon>
-        <v-icon class="pl-3" small @click="deleteDepartment(item)">mdi-delete</v-icon>
+        <v-icon class="pl-3" small @click="deleteDepartment(item)"
+          >mdi-delete</v-icon
+        >
       </template>
       <template v-slot:expanded-item="{ item }">
         <td :colspan="5">
@@ -213,12 +223,14 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="member in membersInDepartment[item.id]" :key="member.id">
+                <tr
+                  v-for="member in membersInDepartment[item.id]"
+                  :key="member.id"
+                >
                   <td>{{ member.first_name }}</td>
                   <td>{{ member.leader.first_name }}</td>
                   <td>{{ member.department.abbreviation }}</td>
                   <td>{{ member.date_joined }}</td>
-                  
                 </tr>
               </tbody>
             </template>
@@ -301,7 +313,9 @@ export default {
         full_name: this.departmentName,
         abbreviation: this.abbreviation,
       };
-      await this.departmentController.createDepartment(this.$api, department).then(this.getDepartments);
+      await this.departmentController
+        .createDepartment(this.$api, department)
+        .then(this.getDepartments);
       this.showModal = true;
     },
 
