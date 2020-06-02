@@ -20,56 +20,58 @@
       -->
       <v-dialog v-model="createPostDialog" persistent max-width="700" min-h>
         <v-card>
-          <v-card-title
-            class="title-table pt-3 py-4 pb-0 headline"
-            style="font-size: 16px !important"
-            >Cadastro do Cargo</v-card-title
-          >
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <template>
-              <v-container fluid>
-                <v-row>
+          <v-form ref="form">
+            <v-card-title
+              class="title-table pt-3 py-4 pb-0 headline"
+              style="font-size: 16px !important"
+              >Cadastro do Cargo</v-card-title
+            >
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <template>
+                <v-container fluid>
+                  <v-row>
+                    <v-col class="d-flex" cols="12" sm="6">
+                      <v-text-field
+                        v-model="abbreviation"
+                        label="Sigla"
+                        :rules="[rules.abbreviationRequired]"
+                        prepend-inner-icon="mdi-account"
+                        dense
+                        outlined
+                      ></v-text-field>
+                    </v-col>
+                    <v-col class="d-flex" cols="12" sm="6">
+                      <v-text-field
+                        v-model="postName"
+                        label="Nome"
+                        prepend-inner-icon="mdi-account"
+                        :rules="[rules.nameRequired]"
+                        dense
+                        outlined
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
                   <v-col class="d-flex" cols="12" sm="6">
-                    <v-text-field
-                      v-model="abbreviation"
-                      label="Sigla"
-                      prepend-inner-icon="mdi-account"
-                      dense
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="12" sm="6">
-                    <v-text-field
-                      v-model="postName"
-                      label="Nome"
-                      prepend-inner-icon="mdi-account"
-                      dense
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-col class="d-flex" cols="12" sm="6">
-                  <v-btn
-                    color="green darken-1"
-                    text
-                    @click="
-                      createPostDialog = false;
-                      submit();
-                    "
-                    >Cadastrar</v-btn
-                  >
+                    <v-btn color="green darken-1" text @click="submit()"
+                      >Cadastrar</v-btn
+                    >
 
-                  <v-btn
-                    color="red darken-1"
-                    text
-                    @click="createPostDialog = false"
-                    >Cancelar</v-btn
-                  >
-                </v-col>
-              </v-container>
-            </template>
-          </v-card-actions>
+                    <v-btn
+                      color="red darken-1"
+                      text
+                      @click="
+                        createPostDialog = false;
+                        postName = '';
+                        abbreviation = '';
+                      "
+                      >Cancelar</v-btn
+                    >
+                  </v-col>
+                </v-container>
+              </template>
+            </v-card-actions>
+          </v-form>
         </v-card>
       </v-dialog>
 
@@ -81,7 +83,15 @@
                 Edição do Cargo
               </h3>
               <v-spacer></v-spacer>
-              <v-btn @click="editPostDialog = false" title="Fechar" icon>
+              <v-btn
+                @click="
+                  editPostDialog = false;
+                  postName = '';
+                  abbreviation = '';
+                "
+                title="Fechar"
+                icon
+              >
                 <v-icon color="grey">mdi-close</v-icon>
               </v-btn>
             </v-row>
@@ -94,6 +104,7 @@
                   <v-col class="d-flex" cols="12" sm="6">
                     <v-text-field
                       v-model="abbreviation"
+                      :rules="[rules.abbreviationRequired]"
                       label="Sigla"
                       prepend-inner-icon="mdi-account"
                       dense
@@ -103,6 +114,7 @@
                   <v-col class="d-flex" cols="12" sm="6">
                     <v-text-field
                       v-model="postName"
+                      :rules="[rules.nameRequired]"
                       label="Nome"
                       prepend-inner-icon="mdi-account"
                       dense
@@ -138,20 +150,18 @@
                 </template>
 
                 <v-col class="d-flex" cols="12" sm="6">
-                  <v-btn
-                    color="green darken-1"
-                    text
-                    @click="
-                      editPostDialog = false;
-                      sendPutRequest();
-                    "
+                  <v-btn color="green darken-1" text @click="sendPutRequest()"
                     >Editar</v-btn
                   >
 
                   <v-btn
                     color="red darken-1"
                     text
-                    @click="editPostDialog = false"
+                    @click="
+                      editPostDialog = false;
+                      postName = '';
+                      abbreviation = '';
+                    "
                     >Cancelar</v-btn
                   >
                 </v-col>
@@ -273,6 +283,10 @@ export default {
       text: "",
       timeout: 3000,
       color: "",
+      rules: {
+        abbreviationRequired: (value) => !!value || "Escreve uma sigla.",
+        nameRequired: (value) => !!value || "Escreve um nome.",
+      },
       headers: [
         {
           text: "Nome",
@@ -330,18 +344,21 @@ export default {
         full_name: this.postName,
         abbreviation: this.abbreviation,
       };
-      await this.postController
-        .createPost(this.$api, post)
-        .then(() => {
-          /* Atualizar pagina e limpar as text-fields */
-          this.getPosts(), (this.postName = ""), (this.abbreviation = "");
-          this.setSnackbar("Cargo cadastrado com sucesso.", "success");
-        })
-        .catch((err) => {
-          console.log(err);
-          this.setSnackbar("Erro ao criar cargo.", "error");
-        });
-      this.showModal = true;
+      if (this.validarFormulario()) {
+        await this.postController
+          .createPost(this.$api, post)
+          .then(() => {
+            /* Atualizar pagina e limpar as text-fields */
+            this.getPosts(), (this.postName = ""), (this.abbreviation = "");
+            this.setSnackbar("Cargo cadastrado com sucesso.", "success");
+            this.createPostDialog = false;
+          })
+          .catch((err) => {
+            console.log(err);
+            this.setSnackbar("Erro ao criar cargo.", "error");
+          });
+        this.showModal = true;
+      }
     },
     setSnackbar(text, color) {
       this.text = text;
@@ -375,16 +392,19 @@ export default {
     async sendPutRequest() {
       this.postDetail.full_name = this.postName;
       this.postDetail.abbreviation = this.abbreviation;
-      await this.postController
-        .editPost(this.$api, this.postDetail)
-        .then(() => {
-          this.getPosts(),
-            this.setSnackbar("Cargo editado com sucesso.", "warning");
-        })
-        .catch((err) => {
-          console.log(err);
-          this.setSnackbar("Erro ao editar cargo.", "error");
-        });
+      if (this.validarFormulario()) {
+        await this.postController
+          .editPost(this.$api, this.postDetail)
+          .then(() => {
+            this.getPosts(),
+              this.setSnackbar("Cargo editado com sucesso.", "warning");
+            this.editPostDialog = false;
+          })
+          .catch((err) => {
+            console.log(err);
+            this.setSnackbar("Erro ao editar cargo.", "error");
+          });
+      }
     },
 
     async deleteItem() {
@@ -398,6 +418,9 @@ export default {
           console.log(err);
           this.setSnackbar("Erro ao editar cargo.", "error");
         });
+    },
+    validarFormulario() {
+      return this.$refs.form.validate();
     },
   },
 };

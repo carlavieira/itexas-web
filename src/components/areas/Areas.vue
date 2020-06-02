@@ -7,7 +7,11 @@
       <h2>Áreas</h2>
       <v-spacer></v-spacer>
       <v-btn
-        @click="createDepartmentDialog = true"
+        @click="
+          departmentName = '';
+          abbreviation = '';
+          createDepartmentDialog = true;
+        "
         title="Cadastrar nova área"
         small
         color="secondary"
@@ -58,7 +62,11 @@
                     <v-btn
                       color="red darken-1"
                       text
-                      @click="createDepartmentDialog = false"
+                      @click="
+                        createDepartmentDialog = false;
+                        departamentName = '';
+                        abbreviation = '';
+                      "
                       >Cancelar</v-btn
                     >
                   </v-col>
@@ -143,7 +151,11 @@
                   <v-btn
                     color="red darken-1"
                     text
-                    @click="editDepartmentDialog = false"
+                    @click="
+                      editDepartmentDialog = false;
+                      departamentName = '';
+                      abbreviation = '';
+                    "
                     >Cancelar</v-btn
                   >
                 </v-col>
@@ -388,8 +400,7 @@ export default {
             this.setSnackbar("Área deletada com sucesso.", "error");
         })
         .catch(() => {
-          console.log("Teste"),
-            this.setSnackbar("Erro ao deletar área.", "error");
+          this.setSnackbar("Erro ao deletar área.", "error");
         });
       this.showModal = true;
     },
