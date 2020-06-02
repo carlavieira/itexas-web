@@ -16,7 +16,7 @@
         ></v-text-field>
         <v-select
           :items="departments"
-          item-text="name"
+          item-text="abbreviation"
           hide-details
           no-data-text="Sem áreas cadastradas"
           style="max-width: 300px;"
@@ -147,6 +147,7 @@ export default {
       await this.memberController
         .getAllDepartments(this.$api)
         .then((res) => {
+          console.log(res);
           this.departments = res.data;
         })
         .catch((e) => {
