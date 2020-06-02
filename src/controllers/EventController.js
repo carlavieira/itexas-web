@@ -54,4 +54,17 @@ export default {
       });
     return response;
   },
+
+  getEventTypes(api) {
+    let url = `manage-event/`;
+    const response = api
+      .options(url)
+      .then(function(response) {
+        return response.data.actions.POST.type.choices;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    return response;
+  }
 };

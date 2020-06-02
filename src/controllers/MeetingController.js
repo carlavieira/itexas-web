@@ -70,4 +70,17 @@ export default {
       });
     return response;
   },
+
+  getMeetingTypes(api) {
+    url = `manage-meetings/`;
+    const response = api
+      .options(url)
+      .then(function(response) {
+        return response.data.actions.POST.type.choices;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    return response;
+  }
 };
