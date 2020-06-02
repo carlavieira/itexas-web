@@ -27,30 +27,30 @@
       </v-card-title>
 
       <v-dialog v-model="dialog" max-width="500" min-h>
-          <v-card>
-            <v-card-title style="font-size: 16px !important" class="headline"
-              >Deseja realmente deletar a office hour?</v-card-title
+        <v-card>
+          <v-card-title style="font-size: 16px !important" class="headline"
+            >Deseja realmente deletar a office hour?</v-card-title
+          >
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              color="green darken-1"
+              text
+              @click="
+                dialog = false;
+                deleteItem(deletedItem);
+              "
             >
-            <v-card-actions>
-              <v-spacer></v-spacer>
+              Sim
+            </v-btn>
 
-              <v-btn
-                color="green darken-1"
-                text
-                @click="
-                  dialog = false;
-                  deleteItem(deletedItem);
-                "
-              >
-                Sim
-              </v-btn>
-
-              <v-btn color="red darken-1" text @click="dialog = false">
-                Não
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+            <v-btn color="red darken-1" text @click="dialog = false">
+              Não
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
       <v-data-table
         :search="search"
@@ -61,17 +61,31 @@
         :headers="header"
         :items="officeHours"
       >
-        <template
-          v-slot:item.member.first_name="{ item }"
-        >{{ item.member.first_name }} {{ item.member.last_name }}</template>
-        <template v-slot:item.date="{ item }">{{ formatDate(item.date) }}</template>
-        <template v-slot:item.checkin_time="{ item }">{{ format(item.checkin_time) }}</template>
+        <template v-slot:item.member.first_name="{ item }"
+          >{{ item.member.first_name }} {{ item.member.last_name }}</template
+        >
+        <template v-slot:item.date="{ item }">{{
+          formatDate(item.date)
+        }}</template>
+        <template v-slot:item.checkin_time="{ item }">{{
+          format(item.checkin_time)
+        }}</template>
         <template v-slot:item.checkout_time="{ item }">
-          <span v-if="item.checkout_time">{{ format(item.checkout_time) }}</span>
+          <span v-if="item.checkout_time">{{
+            format(item.checkout_time)
+          }}</span>
+        </template>
+        <template v-slot:item.duration="{ item }">
+          <span v-if="item.duration">{{ formatDuration(item.duration) }}</span>
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon small @click="edit(item)">mdi-pencil</v-icon>
-          <v-icon class="pl-3" small @click="dialog = true, deletedItem = item">mdi-delete</v-icon>
+          <v-icon
+            class="pl-3"
+            small
+            @click="(dialog = true), (deletedItem = item)"
+            >mdi-delete</v-icon
+          >
         </template>
       </v-data-table>
     </v-card>
@@ -91,11 +105,11 @@
 import modalOfficeHours from "./ModalOfficeHours.vue";
 import officeHoursController from "../../controllers/OfficeHoursController";
 import moment from "moment";
-import memberController from "../../controllers/MemberController"
+import memberController from "../../controllers/MemberController";
 
 export default {
   components: {
-    modalOfficeHours
+    modalOfficeHours,
   },
 
   data() {
@@ -109,7 +123,7 @@ export default {
         { text: "Check-in", value: "checkin_time" },
         { text: "Check-out", value: "checkout_time" },
         { text: "Duração", value: "duration" },
-        { text: "Ações", value: "actions", sortable: false }
+        { text: "Ações", value: "actions", sortable: false },
       ],
       officeHours: [],
       type: null,
@@ -119,33 +133,35 @@ export default {
       search1: "",
       departments: [],
       dialog: false,
-      deletedItem: ""
+      deletedItem: "",
     };
   },
 
   async created() {
     await this.getOfficeHours();
-    await this.getAllDepartments()
+    await this.getAllDepartments();
   },
 
   methods: {
-    async getAllDepartments(){
-      await this.memberController.getAllDepartments(this.$api)
-      .then(res => {
-        this.departments = res.data
-      }).catch(e => {
-        console.log(e)
-      })
+    async getAllDepartments() {
+      await this.memberController
+        .getAllDepartments(this.$api)
+        .then((res) => {
+          this.departments = res.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
 
     async getOfficeHours() {
       await this.officeHoursController
         .listOfficeHour(this.$api)
-        .then(res => {
+        .then((res) => {
           this.officeHours = res.data;
           console.log(this.officeHours);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -159,11 +175,11 @@ export default {
     async deleteItem(item) {
       await this.officeHoursController
         .deleteOfficeHour(this.$api, item)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.getOfficeHours();
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
@@ -174,7 +190,12 @@ export default {
 
     formatDate(item) {
       return moment(item).format("DD/MM/YYYY");
-    }
-  }
+    },
+    formatDuration(item) {
+      const timeSplit = item.split(":");
+      const secondsSplit = timeSplit[2].split(".");
+      return `${timeSplit[0]}:${timeSplit[0]}:${secondsSplit[0]}`;
+    },
+  },
 };
 </script>

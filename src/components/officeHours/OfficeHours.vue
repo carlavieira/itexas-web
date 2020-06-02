@@ -3,17 +3,22 @@
     <v-row class="px-4 pb-3">
       <h2>Office Hours</h2>
       <v-spacer></v-spacer>
-      <v-btn @click="add()" title="Cadastrar novo membro" small color="secondary" fab>
+      <v-btn
+        @click="add()"
+        title="Cadastrar novo membro"
+        small
+        color="secondary"
+        fab
+      >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-row>
 
     <v-dialog v-model="dialog" max-width="500" min-h>
       <v-card>
-        <v-card-title
-          style="font-size: 16px !important"
-          class="headline"
-        >Deseja realmente deletar a office hour?</v-card-title>
+        <v-card-title style="font-size: 16px !important" class="headline"
+          >Deseja realmente deletar a office hour?</v-card-title
+        >
         <v-card-actions>
           <v-spacer></v-spacer>
 
@@ -22,10 +27,11 @@
             color="green darken-1"
             text
             @click="
-                  dialog = false;
-                  deleteItem(deletedItem);
-                "
-          >Sim</v-btn>
+              dialog = false;
+              deleteItem(deletedItem);
+            "
+            >Sim</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -40,14 +46,28 @@
         :headers="header"
         :items="officeHours"
       >
-        <template v-slot:item.date="{ item }">{{ formatDate(item.date) }}</template>
-        <template v-slot:item.checkin_time="{ item }">{{ format(item.checkin_time) }}</template>
+        <template v-slot:item.date="{ item }">{{
+          formatDate(item.date)
+        }}</template>
+        <template v-slot:item.checkin_time="{ item }">{{
+          format(item.checkin_time)
+        }}</template>
         <template v-slot:item.checkout_time="{ item }">
-          <span v-if="item.checkout_time">{{ format(item.checkout_time) }}</span>
+          <span v-if="item.checkout_time">{{
+            format(item.checkout_time)
+          }}</span>
+        </template>
+        <template v-slot:item.duration="{ item }">
+          <span v-if="item.duration">{{ formatDuration(item.duration) }}</span>
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon small @click="edit(item)">mdi-pencil</v-icon>
-          <v-icon class="pl-3" small @click="dialog = true, deletedItem = item">mdi-delete</v-icon>
+          <v-icon
+            class="pl-3"
+            small
+            @click="(dialog = true), (deletedItem = item)"
+            >mdi-delete</v-icon
+          >
         </template>
       </v-data-table>
     </v-card>
@@ -69,7 +89,7 @@ import moment from "moment";
 
 export default {
   components: {
-    modalOfficeHours
+    modalOfficeHours,
   },
 
   data() {
@@ -80,14 +100,14 @@ export default {
         { text: "Check-in", value: "checkin_time" },
         { text: "Check-out", value: "checkout_time" },
         { text: "Duração", value: "duration" },
-        { text: "Ações", value: "actions", sortable: false }
+        { text: "Ações", value: "actions", sortable: false },
       ],
       officeHours: [],
       type: null,
       showModal: false,
       oh: {},
       dialog: false,
-      deletedItem: ""
+      deletedItem: "",
     };
   },
 
@@ -97,13 +117,13 @@ export default {
 
   methods: {
     async getOfficeHours() {
-      this.$emit("reload")
+      this.$emit("reload");
       await this.officeHoursController
         .getOfficeHours(this.$api)
-        .then(res => {
+        .then((res) => {
           this.officeHours = res.data;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -114,7 +134,7 @@ export default {
       this.oh = {
         date: null,
         checkin_time: null,
-        checkout_time: null
+        checkout_time: null,
       };
     },
 
@@ -127,11 +147,11 @@ export default {
     async deleteItem(item) {
       await this.officeHoursController
         .deleteOfficeHour(this.$api, item)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.getOfficeHours();
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
@@ -142,7 +162,12 @@ export default {
 
     formatDate(item) {
       return moment(item).format("DD/MM/YYYY");
-    }
-  }
+    },
+    formatDuration(item) {
+      const timeSplit = item.split(":");
+      const secondsSplit = timeSplit[2].split(".");
+      return `${timeSplit[0]}:${timeSplit[0]}:${secondsSplit[0]}`;
+    },
+  },
 };
 </script>
