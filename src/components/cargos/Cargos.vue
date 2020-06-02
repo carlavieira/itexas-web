@@ -1,6 +1,9 @@
 <template>
   <div>
     <v-row class="px-4 pb-3">
+      <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">
+        {{ text }}</v-snackbar
+      >
       <h2>Cargos</h2>
       <v-spacer></v-spacer>
       <v-btn
@@ -120,7 +123,9 @@
                       item-key="name"
                       class="elevation-1"
                       :hide-default-footer="true"
-                      :rows-per-page-items="[20, 10, 30, 40]"
+                      :footer-props="{
+                        itemsPerPageOptions: [-1],
+                      }"
                     >
                       <template v-slot:item.name="{ item }">
                         <span> {{ getFullName(item) }} </span>
@@ -264,6 +269,10 @@ export default {
       tablePosts: {},
       deletedItem: "",
       selected: [],
+      snackbar: false,
+      text: "",
+      timeout: 3000,
+      color: "",
       headers: [
         {
           text: "Nome",
@@ -321,13 +330,23 @@ export default {
         full_name: this.postName,
         abbreviation: this.abbreviation,
       };
-      await this.postController.createPost(this.$api, post).then(
-        /* Atualizar pagina e limpar as text-fields */
-        this.getPosts(),
-        (this.postName = ""),
-        (this.abbreviation = "")
-      );
+      await this.postController
+        .createPost(this.$api, post)
+        .then(() => {
+          /* Atualizar pagina e limpar as text-fields */
+          this.getPosts(), (this.postName = ""), (this.abbreviation = "");
+          this.setSnackbar("Cargo cadastrado com sucesso.", "success");
+        })
+        .catch((err) => {
+          console.log(err);
+          this.setSnackbar("Erro ao criar cargo.", "error");
+        });
       this.showModal = true;
+    },
+    setSnackbar(text, color) {
+      this.text = text;
+      this.color = color;
+      this.snackbar = true;
     },
 
     async edit(item) {
@@ -346,6 +365,8 @@ export default {
       this.deletePostDialog = true;
       this.deletedItem = item.full_name;
       this.postName = item.full_name;
+      this.postName = "";
+      this.abbreviation = "";
       this.postDetail = {
         id: item.id,
       };
@@ -356,13 +377,27 @@ export default {
       this.postDetail.abbreviation = this.abbreviation;
       await this.postController
         .editPost(this.$api, this.postDetail)
-        .then(this.getPosts);
+        .then(() => {
+          this.getPosts(),
+            this.setSnackbar("Cargo editado com sucesso.", "warning");
+        })
+        .catch((err) => {
+          console.log(err);
+          this.setSnackbar("Erro ao editar cargo.", "error");
+        });
     },
 
     async deleteItem() {
       await this.postController
         .deletePost(this.$api, this.postDetail.id)
-        .then(this.getPosts);
+        .then(() => {
+          this.getPosts(),
+            this.setSnackbar("Cargo deletado com sucesso.", "error");
+        })
+        .catch((err) => {
+          console.log(err);
+          this.setSnackbar("Erro ao editar cargo.", "error");
+        });
     },
   },
 };

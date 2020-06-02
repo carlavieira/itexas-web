@@ -315,7 +315,7 @@ export default {
       };
       await this.departmentController
         .createDepartment(this.$api, department)
-        .then(this.getDepartments);
+        .then(this.getDepartments());
       this.showModal = true;
     },
 
