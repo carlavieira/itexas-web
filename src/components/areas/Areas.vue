@@ -1,6 +1,9 @@
 <template>
   <div>
     <v-row class="px-4 pb-3">
+      <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">
+        {{ text }}</v-snackbar
+      >
       <h2>Áreas</h2>
       <v-spacer></v-spacer>
       <v-btn
@@ -180,7 +183,7 @@
                 deleteItem();
               "
             >
-              DELETAR CARGO
+              DELETAR ÁREA
             </v-btn>
 
             <v-btn text @click="deleteDepartmentDialog = false">
@@ -270,6 +273,10 @@ export default {
       tableDepartments: {},
       deletedItem: "",
       selected: [],
+      snackbar: false,
+      color: "",
+      text: "",
+      timeout: 3000,
       headers: [
         {
           text: "Nome",
@@ -299,7 +306,6 @@ export default {
                 this.membersInDepartment[department.id] = res;
               });
           });
-          console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -307,6 +313,11 @@ export default {
     },
     getFullName: (membro) => `${membro.first_name} ${membro.last_name}`,
     getFullNameLeader: (leader) => `${leader.first_name} ${leader.last_name}`,
+    setSnackbar(text, color) {
+      this.text = text;
+      this.color = color;
+      this.snackbar = true;
+    },
 
     async submit() {
       const department = {
@@ -315,7 +326,15 @@ export default {
       };
       await this.departmentController
         .createDepartment(this.$api, department)
-        .then(this.getDepartments());
+        .then(() => {
+          this.getDepartment(),
+            (this.departmentName = ""),
+            (this.abbreviation = "");
+          this.setSnackbar("Área criada com sucesso.", "success");
+        })
+        .catch(() => {
+          this.setSnackbar("Erro ao criar área.", "error");
+        });
       this.showModal = true;
     },
 
@@ -345,13 +364,30 @@ export default {
       this.departmentDetail.abbreviation = this.abbreviation;
       await this.departmentController
         .editDepartment(this.$api, this.departmentDetail)
-        .then(this.getDepartments);
+        .then(() => {
+          this.getDepartment(),
+            (this.departmentName = ""),
+            (this.abbreviation = "");
+          this.setSnackbar("Área editada com sucesso.", "warning");
+        })
+        .catch(() => {
+          this.setSnackbar("Erro ao editar área.", "error");
+        });
+      this.showModal = true;
     },
 
     async deleteItem() {
       await this.departmentController
         .deleteDepartment(this.$api, this.departmentDetail.id)
-        .then(this.getDepartments);
+        .then(() => {
+          this.getDepartment(),
+            this.setSnackbar("Área deletada com sucesso.", "error");
+        })
+        .catch(() => {
+          console.log("Teste"),
+            this.setSnackbar("Erro ao deletar área.", "error");
+        });
+      this.showModal = true;
     },
   },
 };
