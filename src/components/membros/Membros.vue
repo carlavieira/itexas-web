@@ -56,9 +56,12 @@
               <span v-else> - </span>
             </template>
             <template v-slot:item.is_active="{ item }">
-              <v-icon small v-if="item.is_active" class="success--text">mdi-brightness-1</v-icon>
-              <v-icon small v-if="!item.is_active" class="error--text">mdi-brightness-1</v-icon>
-
+              <v-icon small v-if="item.is_active" class="success--text"
+                >mdi-brightness-1</v-icon
+              >
+              <v-icon small v-if="!item.is_active" class="error--text"
+                >mdi-brightness-1</v-icon
+              >
             </template>
           </v-data-table>
         </v-card>
@@ -101,6 +104,7 @@ export default {
     return {
       btnMembro: false,
       showNickName: (membro) => {
+        console.log(membro.nickname);
         if (membro.nickname) {
           return `(${membro.nickname})`;
         }
@@ -111,12 +115,12 @@ export default {
         {
           text: "Nome",
           align: "start",
-          value: "full_name",
+          value: "name",
         },
         { text: "Cargo", value: "post.abbreviation" },
         { text: "Área", value: "department.abbreviation" },
         { text: "Líder", value: "leader" },
-        { text: "Ativo", value: "is_active" }
+        { text: "Ativo", value: "is_active" },
       ],
       membros: [],
       userDetail: null,
