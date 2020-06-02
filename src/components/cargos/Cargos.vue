@@ -52,7 +52,7 @@
                       ></v-text-field>
                     </v-col>
                   </v-row>
-                  <v-col class="d-flex" cols="12" sm="6">
+                  <v-col class="d-flex pa-0" cols="12" sm="6">
                     <v-btn color="green darken-1" text @click="submit()"
                       >Cadastrar</v-btn
                     >

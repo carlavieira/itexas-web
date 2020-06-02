@@ -20,11 +20,16 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
 
-      <v-dialog v-model="createDepartmentDialog" max-width="700" min-h>
+      <v-dialog
+        v-model="createDepartmentDialog"
+        persistent
+        max-width="700"
+        min-h
+      >
         <v-form ref="form">
           <v-card>
             <v-card-title
-              class="title-table pt-3 py-4 pb-0 headline"
+              class="title-table pt-3 py-4 pb-0 headline font-weight-bold"
               style="font-size: 16px !important"
               >Cadastro do Áreas</v-card-title
             >
@@ -43,7 +48,7 @@
                         :rules="[rules.abbreviationRequired]"
                       ></v-text-field>
                     </v-col>
-                    <v-col class="d-flex" cols="12" sm="11">
+                    <v-col class="d-flex" cols="12" sm="6">
                       <v-text-field
                         v-model="departmentName"
                         label="Nome"
@@ -54,7 +59,7 @@
                       ></v-text-field>
                     </v-col>
                   </v-row>
-                  <v-col class="d-flex" cols="12" sm="6">
+                  <v-col class="d-flex pa-0" cols="12" sm="6">
                     <v-btn color="green darken-1" text @click="submit()"
                       >Cadastrar</v-btn
                     >
