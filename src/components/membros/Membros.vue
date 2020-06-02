@@ -104,7 +104,6 @@ export default {
     return {
       btnMembro: false,
       showNickName: (membro) => {
-        console.log(membro.nickname);
         if (membro.nickname) {
           return `(${membro.nickname})`;
         }

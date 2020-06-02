@@ -70,7 +70,7 @@
           <v-select
             v-model="meeting.type"
             :items="types"
-            item-text="name"
+            item-text="display_name"
             item-value="value"
             label="Tipo da Reunião"
             prepend-inner-icon="mdi-account-group"
@@ -214,13 +214,7 @@ export default {
     },
     hostName: "",
     participantesToDelete: [],
-    types: [
-      { name: "REB", value: "REB" },
-      { name: "Reunião de Área", value: "RA" },
-      { name: "Reunião de Time", value: "RT" },
-      { name: "Reunião de LR", value: "LR" },
-      { name: "Reunião de Corner", value: "CN" },
-    ],
+    types: [],
   }),
 
   computed: {
@@ -236,6 +230,7 @@ export default {
 
   created() {
     this.populaSelectLider();
+    this.getTypeMeetings();
     this.date = this.meeting.date;
     this.time = this.meeting.time;
     this.hostName =
@@ -376,6 +371,9 @@ export default {
             this.$emit("showSnackbar", this.snackbarDetail);
           }, 1000);
         });
+    },
+    async getTypeMeetings() {
+      this.types = await meetingController.getMeetingTypes(this.$api);
     },
   },
 };

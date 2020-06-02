@@ -13,7 +13,7 @@
             <v-select
               v-model="type"
               :items="types"
-              item-text="name"
+              item-text="display_name"
               item-value="value"
               :rules="rules.type"
               label="Tipo da Reunião"
@@ -146,13 +146,7 @@ export default {
   data: (vm) => ({
     meetingController,
     valid: true,
-    types: [
-      { name: "REB", value: "REB" },
-      { name: "Reunião de Área", value: "RA" },
-      { name: "Reunião de Time", value: "RT" },
-      { name: "Reunião de LR", value: "LR" },
-      { name: "Reunião de Corner", value: "CN" },
-    ],
+    types: [],
     rules: {
       type: [(v) => !!v || "Selecione um tipo de reunião"],
       leader: [(v) => !!v || "Selecione o líder na reunião."],
@@ -182,6 +176,7 @@ export default {
   async created() {
     await this.populaSelectLider();
     await this.defaultLeader();
+    await this.getTypeMeetings();
   },
 
   computed: {
@@ -253,7 +248,9 @@ export default {
 
       return newArray;
     },
-
+    async getTypeMeetings() {
+      this.types = await meetingController.getMeetingTypes(this.$api);
+    },
     ordenaOrdemCrescente(array) {
       array.sort(function(item1, item2) {
         if (item1.first_name && item2.first_name) {
