@@ -24,6 +24,13 @@
           label="Áreas"
           v-model="search"
         ></v-select>
+        <v-spacer></v-spacer>
+             <download-excel :fields="json_fields" :data="officeHours" name="OfficeHours.xls" type= "csv">
+               <v-btn icon>
+              <v-icon>mdi-file-excel</v-icon>
+            </v-btn>
+             </download-excel>
+
       </v-card-title>
 
       <v-dialog v-model="dialog" max-width="500" min-h>
@@ -134,6 +141,14 @@ export default {
       departments: [],
       dialog: false,
       deletedItem: "",
+      json_fields: {
+        "Nome": "member.first_name",
+        "Sobrenome": "member.last_name",
+        "Area": "member.department.abbreviation",
+        "Check-in": "checkin_time",
+        "Check-out": "checkout_time",
+        "Duração": "duration"
+      }
     };
   },
 
