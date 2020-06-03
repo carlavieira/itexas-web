@@ -66,5 +66,18 @@ export default {
         console.log(error);
       });
     return response;
-  }
+  },
+  getEventsInMonth(api) {
+    let url = `next-events/`;
+    const response = api
+      .get(url)
+      .then(function(response) {
+        console.log(response);
+        return response.data;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    return response;
+  },
 };
