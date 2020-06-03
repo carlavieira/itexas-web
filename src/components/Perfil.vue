@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="member">
     <v-layout row mx-4>
       <v-btn v-if="!editMember && !editHist" icon @click="editMember = true" title="Editar">
         <v-icon color="black">mdi-account-edit</v-icon>

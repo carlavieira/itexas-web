@@ -149,6 +149,9 @@ export default {
         .login(this.$http, this.email, this.senha)
         .then(() => {
           this.setSnackbar("Login efetuado", "success");
+          this.$router.push("/membro/dashboard");
+          location.reload(true);
+
         })
         .catch(() => {
           this.setSnackbar("Erro ao efetuar login", "error");

@@ -16,11 +16,7 @@ export default {
         localStorage.setItem("user_id", res.data.user.id);
         localStorage.setItem("access_token", res.data.token);
         localStorage.setItem("is_staff", res.data.user.is_staff);
-        router.push("/membro/dashboard");
-        console.log(localStorage.getItem("user_id"));
-        console.log(localStorage.getItem("access_token"));
-        console.log(localStorage.getItem("is_staff"));
-        console.log(res);
+        
         return res;
       })
       .catch((err) => {
