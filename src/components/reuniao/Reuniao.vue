@@ -105,13 +105,7 @@ export default {
       color: "",
       reunioes: [],
       userID: null,
-      types: [
-        { text: "REB", value: "REB" },
-        { text: "Reunião de Área", value: "RA" },
-        { text: "Reunião de Time", value: "RT" },
-        { text: "Reunião de LR", value: "LR" },
-        { text: "Reunião de Corner", value: "CN" },
-      ],
+      types: [],
     };
   },
 
@@ -162,6 +156,8 @@ export default {
       else if (sigla == "RT") return "Reunião de Time";
       else if (sigla == "LR") return "Reunião de LR";
       else if (sigla == "CN") return "Reunião de Corner";
+      else if (sigla == "O2O") return "One to One(O2O)";
+      else if (sigla == "TR") return "Traking";
     },
 
     formatPercentage(item) {

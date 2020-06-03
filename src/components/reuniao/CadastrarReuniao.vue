@@ -12,6 +12,7 @@
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-select
               v-model="type"
+              no-data-text="Carregando tipos de reunião"
               :items="types"
               item-text="display_name"
               item-value="value"
@@ -27,6 +28,7 @@
 
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-select
+              no-data-text="Carregando lista de membros"
               v-model="leader"
               :items="leaders"
               item-text="full_name"
@@ -250,6 +252,7 @@ export default {
     },
     async getTypeMeetings() {
       this.types = await meetingController.getMeetingTypes(this.$api);
+      console.log(this.types);
     },
     ordenaOrdemCrescente(array) {
       array.sort(function(item1, item2) {

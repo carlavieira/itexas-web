@@ -61,9 +61,12 @@
                   dialog = false;
                   deleteMember();
                 "
-              >Sim</v-btn>
+                >Sim</v-btn
+              >
 
-              <v-btn color="red darken-1" text @click="dialog = false">Não</v-btn>
+              <v-btn color="red darken-1" text @click="dialog = false"
+                >Não</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -75,7 +78,9 @@
             </v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="red darken-1" text @click="deleteB = false">Não</v-btn>
+              <v-btn color="red darken-1" text @click="deleteB = false"
+                >Não</v-btn
+              >
               <v-btn
                 color="green darken-1"
                 text
@@ -83,7 +88,8 @@
                   deleteB = false;
                   deleteBack();
                 "
-              >Sim</v-btn>
+                >Sim</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -112,12 +118,13 @@
             @change="onChangeImage"
           />
         </v-avatar>
-        <span
-          v-if="!editMember"
-          class="title font-weight-medium mt-3"
-        >{{ member.first_name }} {{ member.last_name }}</span>
+        <span v-if="!editMember" class="title font-weight-medium mt-3"
+          >{{ member.first_name }} {{ member.last_name }}</span
+        >
 
-        <span v-if="!editMember" class="subheading font-weight-regular">( {{ member.nickname }} )</span>
+        <span v-if="!editMember" class="subheading font-weight-regular"
+          >( {{ member.nickname }} )</span
+        >
 
         <v-layout row mt-3 justify-space-around style="width: 100%;">
           <v-layout justify-left col-xs-12 col-sm-6 v-if="editMember">
@@ -282,7 +289,11 @@
                   v-on="on"
                 ></v-text-field>
               </template>
-              <v-date-picker locale="pt-br" v-model="member.date_joined" @input="menuData = false"></v-date-picker>
+              <v-date-picker
+                locale="pt-br"
+                v-model="member.date_joined"
+                @input="menuData = false"
+              ></v-date-picker>
             </v-menu>
           </v-layout>
 
@@ -302,7 +313,12 @@
             ></v-switch>
             <v-spacer></v-spacer>
 
-            <v-switch v-if="editMember" v-model="member.is_active" color="tertiary" label="Ativo"></v-switch>
+            <v-switch
+              v-if="editMember"
+              v-model="member.is_active"
+              color="tertiary"
+              label="Ativo"
+            ></v-switch>
             <v-switch
               :disabled="!editMember"
               v-if="!editMember"
@@ -313,7 +329,9 @@
           </v-layout>
         </v-layout>
         <v-layout row align-center v-if="editMember">
-          <v-btn class="ma-2" @click="sendEdit()" depressed color="success">Salvar</v-btn>
+          <v-btn class="ma-2" @click="sendEdit()" depressed color="success"
+            >Salvar</v-btn
+          >
         </v-layout>
       </v-layout>
 
@@ -322,17 +340,16 @@
       <v-layout v-if="!editMember" column>
         <v-layout row class="mx-3" align-center>
           <span class="title font-weight-medium">Histórico</span>
-          <span
-            v-if="editHist"
-            class="title font-weight-medium pl-1"
-          >- {{ member.first_name }} {{ member.last_name }}</span>
+          <span v-if="editHist" class="title font-weight-medium pl-1"
+            >- {{ member.first_name }} {{ member.last_name }}</span
+          >
           <v-spacer></v-spacer>
 
           <v-btn
             v-if="!editHist && this.$route.name == 'membersAdm'"
             icon
             class="ma-2"
-            @click="editHist = true, textBtnHist = 'Adicionar'"
+            @click="(editHist = true), (textBtnHist = 'Adicionar')"
             title="Editar"
           >
             <v-icon color="black">mdi-account-edit</v-icon>
@@ -427,7 +444,12 @@
           </v-layout>
 
           <v-layout col-xs-6 col-sm-4 pa-1>
-            <v-text-field v-model="histNewObj.description" outlined label="Descrição" hide-details></v-text-field>
+            <v-text-field
+              v-model="histNewObj.description"
+              outlined
+              label="Descrição"
+              hide-details
+            ></v-text-field>
           </v-layout>
 
           <v-layout col-xs-6 col-sm-4 pa-1 align-end justify-end>
@@ -452,7 +474,12 @@
             </template>
             <template v-slot:item.actions="{ item }" v-if="editHist">
               <v-icon small @click="editBackPrepare(item)">mdi-pencil</v-icon>
-              <v-icon class="pl-3" small @click="deleteB = true, itemToDelete = item.id">mdi-delete</v-icon>
+              <v-icon
+                class="pl-3"
+                small
+                @click="(deleteB = true), (itemToDelete = item.id)"
+                >mdi-delete</v-icon
+              >
             </template>
           </v-data-table>
         </v-card>
@@ -494,13 +521,13 @@ export default {
         {
           text: "Cargo",
           align: "start",
-          value: "post.abbreviation"
+          value: "post.abbreviation",
         },
         { text: "Área", value: "department.abbreviation" },
         { text: "Data Início", value: "start_date" },
         { text: "Data Fim", value: "end_date" },
         { text: "Descrição", value: "description" },
-        { text: "Ações", value: "actions" }
+        { text: "Ações", value: "actions" },
       ],
       hist: [],
       editHist: false,
@@ -512,7 +539,7 @@ export default {
         end_date: null,
         post: null,
         department: null,
-        description: ""
+        description: "",
       },
       textBtnHist: "",
       snackbar: false,
@@ -520,13 +547,13 @@ export default {
       timeout: 3000,
       color: "",
       deleteB: false,
-      itemToDelete: null
+      itemToDelete: null,
     };
   },
 
   props: {
     show: Boolean,
-    Member: Object
+    Member: Object,
   },
 
   async created() {
@@ -536,7 +563,7 @@ export default {
       this.member.post = {
         abbreviation: null,
         full_name: null,
-        id: null
+        id: null,
       };
     }
 
@@ -544,7 +571,7 @@ export default {
       this.member.department = {
         abbreviation: null,
         full_name: null,
-        id: null
+        id: null,
       };
     }
 
@@ -552,8 +579,9 @@ export default {
     this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
     this.abb =
       this.member.first_name.slice(0, 1) + this.member.last_name.slice(0, 1);
-    if (this.member.photo)
-      this.showImage = window.URL.createObjectURL(this.member.photo);
+    if (this.member.photo) this.showImage = this.member.photo;
+
+    console.log(this.showImage);
     await this.getDepartments();
     await this.getPosts();
     await this.getLeaders();
@@ -561,14 +589,14 @@ export default {
   },
 
   methods: {
-    leader_full_name: item => `${item.first_name} ${item.last_name}`,
+    leader_full_name: (item) => `${item.first_name} ${item.last_name}`,
     async getPosts() {
       await this.postController
         .getPosts(this.$api)
-        .then(res => {
+        .then((res) => {
           this.posts = res.data;
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
@@ -576,10 +604,10 @@ export default {
     async getDepartments() {
       await this.departmentController
         .getDepartments(this.$api)
-        .then(res => {
+        .then((res) => {
           this.departments = res.data;
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
@@ -587,10 +615,10 @@ export default {
     async getLeaders() {
       await this.memberController
         .getAllMembers(this.$api)
-        .then(res => {
+        .then((res) => {
           this.leaders = res;
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
@@ -598,43 +626,43 @@ export default {
     async getBackground() {
       await this.backgroundController
         .getBackground(this.$api, this.member.id)
-        .then(res => {
+        .then((res) => {
           this.hist = res.data;
           console.log(this.hist);
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
 
     async sendEdit() {
       let memberEdit = this.member;
+      console.log(memberEdit);
       await this.memberController
         .editMember(this.$api, memberEdit)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.member = res;
           this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
-
           this.setObjects();
           this.$emit("getMembers");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
 
     setObjects() {
-      this.posts.forEach(post => {
+      this.posts.forEach((post) => {
         if (post.id == this.member.post) this.member.post = post;
       });
 
-      this.departments.forEach(department => {
+      this.departments.forEach((department) => {
         if (department.id == this.member.department)
           this.member.department = department;
       });
 
-      this.leaders.forEach(leader => {
+      this.leaders.forEach((leader) => {
         if (leader.id == this.member.leader) this.member.leader = leader;
       });
 
@@ -644,12 +672,12 @@ export default {
     async deleteMember() {
       await this.memberController
         .deleteMember(this.$api, this.member)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.$emit("close");
           this.$emit("getMembers");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -663,10 +691,10 @@ export default {
       return moment(item).format("DD/MM/YYYY");
     },
 
-    editBackPrepare(item){
-      console.log(item)
-      this.textBtnHist = "Editar"
-      this.histNewObj = item
+    editBackPrepare(item) {
+      console.log(item);
+      this.textBtnHist = "Editar";
+      this.histNewObj = item;
     },
 
     changeHist() {
@@ -678,57 +706,61 @@ export default {
       this.histNewObj.member = this.member.id;
       await this.backgroundController
         .createBackround(this.$api, this.histNewObj)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.getBackground();
-          this.setSnackbar("Histórico Adicionado!", "success")
+          this.setSnackbar("Histórico Adicionado!", "success");
           this.histNewObj = {
             member: null,
             start_date: null,
             end_date: null,
             post: null,
             department: null,
-            description: ""
+            description: "",
           };
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
-           this.setSnackbar("Erro ao adicionar histórico.", "error")
+          this.setSnackbar("Erro ao adicionar histórico.", "error");
         });
     },
 
-    async editBack(){
+    async editBack() {
       this.histNewObj.member = this.member.id;
-      await this.backgroundController.editBackground(this.$api, this.histNewObj)
-      .then(res => {
-        console.log(res);
+      await this.backgroundController
+        .editBackground(this.$api, this.histNewObj)
+        .then((res) => {
+          console.log(res);
           this.getBackground();
-          this.setSnackbar("Histórico Editado!", "success")
-          this.textBtnHist = "Adicionar"
+          this.setSnackbar("Histórico Editado!", "success");
+          this.textBtnHist = "Adicionar";
           this.histNewObj = {
             member: null,
             start_date: null,
             end_date: null,
             post: null,
             department: null,
-            description: ""
+            description: "",
           };
-      }).catch(e =>{
-        console.log(e)
-        this.setSnackbar("Erro ao editar histórico.", "error")
-      })
+        })
+        .catch((e) => {
+          console.log(e);
+          this.setSnackbar("Erro ao editar histórico.", "error");
+        });
     },
-    
-    async deleteBack(){
-      await this.backgroundController.deleteBackground(this.$api, this.itemToDelete)
-      .then(res => {
-        console.log(res);
+
+    async deleteBack() {
+      await this.backgroundController
+        .deleteBackground(this.$api, this.itemToDelete)
+        .then((res) => {
+          console.log(res);
           this.getBackground();
-          this.setSnackbar("Histórico Excluído!", "success")
-      }).catch(e =>{
-        console.log(e)
-        this.setSnackbar("Erro ao excluir histórico.", "error")
-      })
+          this.setSnackbar("Histórico Excluído!", "success");
+        })
+        .catch((e) => {
+          console.log(e);
+          this.setSnackbar("Erro ao excluir histórico.", "error");
+        });
     },
 
     setSnackbar(text, color) {
@@ -736,9 +768,7 @@ export default {
       this.color = color;
       this.snackbar = true;
     },
-
-
-  }
+  },
 };
 </script>
 
@@ -767,7 +797,6 @@ i.v-icon.v-icon {
 }
 
 .v-v-input--is-disabled.theme--light.v-card {
-
   color: red !important;
 }
 </style>

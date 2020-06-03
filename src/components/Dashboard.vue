@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <h2>Dashboard</h2>
-    <h3 class="mt-4">
+    <h3 class="mt-4 title font-weight-medium" style="color: #B72E2E">
       Meu critério do mês {{ formatDate(membresia.dayMonth) }}:
     </h3>
-    <v-card>
+    <v-card style="max-width: 1000px">
       <v-data-table
         no-data-text="Nenhum resultado até o momento"
         no-results-text="Nenhum resultado até o momento"
@@ -88,6 +88,43 @@
         </template>
       </v-data-table>
     </v-card>
+
+    <h3 class="mt-8 title font-weight-medium" style="color: #B72E2E">
+      Próximos eventos
+    </h3>
+    <v-card style="max-width: 1000px">
+      <v-data-table
+        no-data-text="Nenhum evento cadastrado"
+        no-results-text="Nenhum evento encontrado"
+        :headers="headerEvent"
+        :items="eventos"
+        :sort-by="['date', 'time']"
+        :sort-desc="[true, true]"
+        :hide-default-footer="true"
+        :footer-props="{
+          itemsPerPageOptions: [-1],
+        }"
+      >
+        <template v-slot:item.type="{ item }">
+          <span> {{ formatTypeEvent(item.type) }} </span>
+        </template>
+        <template v-slot:item.member="{ item }">
+          <span> {{ item.member.first_name }} </span>
+        </template>
+        <template v-slot:item.date="{ item }">
+          <span>{{ formatDateEvent(item.date) }}</span>
+        </template>
+        <template v-slot:item.time="{ item }">
+          <span>{{ formatTime(item.time) }}</span>
+        </template>
+        <template v-slot:item.engagement="{ item }">
+          <span>{{ formatPercentage(item.engagement) }}</span>
+        </template>
+        <template v-slot:item.attendance="{ item }">
+          <input type="checkbox" disabled v-model="item.attendance" />
+        </template>
+      </v-data-table>
+    </v-card>
   </v-container>
 </template>
 
@@ -108,7 +145,17 @@ export default {
         { text: "Eventos", value: "eventsCriteria" },
         { text: "Status", value: "status" },
       ],
+      headerEvent: [
+        {
+          text: "Nome",
+          value: "type",
+        },
+        { text: "Responsável", value: "member" },
+        { text: "Data", value: "date" },
+        { text: "Hora", value: "time" },
+      ],
       membresia: [],
+      eventos: [],
     };
   },
   async created() {
@@ -117,10 +164,7 @@ export default {
   },
   methods: {
     async getEventsMonth() {
-      const eventsMonth = await this.eventController.getEventsInMonth(
-        this.$api
-      );
-      console.log(eventsMonth);
+      this.eventos = await this.eventController.getEventsInMonth(this.$api);
     },
     async getCurrentMonthCriteria() {
       await this.membershipCriteriaController
@@ -131,11 +175,8 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-
-      console.log(this.membresia);
     },
     formatPercentage(item) {
-      console.log(item);
       if (item > 100) {
         return 100 + " %";
       } else return item + " %";
@@ -143,6 +184,19 @@ export default {
 
     formatDate(item) {
       return moment(item).format("MM/YYYY");
+    },
+    formatTypeEvent(sigla) {
+      if (sigla == "RG") return "Reunião Geral";
+      else if (sigla == "AS") return "Assembléia";
+      else if (sigla == "CF") return "Conferência";
+      else if (sigla == "OU") return "Outros";
+    },
+    formatTime(time) {
+      let hora = time.split(":");
+      return `${hora[0]}:${hora[1]}`;
+    },
+    formatDateEvent(date) {
+      return moment(date).format("DD/MM/YYYY");
     },
   },
 };
