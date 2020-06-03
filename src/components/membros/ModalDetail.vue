@@ -575,13 +575,15 @@ export default {
       };
     }
 
-    console.log(this.member);
     this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
     this.abb =
       this.member.first_name.slice(0, 1) + this.member.last_name.slice(0, 1);
-    if (this.member.photo) this.showImage = this.member.photo;
+    if (this.member.photo) {
+      let urlSplit = this.member.photo.split("/");
+      this.showImage = `${urlSplit[0]}//${urlSplit[2]}/${urlSplit[4]}/${urlSplit[5]}`;
+      this.member.photo = this.showImage;
+    }
 
-    console.log(this.showImage);
     await this.getDepartments();
     await this.getPosts();
     await this.getLeaders();
@@ -628,7 +630,6 @@ export default {
         .getBackground(this.$api, this.member.id)
         .then((res) => {
           this.hist = res.data;
-          console.log(this.hist);
         })
         .catch((e) => {
           console.log(e);
@@ -637,6 +638,7 @@ export default {
 
     async sendEdit() {
       let memberEdit = this.member;
+      /*memberEdit.photo = this.showImage;*/
       console.log(memberEdit);
       await this.memberController
         .editMember(this.$api, memberEdit)

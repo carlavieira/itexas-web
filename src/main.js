@@ -8,9 +8,9 @@ import VueTheMask from "vue-the-mask";
 
 Vue.use(VueTheMask);
 Vue.use(VueResource);
-import JsonExcel from 'vue-json-excel'
- 
-Vue.component('downloadExcel', JsonExcel)
+import JsonExcel from "vue-json-excel";
+
+Vue.component("downloadExcel", JsonExcel);
 
 Vue.prototype.$api = axios.create({
   baseURL: "https://itexas.herokuapp.com/",
