@@ -1,8 +1,11 @@
 <template>
   <v-container>
-    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{
+    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">
+      {{
       text
-    }}</v-snackbar>
+      }}
+    </v-snackbar>
+
 
     <v-row class="px-4">
       <h2 v-if="$route.name == 'membersAdm'">Membros</h2>
@@ -31,6 +34,13 @@
               single-line
               hide-details
             ></v-text-field>
+            <v-spacer></v-spacer>
+             <download-excel :fields="json_fields" :data="membros" name="membros.xls" type= "csv">
+
+            <v-btn icon>
+              <v-icon>mdi-file-excel</v-icon>
+            </v-btn>
+            </download-excel>
           </v-card-title>
           <v-data-table
             no-data-text="Nenhum membro cadastrado"
@@ -44,24 +54,16 @@
             class="dataTable"
           >
             <template v-slot:item.name="{ item }">
-              <span class="font-weight-medium"
-                >{{ item.first_name }} {{ item.last_name }}
-              </span>
-              <span class="font-italic font-weight-light">
-                {{ showNickName(item) }}
-              </span>
+              <span class="font-weight-medium">{{ item.first_name }} {{ item.last_name }}</span>
+              <span class="font-italic font-weight-light">{{ showNickName(item) }}</span>
             </template>
             <template v-slot:item.leader="{ item }">
-              <span v-if="item.leader"> {{ item.leader.first_name }} </span>
-              <span v-else> - </span>
+              <span v-if="item.leader">{{ item.leader.first_name }}</span>
+              <span v-else>-</span>
             </template>
             <template v-slot:item.is_active="{ item }">
-              <v-icon small v-if="item.is_active" class="success--text"
-                >mdi-brightness-1</v-icon
-              >
-              <v-icon small v-if="!item.is_active" class="error--text"
-                >mdi-brightness-1</v-icon
-              >
+              <v-icon small v-if="item.is_active" class="success--text">mdi-brightness-1</v-icon>
+              <v-icon small v-if="!item.is_active" class="error--text">mdi-brightness-1</v-icon>
             </template>
           </v-data-table>
         </v-card>
@@ -91,19 +93,20 @@ import modalDetail from "./ModalDetail.vue";
 export default {
   components: {
     NovoMembro,
-    modalDetail,
+    modalDetail
   },
 
   async created() {
     //this.membros = await this.getMembers()
     this.membros = this.setFullName(await this.getMembers());
+    console.log(this.membros)
     //this.membros = this.setFullName(this.membros);
   },
 
   data() {
     return {
       btnMembro: false,
-      showNickName: (membro) => {
+      showNickName: membro => {
         if (membro.nickname) {
           return `(${membro.nickname})`;
         }
@@ -114,12 +117,12 @@ export default {
         {
           text: "Nome",
           align: "start",
-          value: "name",
+          value: "full_name"
         },
         { text: "Cargo", value: "post.abbreviation" },
         { text: "Área", value: "department.abbreviation" },
-        { text: "Líder", value: "leader" },
-        { text: "Ativo", value: "is_active" },
+        { text: "Líder", value: "leader.first_name" },
+        { text: "Ativo", value: "is_active" }
       ],
       membros: [],
       userDetail: null,
@@ -128,6 +131,13 @@ export default {
       text: "",
       timeout: 3000,
       color: "",
+      json_fields: {
+        "Nome": "full_name",
+        "Cargo": "post.abbreviation",
+        "Area": "department.abbreviation",
+        "Líder": "leader.first_name",
+        "Ativo": "is_active" 
+      }
     };
   },
 
@@ -153,11 +163,12 @@ export default {
 
     async getMembers() {
       const members = await this.memberController.getAllMembers(this.$api);
-      members.forEach((member) => {
+      members.forEach(member => {
         if (!member.leader) {
           member.leader = { first_name: "-" };
         }
       });
+      
       if (this.$route.name == "membersAdm") {
         return members;
       } else {
@@ -166,7 +177,7 @@ export default {
     },
     activeMembers(members) {
       const activeMembers = new Array();
-      members.forEach((member) => {
+      members.forEach(member => {
         if (member.is_active) {
           activeMembers.push(member);
         }
@@ -175,13 +186,13 @@ export default {
     },
     setFullName(array) {
       const newArray = new Array();
-      array.map((item) => {
+      array.map(item => {
         item.full_name = `${item.first_name} ${item.last_name}`;
         newArray.push(item);
       });
       return newArray;
-    },
-  },
+    }
+  }
 };
 </script>
 
