@@ -28,7 +28,7 @@ export default {
     console.log(memberDetails);
 
     return api
-      .post("manage-member/", memberDetails)
+      .post("rest-auth/registration/", memberDetails)
       .then((res) => res.data)
       .catch((e) => {
         throw e;
@@ -42,16 +42,16 @@ export default {
     if (memberDetails.leader) memberDetails.leader = memberDetails.leader.id;
     else memberDetails.leader = {};
 
-    if (memberDetails.photo) {
-      console.log("teste");
+    if (memberDetails.picture) {
+      console.log("teste" + memberDetails.picture);
       const config = {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       };
       let formData = new FormData();
-      if (typeof memberDetails.photo == "string") {
-        delete memberDetails.photo;
+      if (typeof memberDetails.picture == "string") {
+        delete memberDetails.picture;
         console.log(memberDetails);
 
         return api
@@ -61,10 +61,10 @@ export default {
             throw e;
           });
       } else {
-        formData.append("photo", memberDetails.photo);
+        formData.append("picture", memberDetails.picture);
         formData.append("email", memberDetails.email);
         formData.append("date_joined", memberDetails.date_joined);
-        formData.append("photo", memberDetails.photo);
+        formData.append("picture", memberDetails.picture);
         formData.append("email", memberDetails.email);
         formData.append("date_joined", memberDetails.date_joined);
         formData.append("department", memberDetails.department);
@@ -80,7 +80,7 @@ export default {
         formData.append("leader", memberDetails.leader);
       }
 
-      /*memberDetails.photo = formData */
+      /*memberDetails.picture = formData */
       return api
         .put(`manage-member/${memberDetails.id}/`, formData, config)
         .then((res) => res.data)
