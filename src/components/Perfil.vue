@@ -499,11 +499,18 @@ export default {
   },
 
   async created() {
-    await this.getMember();
+    await this.getMember().then((res) => {
+      if (this.member.picture) {
+        this.showImage = this.member.picture;
+        this.member.picture = this.showImage;
+      }}
+    );
     await this.getDepartments();
     await this.getPosts();
     await this.getLeaders();
     await this.getBackground();
+
+
   },
 
   methods: {
