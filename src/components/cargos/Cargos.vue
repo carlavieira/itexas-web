@@ -146,6 +146,9 @@
                         <template v-slot:item.leader="{ item }">
                           <span> {{ getFullNameLeader(item.leader) }} </span>
                         </template>
+                        <template v-slot:item.datejoined="{ item }">
+                          <span> {{item}} </span>
+                        </template>
                       </v-data-table>
                     </v-card>
                   </template>
@@ -236,7 +239,7 @@
                     <td>{{ member.first_name }}</td>
                     <td>{{ member.leader.first_name }}</td>
                     <td>{{ member.department.abbreviation }}</td>
-                    <td>{{ member.date_joined }}</td>
+                    <td> {{ moment(member.date_joined).format("DD/MM/YYYY") }}</td>
                   </tr>
                 </template>
 
@@ -254,6 +257,7 @@
 <script>
 import postController from "../../controllers/PostController";
 import memberController from "../../controllers/MemberController";
+import moment from "moment";
 
 export default {
   data() {
@@ -262,6 +266,7 @@ export default {
       singleExpand: false,
       postController,
       memberController,
+      moment,
       header: [
         { text: "Sigla", value: "abbreviation" },
         { text: "Título", value: "full_name" },

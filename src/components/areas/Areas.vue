@@ -249,7 +249,7 @@
                       {{ member.leader.first_name }} {{ member.leader.last_name }}
                     </td>
                     <td>{{ member.post.abbreviation }}</td>
-                    <td>{{ member.date_joined }}</td>
+                    <td>{{ moment(member.date_joined).format("DD/MM/YYYY") }}</td>
                   </tr>
                   </template>
                   <template v-else class="py-2 px-4">
@@ -266,6 +266,7 @@
 <script>
 import departmentController from "../../controllers/DepartmentsController";
 import memberController from "../../controllers/MemberController";
+import moment from "moment";
 
 export default {
   data() {
@@ -274,6 +275,7 @@ export default {
       singleExpand: false,
       departmentController,
       memberController,
+      moment,
       header: [
         { text: "Sigla", value: "abbreviation" },
         { text: "Título", value: "full_name" },
