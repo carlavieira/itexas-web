@@ -65,7 +65,8 @@
               <span>{{ formatPercentage(item.engagement) }}</span>
             </template>
             <template v-slot:item.attendance="{ item }">
-              <input type="checkbox" disabled v-model="item.attendance" />
+              <v-icon small v-if="item.attendance" class="success--text">mdi-brightness-1</v-icon>
+              <v-icon small v-else class="error--text">mdi-brightness-1</v-icon>
             </template>
           </v-data-table>
         </v-card>
@@ -182,7 +183,7 @@ export default {
           { text: "Responsável", value: "member", align: "center" },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
-          { text: "Presenca", value: "attendance", align: "center" },
+          { text: "Presença", value: "attendance", align: "center" },
         ];
       }
     },
