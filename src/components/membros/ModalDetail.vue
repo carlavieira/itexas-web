@@ -172,6 +172,9 @@
               hide-details
             ></v-text-field>
           </v-layout>
+
+
+          
           <v-layout justify-left col-xs-12 col-sm-6>
             <v-text-field
               outlined
@@ -575,12 +578,10 @@ export default {
       };
     }
 
-console.log(this.member.picture)
     this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
     this.abb =
       this.member.first_name.slice(0, 1) + this.member.last_name.slice(0, 1);
     if (this.member.picture) {
-      console.log(this.member.picture)
       this.showImage = this.member.picture;
       this.member.picture = this.showImage;
     }

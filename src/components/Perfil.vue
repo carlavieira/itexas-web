@@ -505,6 +505,7 @@ export default {
         this.member.picture = this.showImage;
       }}
     );
+    this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
     await this.getDepartments();
     await this.getPosts();
     await this.getLeaders();

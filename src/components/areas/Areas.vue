@@ -83,91 +83,93 @@
       </v-dialog>
 
       <v-dialog v-model="editDepartmentDialog" max-width="600" min-h>
-        <v-card style="background-color: #f5f5f5">
-          <v-container>
-            <v-row class="px-4 py-2">
-              <h3 class="headline font-weight-bold subtitle-1">
-                Edição da Área
-              </h3>
+        <v-form ref="form">
+          <v-card style="background-color: #f5f5f5">
+            <v-container>
+              <v-row class="px-4 py-2">
+                <h3 class="headline font-weight-bold subtitle-1">
+                  Edição da Área
+                </h3>
+                <v-spacer></v-spacer>
+                <v-btn @click="editDepartmentDialog = false" title="Fechar" icon>
+                  <v-icon color="grey">mdi-close</v-icon>
+                </v-btn>
+              </v-row>
+            </v-container>
+            <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn @click="editDepartmentDialog = false" title="Fechar" icon>
-                <v-icon color="grey">mdi-close</v-icon>
-              </v-btn>
-            </v-row>
-          </v-container>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <template>
-              <v-container fluid class="py-0">
-                <v-row>
-                  <v-col class="d-flex" cols="12" sm="6">
-                    <v-text-field
-                      v-model="abbreviation"
-                      :rules="[rules.abbreviationRequired]"
-                      label="Sigla"
-                      prepend-inner-icon="mdi-account"
-                      dense
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="12" sm="6">
-                    <v-text-field
-                      v-model="departmentName"
-                      :rules="[rules.nameRequired]"
-                      label="Nome"
-                      prepend-inner-icon="mdi-account"
-                      dense
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
+              <template>
+                <v-container fluid class="py-0">
+                  <v-row>
+                    <v-col class="d-flex" cols="12" sm="6">
+                      <v-text-field
+                        v-model="abbreviation"
+                        :rules="[rules.abbreviationRequired]"
+                        label="Sigla"
+                        prepend-inner-icon="mdi-account"
+                        dense
+                        outlined
+                      ></v-text-field>
+                    </v-col>
+                    <v-col class="d-flex" cols="12" sm="6">
+                      <v-text-field
+                        v-model="departmentName"
+                        :rules="[rules.nameRequired]"
+                        label="Nome"
+                        prepend-inner-icon="mdi-account"
+                        dense
+                        outlined
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
 
-                <template>
-                  <v-card>
-                    <v-card-title class="title-table pt-3 py-4 pb-0">
-                      Membros
-                    </v-card-title>
-                    <v-data-table
-                      v-model="selected"
-                      :headers="headers"
-                      :items="membersInTable"
-                      item-key="name"
-                      class="elevation-1"
-                      :hide-default-footer="true"
-                      :footer-props="{
-                        itemsPerPageOptions: [-1],
-                      }"
+                  <template>
+                    <v-card>
+                      <v-card-title class="title-table pt-3 py-4 pb-0">
+                        Membros
+                      </v-card-title>
+                      <v-data-table
+                        v-model="selected"
+                        :headers="headers"
+                        :items="membersInTable"
+                        item-key="name"
+                        class="elevation-1"
+                        :hide-default-footer="true"
+                        :footer-props="{
+                          itemsPerPageOptions: [-1],
+                        }"
+                      >
+                        <template v-slot:item.name="{ item }">
+                          <span> {{ getFullName(item) }} </span>
+                        </template>
+                        <template v-slot:item.leader="{ item }">
+                          <span> {{ getFullNameLeader(item.leader) }} </span>
+                        </template>
+                      </v-data-table>
+                    </v-card>
+                  </template>
+
+                  <v-col class="d-flex" cols="12" sm="6">
+                    <v-btn color="green darken-1" text @click="sendPutRequest()"
+                      >Editar</v-btn
                     >
-                      <template v-slot:item.name="{ item }">
-                        <span> {{ getFullName(item) }} </span>
-                      </template>
-                      <template v-slot:item.leader="{ item }">
-                        <span> {{ getFullNameLeader(item.leader) }} </span>
-                      </template>
-                    </v-data-table>
-                  </v-card>
-                </template>
 
-                <v-col class="d-flex" cols="12" sm="6">
-                  <v-btn color="green darken-1" text @click="sendPutRequest()"
-                    >Editar</v-btn
-                  >
-
-                  <v-btn
-                    color="red darken-1"
-                    text
-                    @click="
-                      editDepartmentDialog = false;
-                      departamentName = '';
-                      abbreviation = '';
-                    "
-                    >Cancelar</v-btn
-                  >
-                </v-col>
-              </v-container>
-            </template>
-          </v-card-actions>
-        </v-card>
+                    <v-btn
+                      color="red darken-1"
+                      text
+                      @click="
+                        editDepartmentDialog = false;
+                        departamentName = '';
+                        abbreviation = '';
+                      "
+                      >Cancelar</v-btn
+                    >
+                  </v-col>
+                </v-container>
+              </template>
+            </v-card-actions>
+          </v-card>
+        </v-form>
       </v-dialog>
       <v-dialog
         v-model="deleteDepartmentDialog"
@@ -387,10 +389,10 @@ export default {
           .editDepartment(this.$api, this.departmentDetail)
           .then(() => {
             this.getDepartment(),
-              (this.departmentName = ""),
-              (this.abbreviation = "");
+            (this.departmentName = ""),
+            (this.abbreviation = "");
+            this.editDepartmentDialog = false;
             this.setSnackbar("Área editada com sucesso.", "warning");
-            this.createDepartmentDialog = false;
           })
           .catch(() => {
             this.setSnackbar("Erro ao editar área.", "error");
