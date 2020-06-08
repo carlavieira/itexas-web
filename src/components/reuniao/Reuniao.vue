@@ -117,6 +117,7 @@ export default {
         "Sobrenome Responsável": "member.last_name",
         "Cargo": "member.post.abbreviation",
         "Area": "member.department.abbreviation",
+        "Tipo": "type",
         "Data": "date",
         "Hora": "time",
         "% Presença": "engagement"
