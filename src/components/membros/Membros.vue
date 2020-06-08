@@ -35,7 +35,7 @@
               hide-details
             ></v-text-field>
             <v-spacer></v-spacer>
-             <download-excel :fields="json_fields" :data="membros" name="membros.xls" type= "csv">
+             <download-excel :fields="json_fields" :data="membros" name="membros.xls" >
 
             <v-btn icon>
               <v-icon>mdi-file-excel</v-icon>
@@ -133,10 +133,15 @@ export default {
       color: "",
       json_fields: {
         "Nome": "full_name",
+        "E-mail": "email",
         "Cargo": "post.abbreviation",
         "Area": "department.abbreviation",
         "Líder": "leader.first_name",
-        "Ativo": "is_active" 
+        "Telefone": "phone",
+        "Slack": "slack",
+        "Apelido": "nickname",
+        "Ativo": "is_active",
+        "Data da entrada": "date_joined"
       }
     };
   },
