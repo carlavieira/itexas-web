@@ -5,16 +5,43 @@
       <v-spacer></v-spacer>
     </v-row>
     <v-divider class="pb-3"></v-divider>
+    <v-row class="px-4 pt-3">
+      <v-flex>
+        <v-card class="w-100">
+          <v-card-title>
+            <v-text-field
+              style="max-width: 300px;"
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Pesquisar"
+              single-line
+              hide-details
+            ></v-text-field>
+            <v-spacer></v-spacer>
+             <download-excel 
+             :fields="json_fields" 
+             :data="membresia" 
+             name="Criterio de Membresia dos meus Liderados.xls">
+               <v-btn icon>
+              <v-icon>mdi-file-excel</v-icon>
+            </v-btn>
+             </download-excel>
+          </v-card-title>
+        </v-card>
+      </v-flex>
+    </v-row>
     <v-card>
       <v-data-table
         no-data-text="Nenhum resultado até o momento"
         no-results-text="Nenhum resultado até o momento"
         :headers="header"
         :items="membresia"
+        :search="search"
+        :sort-desc="true"
       >
-        <template v-slot:item.member="{ item }">{{
+        <!-- <template v-slot:item.member="{ item }">{{
           item.member.first_name + " " + item.member.last_name
-        }}</template>
+        }}</template> -->
         <template v-slot:item.member.leader="{ item }">
           <span v-if="item.member.leader">
             {{ item.member.leader.first_name }}
@@ -108,15 +135,44 @@ export default {
     return {
       MembershipCriteriaController,
       header: [
-        { text: "Nome", value: "member" },
+        { text: "Nome", value: "full_name" },
         { text: "Referência", value: "dayMonth" },
         { text: "Office Hours", value: "officeHoursCriteria" },
         { text: "Reuniões", value: "meetingsCriteria" },
         { text: "Eventos", value: "eventsCriteria" },
         { text: "Status", value: "status" },
       ],
+      search: "",
       membresia: [],
       showModal: false,
+      json_fields: {
+        'Nome' : {
+            callback: (value) => {
+                return `${value.member.first_name} ${value.member.last_name}`;
+            }
+        },
+        "Referência": {
+            callback: (value) => {
+                return moment(value.dayMonth).format("MM/YYYY")
+            }
+        },
+        "Office Hours": {
+            callback: (value) => {
+                return `${value.officeHoursCriteria} %`
+            }
+        },
+        "Reuniões": {
+            callback: (value) => {
+                return `${value.meetingsCriteria} %`
+            }
+        },
+        "Eventos": {
+            callback: (value) => {
+                return `${value.eventsCriteria} %`
+            }
+        },
+        "Status": "status"
+      }
     };
   },
 
@@ -131,7 +187,7 @@ export default {
       )
         .then((res) => {
           console.log(res.data);
-          this.membresia = res.data;
+          this.membresia = this.setFullName(res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -147,6 +203,15 @@ export default {
     formatDate(item) {
       return moment(item).format("MM/YYYY");
     },
+
+    setFullName(array) {
+      const newArray = new Array();
+      array.map(item => {
+        item.full_name = `${item.member.first_name} ${item.member.last_name}`;
+        newArray.push(item);
+      });
+      return newArray;
+    }
   },
 };
 </script>
