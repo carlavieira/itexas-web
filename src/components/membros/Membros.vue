@@ -136,11 +136,22 @@ export default {
         "E-mail": "email",
         "Cargo": "post.abbreviation",
         "Area": "department.abbreviation",
-        "Líder": "leader.first_name",
+        "Líder": {
+            callback: (value) => {
+                return `${value.leader.first_name} ${value.leader.last_name}`;
+            }
+        },
         "Telefone": "phone",
         "Slack": "slack",
         "Apelido": "nickname",
-        "Ativo": "is_active",
+        "Ativo": {
+            callback: (value) => {
+              if (value.is_active)  {
+                return 'Ativo';
+              } 
+              return 'Inativo';
+            }
+        },
         "Data da entrada": "date_joined"
       }
     };

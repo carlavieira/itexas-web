@@ -142,10 +142,18 @@ export default {
       dialog: false,
       deletedItem: "",
       json_fields: {
-        "Nome": "member.first_name",
-        "Sobrenome": "member.last_name",
+        "Nome": {
+            callback: (value) => {
+                return `${value.member.first_name} ${value.member.last_name}`;
+            }
+        },
         "Cargo": "member.post.abbreviation",
         "Area": "member.department.abbreviation",
+        "Líder" : {
+            callback: (value) => {
+                return `${value.member.leader.first_name} ${value.member.leader.last_name}`;
+            }
+        },
         "Check-in": "checkin_time",
         "Check-out": "checkout_time",
         "Duração": "duration"

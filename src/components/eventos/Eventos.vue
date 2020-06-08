@@ -123,8 +123,11 @@ export default {
       eventos: [],
       userID: null,
       json_fields: {
-        "Nome": "member.first_name",
-        "Sobrenome Responsável": "member.last_name",
+        "Responsável": {
+            callback: (value) => {
+                return `${value.member.first_name} ${value.member.last_name}`;
+            }
+        },
         "Cargo": "member.post.abbreviation",
         "Area": "member.department.abbreviation",
         "Tipo": "type",
