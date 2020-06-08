@@ -29,6 +29,12 @@
               single-line
               hide-details
             ></v-text-field>
+            <v-spacer></v-spacer>
+             <download-excel :fields="json_fields" :data="reunioes" name="Reuniões.xls">
+               <v-btn icon>
+              <v-icon>mdi-file-excel</v-icon>
+            </v-btn>
+             </download-excel>
           </v-card-title>
           <v-data-table
             no-data-text="Nenhuma reunião cadastrada"
@@ -105,6 +111,16 @@ export default {
       reunioes: [],
       userID: null,
       types: [],
+      json_fields: {
+        "Nome": "member.first_name",
+        "Sobrenome Responsável": "member.last_name",
+        "Cargo": "member.post.abbreviation",
+        "Area": "member.department.abbreviation",
+        "Tipo": "type",
+        "Data": "date",
+        "Hora": "time",
+        "% Presença": "engagement"
+      }
     };
   },
 

@@ -25,7 +25,7 @@
           v-model="search"
         ></v-select>
         <v-spacer></v-spacer>
-             <download-excel :fields="json_fields" :data="officeHours" name="OfficeHours.xls" type= "csv">
+             <download-excel :fields="json_fields" :data="officeHours" name="OfficeHours.xls">
                <v-btn icon>
               <v-icon>mdi-file-excel</v-icon>
             </v-btn>
@@ -144,6 +144,7 @@ export default {
       json_fields: {
         "Nome": "member.first_name",
         "Sobrenome": "member.last_name",
+        "Cargo": "member.post.abbreviation",
         "Area": "member.department.abbreviation",
         "Check-in": "checkin_time",
         "Check-out": "checkout_time",

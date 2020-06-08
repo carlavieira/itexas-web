@@ -514,6 +514,7 @@ export default {
         this.$api,
         localStorage.getItem("user_id")
       );
+      console.log(this.member);
     },
 
     async getPosts() {
@@ -597,7 +598,7 @@ export default {
 
     async onChangeImage(e) {
       this.showImage = window.URL.createObjectURL(e.target.files[0]);
-      this.member.photo = e.target.files[0];
+      this.member.picture = e.target.files[0];
     },
 
     formatDate(item) {

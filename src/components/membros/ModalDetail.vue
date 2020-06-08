@@ -578,10 +578,11 @@ export default {
     this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
     this.abb =
       this.member.first_name.slice(0, 1) + this.member.last_name.slice(0, 1);
-    if (this.member.photo) {
-      let urlSplit = this.member.photo.split("/");
-      this.showImage = `${urlSplit[0]}//${urlSplit[2]}/${urlSplit[4]}/${urlSplit[5]}`;
-      this.member.photo = this.showImage;
+    if (this.member.picture) {
+      // let urlSplit = this.member.photo.split("/");
+      //this.showImage = `${urlSplit[0]}//${urlSplit[2]}/${urlSplit[4]}/${urlSplit[5]}`;
+      this.showImage = this.member.picture;
+      this.member.picture = this.showImage;
     }
 
     await this.getDepartments();
@@ -686,7 +687,7 @@ export default {
 
     async onChangeImage(e) {
       this.showImage = window.URL.createObjectURL(e.target.files[0]);
-      this.member.photo = e.target.files[0];
+      this.member.picture = e.target.files[0];
     },
 
     formatDate(item) {

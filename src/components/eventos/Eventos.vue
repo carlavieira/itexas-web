@@ -30,6 +30,12 @@
               single-line
               hide-details
             ></v-text-field>
+            <v-spacer></v-spacer>
+             <download-excel :fields="json_fields" :data="eventos" name="Eventos.xls">
+               <v-btn icon>
+              <v-icon>mdi-file-excel</v-icon>
+            </v-btn>
+             </download-excel>
           </v-card-title>
 
           <v-data-table
@@ -116,6 +122,16 @@ export default {
       color: "",
       eventos: [],
       userID: null,
+      json_fields: {
+        "Nome": "member.first_name",
+        "Sobrenome Responsável": "member.last_name",
+        "Cargo": "member.post.abbreviation",
+        "Area": "member.department.abbreviation",
+        "Tipo": "type",
+        "Data": "date",
+        "Hora": "time",
+        "% Presença": "engagement"
+      }
     };
   },
   methods: {

@@ -245,7 +245,7 @@ export default {
         department: "",
         leader: "",
         slack: "",
-        photo: null,
+        picture: null,
         phone: "",
         dataEntrada: "",
         is_active: true,
