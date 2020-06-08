@@ -8,7 +8,6 @@
       <h2 v-else>Minhas Reuniões</h2>
       <v-spacer></v-spacer>
       <v-btn
-        v-if="$route.name == 'reuniaoAdm'"
         @click="btnReuniao = true"
         title="Marcar Reunião"
         small

@@ -3,7 +3,7 @@
     <v-card class="pa-5 pl-10 modal">
       <v-layout row class="px-3">
         <v-btn
-          v-if="!editMeeting && $route.name == 'reuniaoAdm'"
+          v-if="imLeader && !editMeeting || ($route.name == 'reuniaoAdm' && !editMeeting)"
           color="black"
           @click="editMeeting = true"
           title="Editar"
@@ -12,8 +12,24 @@
           <v-icon color="white">mdi-account-edit</v-icon>
         </v-btn>
 
+
+        <v-tooltip v-model="showMessage" top>
+          <template v-slot:activator="{ on }">
+            <v-btn v-on="on"
+              v-if="!imLeader"
+              color="grey lighten-1"
+              @click="showMessage = !showMessage"
+              small
+            >
+              <v-icon color="grey darken-2">mdi-account-edit</v-icon>
+            </v-btn>
+          </template>
+          <span>Você não tem permissão para editar essa reunião.</span>
+        </v-tooltip>
+
+
         <v-btn
-          v-if="$route.name == 'reuniaoAdm'"
+          v-if="imLeader || $route.name == 'reuniaoAdm'"
           color="red"
           @click.stop="dialog = true"
           class="ml-2"
@@ -203,9 +219,11 @@ export default {
     meetingDetails: {},
     meetingController,
     memberController,
+    imLeader: "",
     participationController,
     memberById: null,
     participantes: [],
+    showMessage: false,
     leader: "",
     leaders: [],
     snackbarDetail: {
@@ -231,6 +249,7 @@ export default {
   created() {
     this.populaSelectLider();
     this.getTypeMeetings();
+    this.checkImLeader();
     this.date = this.meeting.date;
     this.time = this.meeting.time;
     this.hostName =
@@ -375,6 +394,12 @@ export default {
     async getTypeMeetings() {
       this.types = await meetingController.getMeetingTypes(this.$api);
     },
+    checkImLeader(){
+      const myID = localStorage.getItem("user_id");
+      const idLeader = this.meeting.member.id;
+
+      this.imLeader= myID == idLeader;
+    }
   },
 };
 </script>
