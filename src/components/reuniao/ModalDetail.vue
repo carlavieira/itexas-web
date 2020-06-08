@@ -66,9 +66,29 @@
         </v-dialog>
 
         <v-spacer></v-spacer>
-        <v-btn @click="$emit('close')" title="Fechar" icon>
-          <v-icon color="grey">mdi-close</v-icon>
-        </v-btn>
+        
+        
+        <v-dialog v-model="confirmDialog" persistent max-width="400">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn v-if="!editMeeting" @click="$emit('close')" title="Fechar" icon>
+            <v-icon color="grey">mdi-close</v-icon>
+          </v-btn>
+          <v-btn v-else title="Fechar" icon v-bind="attrs"
+            v-on="on">
+           <v-icon color="grey">mdi-close</v-icon>
+          </v-btn>
+        </template>
+         <v-card>
+          <v-card-title class="headline">Sair da edição da reunião?</v-card-title>
+          <v-card-text>Ao sair da edição sem salvar, 
+            quaisquer alterações que você tenha realizado serão perdidas.</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="confirmDialog = false">Continuar editando</v-btn>
+            <v-btn color="red darken-1" text @click="confirmDialog = false; $emit('close')">Sair</v-btn>
+          </v-card-actions>
+        </v-card>
+        </v-dialog>
       </v-layout>
 
       <v-layout column mx-2 justify-center align-center>
@@ -226,6 +246,7 @@ export default {
     showMessage: false,
     leader: "",
     leaders: [],
+    confirmDialog: false,
     snackbarDetail: {
       color: "",
       text: "",
