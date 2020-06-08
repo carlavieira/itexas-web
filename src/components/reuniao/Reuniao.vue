@@ -143,11 +143,12 @@ export default {
       if (this.$route.name == "reuniaoAdm") {
         return [
           {
-            text: "Nome",
+            text: "Tipo",
             align: "center",
             value: "type",
           },
           { text: "Responsável", value: "member", align: "center" },
+          { text: "Área", value: "member.department.abbreviation", align: "center" },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "% de Presença", value: "engagement", align: "center" },
