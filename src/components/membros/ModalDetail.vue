@@ -100,7 +100,7 @@
         </v-btn>
       </v-layout>
       <v-layout column mx-2 justify-center align-center v-if="!editHist">
-        <v-avatar size="130px" class="avatar" color="indigo">
+        <v-avatar size="130px" class="avatar" color="red">
           <img v-if="showImage" :src="showImage" class="adjust" />
           <span v-if="!showImage" class="white--text headline">{{ abb }}</span>
 
@@ -575,12 +575,12 @@ export default {
       };
     }
 
+console.log(this.member.picture)
     this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
     this.abb =
       this.member.first_name.slice(0, 1) + this.member.last_name.slice(0, 1);
     if (this.member.picture) {
-      // let urlSplit = this.member.photo.split("/");
-      //this.showImage = `${urlSplit[0]}//${urlSplit[2]}/${urlSplit[4]}/${urlSplit[5]}`;
+      console.log(this.member.picture)
       this.showImage = this.member.picture;
       this.member.picture = this.showImage;
     }

@@ -52,6 +52,7 @@ export default {
       let formData = new FormData();
       if (typeof memberDetails.picture == "string") {
         delete memberDetails.picture;
+        delete memberDetails.photo;
         console.log(memberDetails);
 
         return api
