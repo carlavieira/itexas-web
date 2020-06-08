@@ -239,17 +239,22 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="member in membersInDepartment[item.id]"
-                  :key="member.id"
-                >
-                  <td>{{ member.first_name }} {{ member.last_name }}</td>
-                  <td>
-                    {{ member.leader.first_name }} {{ member.leader.last_name }}
-                  </td>
-                  <td>{{ member.post.abbreviation }}</td>
-                  <td>{{ member.date_joined }}</td>
-                </tr>
+                <template v-if="membersInDepartment[item.id].length">
+                  <tr
+                    v-for="member in membersInDepartment[item.id]"
+                    :key="member.id"
+                  >
+                    <td>{{ member.first_name }} {{ member.last_name }}</td>
+                    <td>
+                      {{ member.leader.first_name }} {{ member.leader.last_name }}
+                    </td>
+                    <td>{{ member.post.abbreviation }}</td>
+                    <td>{{ member.date_joined }}</td>
+                  </tr>
+                  </template>
+                  <template v-else class="py-2 px-4">
+                    Sem membros cadastrados nessa area.
+                  </template>
               </tbody>
             </template>
           </v-simple-table>

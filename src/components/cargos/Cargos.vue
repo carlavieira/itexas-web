@@ -231,7 +231,7 @@
               </thead>
               <tbody class="pa-2">
                 <!-- Verificação se possui membro no cargo -->
-                <template v-if="membersInPost[item.id].length != 0">
+                <template v-if="membersInPost[item.id].length">
                   <tr v-for="member in membersInPost[item.id]" :key="member.id">
                     <td>{{ member.first_name }}</td>
                     <td>{{ member.leader.first_name }}</td>
