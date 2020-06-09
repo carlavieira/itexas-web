@@ -1,7 +1,12 @@
 <template>
   <v-container v-if="member">
     <v-layout row mx-4>
-      <v-btn v-if="!editMember && !editHist" icon @click="editMember = true" title="Editar">
+      <v-btn
+        v-if="!editMember && !editHist"
+        icon
+        @click="editMember = true"
+        title="Editar"
+      >
         <v-icon color="black">mdi-account-edit</v-icon>
       </v-btn>
       <v-btn
@@ -24,23 +29,20 @@
         <v-icon color="grey">mdi-arrow-left</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn outlined class="tertiary--text" @click="passwordDialog=true">
+      <v-btn outlined class="tertiary--text" @click="passwordDialog = true">
         <span class="caption">Mudar minha senha</span>
       </v-btn>
     </v-layout>
 
     <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">
-      {{
-      text
-      }}
+      {{ text }}
     </v-snackbar>
 
     <v-dialog v-model="deleteB" max-width="500" min-h>
       <v-card>
-        <v-card-title
-          style="font-size: 16px !important"
-          class="headline"
-        >Deseja realmente deletar o histórico?</v-card-title>
+        <v-card-title style="font-size: 16px !important" class="headline"
+          >Deseja realmente deletar o histórico?</v-card-title
+        >
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red darken-1" text @click="deleteB = false">Não</v-btn>
@@ -48,10 +50,11 @@
             color="green darken-1"
             text
             @click="
-                  deleteB = false;
-                  deleteBack();
-                "
-          >Sim</v-btn>
+              deleteB = false;
+              deleteBack();
+            "
+            >Sim</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -75,12 +78,13 @@
           @change="onChangeImage"
         />
       </v-avatar>
-      <span
-        v-if="!editMember"
-        class="title font-weight-medium mt-3"
-      >{{ member.first_name }} {{ member.last_name }}</span>
+      <span v-if="!editMember" class="title font-weight-medium mt-3"
+        >{{ member.first_name }} {{ member.last_name }}</span
+      >
 
-      <span v-if="!editMember" class="subheading font-weight-regular">( {{ member.nickname }} )</span>
+      <span v-if="!editMember" class="subheading font-weight-regular"
+        >( {{ member.nickname }} )</span
+      >
 
       <v-layout row mt-3 justify-space-around style="width: 100%;">
         <v-layout justify-left col-xs-12 col-sm-6 v-if="editMember">
@@ -245,7 +249,11 @@
                 v-on="on"
               ></v-text-field>
             </template>
-            <v-date-picker locale="pt-br" v-model="member.date_joined" @input="menuData = false"></v-date-picker>
+            <v-date-picker
+              locale="pt-br"
+              v-model="member.date_joined"
+              @input="menuData = false"
+            ></v-date-picker>
           </v-menu>
         </v-layout>
 
@@ -256,14 +264,14 @@
             color="tertiary"
             label="Administrador"
           ></v-switch>
-          <v-switch
-            :disabled="!editMember"
-            v-if="!editMember"
-            v-model="member.is_staff"
-            color="tertiary"
-            label="Administrador"
-          ></v-switch>
           <v-spacer></v-spacer>
+
+          <v-switch
+            v-if="editMember"
+            v-model="member.is_active"
+            color="tertiary"
+            label="Ativo"
+          ></v-switch>
 
           <v-switch v-if="editMember && staff" v-model="member.is_active" color="tertiary" label="Ativo"></v-switch>
           <v-switch
@@ -276,7 +284,9 @@
         </v-layout>
       </v-layout>
       <v-layout row align-center v-if="editMember">
-        <v-btn class="ma-2" @click="sendEdit()" depressed color="success">Salvar</v-btn>
+        <v-btn class="ma-2" @click="sendEdit()" depressed color="success"
+          >Salvar</v-btn
+        >
       </v-layout>
     </v-layout>
 
@@ -285,17 +295,16 @@
     <v-layout v-if="!editMember" column>
       <v-layout row class="mx-3" align-center>
         <span class="title font-weight-medium">Histórico</span>
-        <span
-          v-if="editHist"
-          class="title font-weight-medium pl-1"
-        >- {{ member.first_name }} {{ member.last_name }}</span>
+        <span v-if="editHist" class="title font-weight-medium pl-1"
+          >- {{ member.first_name }} {{ member.last_name }}</span
+        >
         <v-spacer></v-spacer>
 
         <v-btn
           v-if="!editHist"
           icon
           class="ma-2"
-          @click="editHist = true, textBtnHist = 'Adicionar'"
+          @click="(editHist = true), (textBtnHist = 'Adicionar')"
           title="Editar"
         >
           <v-icon color="black">mdi-account-edit</v-icon>
@@ -390,7 +399,12 @@
         </v-layout>
 
         <v-layout col-xs-6 col-sm-4 pa-1>
-          <v-text-field v-model="histNewObj.description" outlined label="Descrição" hide-details></v-text-field>
+          <v-text-field
+            v-model="histNewObj.description"
+            outlined
+            label="Descrição"
+            hide-details
+          ></v-text-field>
         </v-layout>
 
         <v-layout col-xs-6 col-sm-4 pa-1 align-end justify-end>
@@ -415,7 +429,12 @@
           </template>
           <template v-slot:item.actions="{ item }" v-if="editHist">
             <v-icon small @click="editBackPrepare(item)">mdi-pencil</v-icon>
-            <v-icon class="pl-3" small @click="deleteB = true, itemToDelete = item.id">mdi-delete</v-icon>
+            <v-icon
+              class="pl-3"
+              small
+              @click="(deleteB = true), (itemToDelete = item.id)"
+              >mdi-delete</v-icon
+            >
           </template>
         </v-data-table>
       </v-card>
@@ -423,7 +442,7 @@
     <PasswordChange
       v-if="passwordDialog"
       :show="passwordDialog"
-      @close="passwordDialog=false"
+      @close="passwordDialog = false"
       :email="member.email"
     ></PasswordChange>
   </v-container>
@@ -442,7 +461,7 @@ import PasswordChange from "./PasswordChange.vue";
 
 export default {
   components: {
-    PasswordChange
+    PasswordChange,
   },
 
   data() {
@@ -467,13 +486,13 @@ export default {
         {
           text: "Cargo",
           align: "start",
-          value: "post.abbreviation"
+          value: "post.abbreviation",
         },
         { text: "Área", value: "department.abbreviation" },
         { text: "Data Início", value: "start_date" },
         { text: "Data Fim", value: "end_date" },
         { text: "Descrição", value: "description" },
-        { text: "Ações", value: "actions" }
+        { text: "Ações", value: "actions" },
       ],
       hist: [],
       editHist: false,
@@ -485,7 +504,7 @@ export default {
         end_date: null,
         post: null,
         department: null,
-        description: ""
+        description: "",
       },
       textBtnHist: "",
       snackbar: false,
@@ -513,12 +532,10 @@ export default {
     await this.getPosts();
     await this.getLeaders();
     await this.getBackground();
-
-
   },
 
   methods: {
-    leader_full_name: item => `${item.first_name} ${item.last_name}`,
+    leader_full_name: (item) => `${item.first_name} ${item.last_name}`,
 
     async getMember() {
       this.member = await this.memberController.getMemberById(
@@ -531,10 +548,10 @@ export default {
     async getPosts() {
       await this.postController
         .getPosts(this.$api)
-        .then(res => {
+        .then((res) => {
           this.posts = res.data;
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
@@ -542,10 +559,10 @@ export default {
     async getDepartments() {
       await this.departmentController
         .getDepartments(this.$api)
-        .then(res => {
+        .then((res) => {
           this.departments = res.data;
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
@@ -553,10 +570,10 @@ export default {
     async getLeaders() {
       await this.memberController
         .getAllMembers(this.$api)
-        .then(res => {
+        .then((res) => {
           this.leaders = res;
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
@@ -564,11 +581,11 @@ export default {
     async getBackground() {
       await this.backgroundController
         .getBackground(this.$api, this.member.id)
-        .then(res => {
+        .then((res) => {
           this.hist = res.data;
           console.log(this.hist);
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
         });
     },
@@ -577,7 +594,7 @@ export default {
       let memberEdit = this.member;
       await this.memberController
         .editMember(this.$api, memberEdit)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.member = res;
           this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
@@ -587,23 +604,23 @@ export default {
             this.$emit("reload")
           this.staff = this.member.is_staff
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.setSnackbar("Erro ao atualizar perfil.", "error");
         });
     },
 
     setObjects() {
-      this.posts.forEach(post => {
+      this.posts.forEach((post) => {
         if (post.id == this.member.post) this.member.post = post;
       });
 
-      this.departments.forEach(department => {
+      this.departments.forEach((department) => {
         if (department.id == this.member.department)
           this.member.department = department;
       });
 
-      this.leaders.forEach(leader => {
+      this.leaders.forEach((leader) => {
         if (leader.id == this.member.leader) this.member.leader = leader;
       });
 
@@ -634,7 +651,7 @@ export default {
       this.histNewObj.member = this.member.id;
       await this.backgroundController
         .createBackround(this.$api, this.histNewObj)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.getBackground();
           this.setSnackbar("Histórico Adicionado!", "success");
@@ -644,10 +661,10 @@ export default {
             end_date: null,
             post: null,
             department: null,
-            description: ""
+            description: "",
           };
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
           this.setSnackbar("Erro ao adicionar histórico.", "error");
         });
@@ -657,7 +674,7 @@ export default {
       this.histNewObj.member = this.member.id;
       await this.backgroundController
         .editBackground(this.$api, this.histNewObj)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.getBackground();
           this.setSnackbar("Histórico Editado!", "success");
@@ -668,10 +685,10 @@ export default {
             end_date: null,
             post: null,
             department: null,
-            description: ""
+            description: "",
           };
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
           this.setSnackbar("Erro ao editar histórico.", "error");
         });
@@ -680,12 +697,12 @@ export default {
     async deleteBack() {
       await this.backgroundController
         .deleteBackground(this.$api, this.itemToDelete)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.getBackground();
           this.setSnackbar("Histórico Excluído!", "success");
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
           this.setSnackbar("Erro ao excluir histórico.", "error");
         });
@@ -695,8 +712,8 @@ export default {
       this.text = text;
       this.color = color;
       this.snackbar = true;
-    }
-  }
+    },
+  },
 };
 </script>
 

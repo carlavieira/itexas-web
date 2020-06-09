@@ -36,8 +36,10 @@
         :headers="header"
         :items="membresia"
         :search="search"
-        :sort-by="meetingsCriteria"
-        :sort-desc="false"
+        :sort-by="['full_name', 'dayMonth']"
+        :sort-desc="[false, false]"
+        :loading="showBar"
+        loading-text="Carregando..."
       >
         <!-- <template v-slot:item.member="{ item }">{{
           item.member.first_name + " " + item.member.last_name
@@ -110,16 +112,17 @@
         </template>
         <template v-slot:item.status="{ item }">
           <v-chip
-            v-if="(item.status = 'Risco')"
+            v-if="item.status == 'RISCO'"
             class="ma-2"
             color="red"
             text-color="white"
             small
-            >{{ item.status }}</v-chip
           >
-          <v-chip class="ma-2" color="green" text-color="white" v-else>{{
-            item.status
-          }}</v-chip>
+            Risco
+          </v-chip>
+          <v-chip v-else class="ma-2" color="green" small text-color="white">
+            Ideal
+          </v-chip>
         </template>
       </v-data-table>
     </v-card>
@@ -134,6 +137,7 @@ export default {
   data() {
     return {
       MembershipCriteriaController,
+      showBar: true,
       header: [
         { text: "Nome", value: "full_name" },
         { text: "Referência", value: "dayMonth" },
@@ -188,16 +192,7 @@ export default {
       )
         .then((res) => {
           this.membresia = this.setFullName(res.data);
-          console.log(res.data);
-          const membersID = [];
-          res.data.map((criterio) => {
-            const memberID = criterio.member.id;
-            membersID.push(memberID);
-          });
-          this.allMembersID = membersID.filter(
-            (este, i) => membersID.indexOf(este) === i
-          );
-          console.log(this.allMembersID);
+          this.showBar = false;
         })
         .catch((err) => {
           console.log(err);

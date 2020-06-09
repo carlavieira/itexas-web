@@ -36,10 +36,10 @@
         :headers="header"
         :items="membresia"
         :search="search"
-        :sort-by="['full_name']"
-        :sort-desc="[false]"
+        :sort-by="['full_name', 'dayMonth']"
+        :sort-desc="[false, false]"
         :loading="showBar"
-        loading-text="Loading... Please wait"
+        loading-text="Carregando..."
       >
         >
         <template v-slot:item.member="{ item }">{{
@@ -113,16 +113,17 @@
         </template>
         <template v-slot:item.status="{ item }">
           <v-chip
-            v-if="(item.status = 'Risco')"
+            v-if="item.status == 'RISCO'"
             class="ma-2"
             color="red"
             text-color="white"
             small
-            >{{ item.status }}</v-chip
           >
-          <v-chip class="ma-2" color="green" text-color="white" v-else>{{
-            item.status
-          }}</v-chip>
+            Risco
+          </v-chip>
+          <v-chip v-else class="ma-2" color="green" small text-color="white">
+            Ideal
+          </v-chip>
         </template>
       </v-data-table>
     </v-card>
@@ -207,6 +208,7 @@ export default {
     async listMembershipCriteria() {
       await this.MembershipCriteriaController.listMembershipCriteria(this.$api)
         .then((res) => {
+          console.log(res);
           this.membresia = this.setFullName(res.data);
           this.showBar = false;
         })

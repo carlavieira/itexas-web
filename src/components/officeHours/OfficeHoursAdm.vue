@@ -25,12 +25,15 @@
           v-model="search"
         ></v-select>
         <v-spacer></v-spacer>
-             <download-excel :fields="json_fields" :data="officeHours" name="OfficeHours.xls">
-               <v-btn icon>
-              <v-icon>mdi-file-excel</v-icon>
-            </v-btn>
-             </download-excel>
-
+        <download-excel
+          :fields="json_fields"
+          :data="officeHours"
+          name="OfficeHours.xls"
+        >
+          <v-btn icon>
+            <v-icon>mdi-file-excel</v-icon>
+          </v-btn>
+        </download-excel>
       </v-card-title>
 
       <v-dialog v-model="dialog" max-width="500" min-h>
@@ -142,22 +145,22 @@ export default {
       dialog: false,
       deletedItem: "",
       json_fields: {
-        "Nome": {
-            callback: (value) => {
-                return `${value.member.first_name} ${value.member.last_name}`;
-            }
+        Nome: {
+          callback: (value) => {
+            return `${value.member.first_name} ${value.member.last_name}`;
+          },
         },
-        "Cargo": "member.post.abbreviation",
-        "Area": "member.department.abbreviation",
-        "Líder" : {
-            callback: (value) => {
-                return `${value.member.leader.first_name} ${value.member.leader.last_name}`;
-            }
+        Cargo: "member.post.abbreviation",
+        Area: "member.department.abbreviation",
+        Líder: {
+          callback: (value) => {
+            return `${value.member.leader.first_name} ${value.member.leader.last_name}`;
+          },
         },
         "Check-in": "checkin_time",
         "Check-out": "checkout_time",
-        "Duração": "duration"
-      }
+        Duração: "duration",
+      },
     };
   },
 
@@ -217,9 +220,8 @@ export default {
       return moment(item).format("DD/MM/YYYY");
     },
     formatDuration(item) {
-      const timeSplit = item.split(":");
-      const secondsSplit = timeSplit[2].split(".");
-      return `${timeSplit[0]}:${timeSplit[0]}:${secondsSplit[0]}`;
+      item = item.split(".");
+      return `${item[0]}`;
     },
   },
 };
