@@ -387,7 +387,7 @@ export default {
           this.$emit("close2")
         })
         .catch(() => {
-          showSnackbar("Presença não alterada", "error")
+          this.showSnackbar("Presença não alterada", "error")
         });
       this.$emit("getAllEvents");
     },
