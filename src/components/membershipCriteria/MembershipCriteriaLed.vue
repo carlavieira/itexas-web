@@ -36,8 +36,10 @@
         :headers="header"
         :items="membresia"
         :search="search"
-        :sort-by="meetingsCriteria"
-        :sort-desc="false"
+        :sort-by="['full_name', 'dayMonth']"
+        :sort-desc="[false, false]"
+        :loading="showBar"
+        loading-text="Carregando..."
       >
         <!-- <template v-slot:item.member="{ item }">{{
           item.member.first_name + " " + item.member.last_name
@@ -134,6 +136,7 @@ export default {
   data() {
     return {
       MembershipCriteriaController,
+      showBar: true,
       header: [
         { text: "Nome", value: "full_name" },
         { text: "Referência", value: "dayMonth" },
@@ -188,16 +191,7 @@ export default {
       )
         .then((res) => {
           this.membresia = this.setFullName(res.data);
-          console.log(res.data);
-          const membersID = [];
-          res.data.map((criterio) => {
-            const memberID = criterio.member.id;
-            membersID.push(memberID);
-          });
-          this.allMembersID = membersID.filter(
-            (este, i) => membersID.indexOf(este) === i
-          );
-          console.log(this.allMembersID);
+          this.showBar = false;
         })
         .catch((err) => {
           console.log(err);

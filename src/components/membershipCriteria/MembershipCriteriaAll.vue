@@ -36,10 +36,10 @@
         :headers="header"
         :items="membresia"
         :search="search"
-        :sort-by="['full_name']"
-        :sort-desc="[false]"
+        :sort-by="['full_name', 'dayMonth']"
+        :sort-desc="[false, false]"
         :loading="showBar"
-        loading-text="Loading... Please wait"
+        loading-text="Carregando..."
       >
         >
         <template v-slot:item.member="{ item }">{{
