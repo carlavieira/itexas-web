@@ -83,6 +83,7 @@
       v-if="showDetail"
       :show="showDetail"
       @close="showDetail = false"
+      @close2="showDetail = false, showSnackbar({text: 'Presença Alterada com sucesso', color: 'success'})"
       :event="eventDetail"
       v-on:showSnackbar="showSnackbar"
       @getAllEvents="getEvents()"

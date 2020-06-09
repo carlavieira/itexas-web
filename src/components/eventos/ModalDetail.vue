@@ -1,5 +1,8 @@
 <template>
   <v-dialog max-width="700px" persistent v-model="show">
+    <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">{{
+      text
+    }}</v-snackbar>
     <v-card class="pa-5 pl-10 modal">
       <v-layout row class="px-3">
         <v-btn
@@ -250,6 +253,10 @@ export default {
       { name: "Conferência", value: "CF" },
       { name: "Outros", value: "OU" },
     ],
+    snackbar: false,
+      text: "",
+      timeout: 3000,
+      color: "",
     snackbarDetail: {
       color: "warning",
       text: "Reunião Atualizada com sucesso",
@@ -376,15 +383,19 @@ export default {
       };
       await this.participationController
         .editParticipationEvent(this.$api, participationDetail)
-        .then(function(response) {
-          alert("Presença Alterada com sucesso");
-          console.log(response);
+        .then(() => {
+          this.$emit("close2")
         })
-        .catch(function(error) {
-          alert("Erro: presença não alterada");
-          console.log(error);
+        .catch(() => {
+          showSnackbar("Presença não alterada", "error")
         });
       this.$emit("getAllEvents");
+    },
+
+    showSnackbar(text, color) {
+      this.text = text;
+      this.color = color;
+      this.snackbar = true;
     },
 
     formatDate(date) {
