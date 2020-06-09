@@ -45,7 +45,7 @@
           <v-data-table
             no-data-text="Nenhum membro cadastrado"
             no-results-text="Nenhum membro encontrado"
-            :headers="headersMembros"
+            :headers="($route.name == 'membersAdm') ? headersMembros : headerContactList"
             :items="membros"
             :search="search"
             :sort-by="['is_active', 'full_name']"
@@ -61,7 +61,7 @@
               <span v-if="item.leader">{{ item.leader.first_name }}</span>
               <span v-else>-</span>
             </template>
-            <template v-slot:item.is_active="{ item }">
+            <template v-slot:item.is_active="{ item }" v-if="$route.name == 'membersAdm'">
               <v-icon small v-if="item.is_active" class="success--text">mdi-brightness-1</v-icon>
               <v-icon small v-if="!item.is_active" class="error--text">mdi-brightness-1</v-icon>
             </template>
@@ -123,6 +123,16 @@ export default {
         { text: "Área", value: "department.abbreviation" },
         { text: "Líder", value: "leader.first_name" },
         { text: "Ativo", value: "is_active" }
+      ],
+      headerContactList: [
+        {
+          text: "Nome",
+          align: "start",
+          value: "full_name"
+        },
+        { text: "Cargo", value: "post.abbreviation" },
+        { text: "Área", value: "department.abbreviation" },
+        { text: "Líder", value: "leader.first_name" }
       ],
       membros: [],
       userDetail: null,
