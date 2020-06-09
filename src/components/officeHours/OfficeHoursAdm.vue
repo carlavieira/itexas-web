@@ -70,6 +70,8 @@
         no-results-text="Sem resultados para a busca"
         :headers="header"
         :items="officeHours"
+        :loading="showBar"
+        loading-text="Carregando..."
       >
         <template v-slot:item.member.first_name="{ item }"
           >{{ item.member.first_name }} {{ item.member.last_name }}</template
@@ -125,6 +127,7 @@ export default {
   data() {
     return {
       memberController,
+      showBar: true,
       officeHoursController,
       header: [
         { text: "Nome", value: "member.first_name" },
@@ -187,6 +190,7 @@ export default {
         .listOfficeHour(this.$api)
         .then((res) => {
           this.officeHours = res.data;
+          this.showBar = false;
           console.log(this.officeHours);
         })
         .catch((err) => {
