@@ -5,9 +5,9 @@
       <v-spacer></v-spacer>
     </v-row>
     <v-divider class="pb-3"></v-divider>
-    <v-row class="px-4 pt-3">
-      <v-flex>
-        <v-card class="w-100">
+    <v-card class="w-100">
+      <v-row class="px-4 pt-3">
+        <v-flex>
           <v-card-title>
             <v-text-field
               style="max-width: 300px;"
@@ -18,26 +18,26 @@
               hide-details
             ></v-text-field>
             <v-spacer></v-spacer>
-             <download-excel 
-             :fields="json_fields" 
-             :data="membresia" 
-             name="Criterio de Membresia dos meus Liderados.xls">
-               <v-btn icon>
-              <v-icon>mdi-file-excel</v-icon>
-            </v-btn>
-             </download-excel>
+            <download-excel
+              :fields="json_fields"
+              :data="membresia"
+              name="Criterio de Membresia dos meus Liderados.xls"
+            >
+              <v-btn icon>
+                <v-icon>mdi-file-excel</v-icon>
+              </v-btn>
+            </download-excel>
           </v-card-title>
-        </v-card>
-      </v-flex>
-    </v-row>
-    <v-card>
+        </v-flex>
+      </v-row>
       <v-data-table
         no-data-text="Nenhum resultado até o momento"
         no-results-text="Nenhum resultado até o momento"
         :headers="header"
         :items="membresia"
         :search="search"
-        :sort-desc="true"
+        :sort-by="meetingsCriteria"
+        :sort-desc="false"
       >
         <!-- <template v-slot:item.member="{ item }">{{
           item.member.first_name + " " + item.member.last_name
@@ -145,34 +145,35 @@ export default {
       search: "",
       membresia: [],
       showModal: false,
+      allMembersID: [],
       json_fields: {
-        'Nome' : {
-            callback: (value) => {
-                return `${value.member.first_name} ${value.member.last_name}`;
-            }
+        Nome: {
+          callback: (value) => {
+            return `${value.member.first_name} ${value.member.last_name}`;
+          },
         },
-        "Referência": {
-            callback: (value) => {
-                return moment(value.dayMonth).format("MM/YYYY")
-            }
+        Referência: {
+          callback: (value) => {
+            return moment(value.dayMonth).format("MM/YYYY");
+          },
         },
         "Office Hours": {
-            callback: (value) => {
-                return `${value.officeHoursCriteria} %`
-            }
+          callback: (value) => {
+            return `${value.officeHoursCriteria} %`;
+          },
         },
-        "Reuniões": {
-            callback: (value) => {
-                return `${value.meetingsCriteria} %`
-            }
+        Reuniões: {
+          callback: (value) => {
+            return `${value.meetingsCriteria} %`;
+          },
         },
-        "Eventos": {
-            callback: (value) => {
-                return `${value.eventsCriteria} %`
-            }
+        Eventos: {
+          callback: (value) => {
+            return `${value.eventsCriteria} %`;
+          },
         },
-        "Status": "status"
-      }
+        Status: "status",
+      },
     };
   },
 
@@ -186,12 +187,28 @@ export default {
         this.$api
       )
         .then((res) => {
-          console.log(res.data);
           this.membresia = this.setFullName(res.data);
+          console.log(res.data);
+          const membersID = [];
+          res.data.map((criterio) => {
+            const memberID = criterio.member.id;
+            membersID.push(memberID);
+          });
+          this.allMembersID = membersID.filter(
+            (este, i) => membersID.indexOf(este) === i
+          );
+          console.log(this.allMembersID);
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+
+    async getMembershipCriteriaById(memberID) {
+      await this.MembershipCriteriaController.getMyMembershipCriteria(
+        this.$api,
+        memberID
+      ).then((res) => console.log(res));
     },
 
     formatPercentage(item) {
@@ -206,12 +223,12 @@ export default {
 
     setFullName(array) {
       const newArray = new Array();
-      array.map(item => {
+      array.map((item) => {
         item.full_name = `${item.member.first_name} ${item.member.last_name}`;
         newArray.push(item);
       });
       return newArray;
-    }
+    },
   },
 };
 </script>

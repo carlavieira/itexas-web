@@ -36,7 +36,6 @@ export default {
   },
 
   listCurrentMonthCriteria(api) {
-    console.log("teste");
     return api
       .get("current-month-criteria")
       .then((res) => {
