@@ -259,7 +259,7 @@
 
         <v-layout justify-left col-xs-12 col-sm-6>
           <v-switch
-            :disabled="!member.is_staff || !editMember"
+            v-if="editMember && staff"
             v-model="member.is_staff"
             color="tertiary"
             label="Administrador"
@@ -273,6 +273,7 @@
             label="Ativo"
           ></v-switch>
 
+          <v-switch v-if="editMember && staff" v-model="member.is_active" color="tertiary" label="Ativo"></v-switch>
           <v-switch
             :disabled="!editMember"
             v-if="!editMember"
@@ -513,6 +514,7 @@ export default {
       deleteB: false,
       itemToDelete: null,
       passwordDialog: false,
+      staff: null
     };
   },
 
@@ -521,8 +523,10 @@ export default {
       if (this.member.picture) {
         this.showImage = this.member.picture;
         this.member.picture = this.showImage;
-      }
-    });
+      }}
+    );
+    this.staff = this.member.is_staff 
+
     this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
     await this.getDepartments();
     await this.getPosts();
@@ -596,6 +600,9 @@ export default {
           this.date = moment(this.member.date_joined).format("DD/MM/YYYY");
           this.setSnackbar("Perfil Atualizado!", "success");
           this.setObjects();
+          if(this.staff != this.member.is_staff)
+            this.$emit("reload")
+          this.staff = this.member.is_staff
         })
         .catch((err) => {
           console.log(err);
