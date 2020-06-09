@@ -18,6 +18,7 @@
                 type="text"
                 name="email"
                 v-model="email"
+                placeholder="Digite seu email"
                 required
                 :rules="validacaoEmail"
                 outlined
@@ -30,6 +31,7 @@
                 type="password"
                 name="senha"
                 v-model="senha"
+                placeholder="Digite sua senha"
                 required
                 outlined
                 color="tertiary"
