@@ -5,7 +5,7 @@
         <v-snackbar top v-model="snackbar" :color="color" :timeout="timeout">
           {{ text }}</v-snackbar
         >
-        <v-card flat color="white" class="px-8 pt-5 pb-12 form mx-auto">
+        <v-card flat color="transparent" class="px-8 pt-5 pb-12 form mx-auto">
           <v-form ref="form" v-if="loginPage">
             <v-img
               src="../assets/rrrrr.png"
