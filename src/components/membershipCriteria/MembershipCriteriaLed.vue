@@ -112,16 +112,17 @@
         </template>
         <template v-slot:item.status="{ item }">
           <v-chip
-            v-if="(item.status = 'Risco')"
+            v-if="item.status == 'RISCO'"
             class="ma-2"
             color="red"
             text-color="white"
             small
-            >{{ item.status }}</v-chip
           >
-          <v-chip class="ma-2" color="green" text-color="white" v-else>{{
-            item.status
-          }}</v-chip>
+            Risco
+          </v-chip>
+          <v-chip v-else class="ma-2" color="green" small text-color="white">
+            Ideal
+          </v-chip>
         </template>
       </v-data-table>
     </v-card>
