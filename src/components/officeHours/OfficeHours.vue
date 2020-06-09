@@ -164,9 +164,8 @@ export default {
       return moment(item).format("DD/MM/YYYY");
     },
     formatDuration(item) {
-      const timeSplit = item.split(":");
-      const secondsSplit = timeSplit[2].split(".");
-      return `${timeSplit[0]}:${timeSplit[0]}:${secondsSplit[0]}`;
+      item = item.split(".");
+      return `${item[0]}`;
     },
   },
 };
