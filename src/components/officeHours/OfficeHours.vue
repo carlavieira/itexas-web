@@ -45,6 +45,8 @@
         no-results-text="Sem resultados para a busca"
         :headers="header"
         :items="officeHours"
+        :loading="showBar"
+        loading-text="Carregando..."
       >
         <template v-slot:item.date="{ item }">{{
           formatDate(item.date)
@@ -95,6 +97,7 @@ export default {
   data() {
     return {
       officeHoursController,
+      showBar: true,
       header: [
         { text: "Data", value: "date" },
         { text: "Check-in", value: "checkin_time" },
@@ -122,6 +125,7 @@ export default {
         .getOfficeHours(this.$api)
         .then((res) => {
           this.officeHours = res.data;
+          this.showBar = false;
         })
         .catch((err) => {
           console.log(err);
