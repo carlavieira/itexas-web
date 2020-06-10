@@ -211,7 +211,6 @@ export default {
       if (this.$route.name == "reuniaoAdm") {
         const res = await this.meetingController.getAllMeeting(this.$api);
         this.reunioes = res;
-        this.showBar = false;
       } else if (this.$route.name == "minhas-reunioes") {
         const memberID = localStorage.getItem("user_id");
         const minhasParticipacoes = await this.participationController.getMemberParticipationMeeting(
@@ -224,8 +223,8 @@ export default {
           minhasReunioes.push(participacao.meeting);
         });
         this.reunioes = minhasReunioes;
-        this.showBar = false;
       }
+      this.showBar = false;
     },
     showSnackbar(snackbarDetails) {
       this.snackbar = true;

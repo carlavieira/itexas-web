@@ -31,11 +31,15 @@
               hide-details
             ></v-text-field>
             <v-spacer></v-spacer>
-             <download-excel :fields="json_fields" :data="eventos" name="Eventos.xls">
-               <v-btn icon>
-              <v-icon>mdi-file-excel</v-icon>
-            </v-btn>
-             </download-excel>
+            <download-excel
+              :fields="json_fields"
+              :data="eventos"
+              name="Eventos.xls"
+            >
+              <v-btn icon>
+                <v-icon>mdi-file-excel</v-icon>
+              </v-btn>
+            </download-excel>
           </v-card-title>
 
           <v-data-table
@@ -48,6 +52,8 @@
             :sort-desc="[true, true]"
             @click:row="eventShow"
             class="dataTable"
+            :loading="showBar"
+            loading-text="Carregando..."
           >
             <template v-slot:item.type="{ item }">
               <span> {{ formatTypeEvent(item.type) }} </span>
@@ -65,7 +71,9 @@
               <span>{{ formatPercentage(item.engagement) }}</span>
             </template>
             <template v-slot:item.attendance="{ item }">
-              <v-icon small v-if="item.attendance" class="success--text">mdi-brightness-1</v-icon>
+              <v-icon small v-if="item.attendance" class="success--text"
+                >mdi-brightness-1</v-icon
+              >
               <v-icon small v-else class="error--text">mdi-brightness-1</v-icon>
             </template>
           </v-data-table>
@@ -83,7 +91,13 @@
       v-if="showDetail"
       :show="showDetail"
       @close="showDetail = false"
-      @close2="showDetail = false, showSnackbar({text: 'Presença Alterada com sucesso', color: 'success'})"
+      @close2="
+        (showDetail = false),
+          showSnackbar({
+            text: 'Presença Alterada com sucesso',
+            color: 'success',
+          })
+      "
       :event="eventDetail"
       v-on:showSnackbar="showSnackbar"
       @getAllEvents="getEvents()"
@@ -113,6 +127,7 @@ export default {
   data() {
     return {
       btnEvento: false,
+      showBar: true,
       search: "",
       eventController,
       participationController,
@@ -125,18 +140,18 @@ export default {
       eventos: [],
       userID: null,
       json_fields: {
-        "Responsável": {
-            callback: (value) => {
-                return `${value.member.first_name} ${value.member.last_name}`;
-            }
+        Responsável: {
+          callback: (value) => {
+            return `${value.member.first_name} ${value.member.last_name}`;
+          },
         },
-        "Cargo": "member.post.abbreviation",
-        "Area": "member.department.abbreviation",
-        "Tipo": "type",
-        "Data": "date",
-        "Hora": "time",
-        "% Presença": "engagement"
-      }
+        Cargo: "member.post.abbreviation",
+        Area: "member.department.abbreviation",
+        Tipo: "type",
+        Data: "date",
+        Hora: "time",
+        "% Presença": "engagement",
+      },
     };
   },
   methods: {
@@ -207,6 +222,7 @@ export default {
         });
         this.eventos = meusEventos;
       }
+      this.showBar = false;
     },
     async deleteEvent() {
       await this.eventController.deleteEvent(this.$api, this.event);
