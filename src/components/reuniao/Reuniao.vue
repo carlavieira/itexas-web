@@ -30,11 +30,15 @@
               hide-details
             ></v-text-field>
             <v-spacer></v-spacer>
-             <download-excel :fields="json_fields" :data="reunioes" name="Reuniões.xls">
-               <v-btn icon>
-              <v-icon>mdi-file-excel</v-icon>
-            </v-btn>
-             </download-excel>
+            <download-excel
+              :fields="json_fields"
+              :data="reunioes"
+              name="Reuniões.xls"
+            >
+              <v-btn icon>
+                <v-icon>mdi-file-excel</v-icon>
+              </v-btn>
+            </download-excel>
           </v-card-title>
           <v-data-table
             no-data-text="Nenhuma reunião cadastrada"
@@ -46,6 +50,8 @@
             :sort-desc="[true, true]"
             @click:row="meetingShow"
             class="dataTable"
+            :loading="showBar"
+            loading-text="Carregando..."
           >
             <template v-slot:item.type="{ item }">
               <span>{{ formatTypeMeeting(item.type) }}</span>
@@ -63,7 +69,9 @@
               <span>{{ formatPercentage(item.engagement) }}</span>
             </template>
             <template v-slot:item.attendance="{ item }">
-              <v-icon small v-if="item.attendance" class="success--text">mdi-brightness-1</v-icon>
+              <v-icon small v-if="item.attendance" class="success--text"
+                >mdi-brightness-1</v-icon
+              >
               <v-icon small v-else class="error--text">mdi-brightness-1</v-icon>
             </template>
           </v-data-table>
@@ -98,6 +106,7 @@ export default {
   data() {
     return {
       btnReuniao: false,
+      showBar: true,
       search: "",
       data: null,
       meetingController,
@@ -113,18 +122,18 @@ export default {
       userID: null,
       types: [],
       json_fields: {
-        "Responsável": {
-            callback: (value) => {
-                return `${value.member.first_name} ${value.member.last_name}`;
-            }
+        Responsável: {
+          callback: (value) => {
+            return `${value.member.first_name} ${value.member.last_name}`;
+          },
         },
-        "Cargo": "member.post.abbreviation",
-        "Area": "member.department.abbreviation",
-        "Tipo": "type",
-        "Data": "date",
-        "Hora": "time",
-        "% Presença": "engagement"
-      }
+        Cargo: "member.post.abbreviation",
+        Area: "member.department.abbreviation",
+        Tipo: "type",
+        Data: "date",
+        Hora: "time",
+        "% Presença": "engagement",
+      },
     };
   },
 
@@ -148,7 +157,11 @@ export default {
             value: "type",
           },
           { text: "Responsável", value: "member", align: "center" },
-          { text: "Área", value: "member.department.abbreviation", align: "center" },
+          {
+            text: "Área",
+            value: "member.department.abbreviation",
+            align: "center",
+          },
           { text: "Data", value: "date", align: "center" },
           { text: "Hora", value: "time", align: "center" },
           { text: "% de Presença", value: "engagement", align: "center" },
@@ -198,6 +211,7 @@ export default {
       if (this.$route.name == "reuniaoAdm") {
         const res = await this.meetingController.getAllMeeting(this.$api);
         this.reunioes = res;
+        this.showBar = false;
       } else if (this.$route.name == "minhas-reunioes") {
         const memberID = localStorage.getItem("user_id");
         const minhasParticipacoes = await this.participationController.getMemberParticipationMeeting(
@@ -210,7 +224,7 @@ export default {
           minhasReunioes.push(participacao.meeting);
         });
         this.reunioes = minhasReunioes;
-        console.log(this.reunioes);
+        this.showBar = false;
       }
     },
     showSnackbar(snackbarDetails) {
