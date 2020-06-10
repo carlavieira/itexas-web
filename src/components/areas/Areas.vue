@@ -91,7 +91,11 @@
                   Edição da Área
                 </h3>
                 <v-spacer></v-spacer>
-                <v-btn @click="editDepartmentDialog = false" title="Fechar" icon>
+                <v-btn
+                  @click="editDepartmentDialog = false"
+                  title="Fechar"
+                  icon
+                >
                   <v-icon color="grey">mdi-close</v-icon>
                 </v-btn>
               </v-row>
@@ -219,6 +223,8 @@
         itemsPerPageOptions: [-1],
       }"
       show-expand
+      :loading="showBar"
+      loading-text="Carregando..."
     >
       <template v-slot:item.actions="{ item }">
         <v-icon small @click="edit(item)">mdi-pencil</v-icon>
@@ -246,15 +252,18 @@
                   >
                     <td>{{ member.first_name }} {{ member.last_name }}</td>
                     <td>
-                      {{ member.leader.first_name }} {{ member.leader.last_name }}
+                      {{ member.leader.first_name }}
+                      {{ member.leader.last_name }}
                     </td>
                     <td>{{ member.post.abbreviation }}</td>
-                    <td>{{ moment(member.date_joined).format("DD/MM/YYYY") }}</td>
+                    <td>
+                      {{ moment(member.date_joined).format("DD/MM/YYYY") }}
+                    </td>
                   </tr>
-                  </template>
-                  <template v-else class="py-2 px-4">
-                    Sem membros cadastrados nessa area.
-                  </template>
+                </template>
+                <template v-else class="py-2 px-4">
+                  Sem membros cadastrados nessa area.
+                </template>
               </tbody>
             </template>
           </v-simple-table>
@@ -273,6 +282,7 @@ export default {
     return {
       expanded: [],
       singleExpand: false,
+      showBar: true,
       departmentController,
       memberController,
       moment,
@@ -324,7 +334,7 @@ export default {
         .then((res) => {
           const allDepartment = res.data;
           this.departments = res.data;
-
+          this.showBar = false;
           allDepartment.forEach((department) => {
             this.memberController
               .getMembersInDepartment(this.$api, department.id)
@@ -396,8 +406,8 @@ export default {
           .editDepartment(this.$api, this.departmentDetail)
           .then(() => {
             this.getDepartment(),
-            (this.departmentName = ""),
-            (this.abbreviation = "");
+              (this.departmentName = ""),
+              (this.abbreviation = "");
             this.editDepartmentDialog = false;
             this.setSnackbar("Área editada com sucesso.", "warning");
           })

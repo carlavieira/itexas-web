@@ -333,6 +333,7 @@ export default {
               .getMembersInPost(this.$api, post.id)
               .then((res) => {
                 this.membersInPost[post.id] = res;
+                console.log("teste");
                 /*
                   Verificação para saber se há membros sem líderes,
                   caso tenha, adicionar leader
