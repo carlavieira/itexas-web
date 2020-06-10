@@ -3,7 +3,10 @@
     <v-card class="pa-5 pl-10 modal">
       <v-layout row class="px-3">
         <v-btn
-          v-if="imLeader && !editMeeting || ($route.name == 'reuniaoAdm' && !editMeeting)"
+          v-if="
+            (imLeader && !editMeeting) ||
+              ($route.name == 'reuniaoAdm' && !editMeeting)
+          "
           color="black"
           @click="editMeeting = true"
           title="Editar"
@@ -12,11 +15,11 @@
           <v-icon color="white">mdi-account-edit</v-icon>
         </v-btn>
 
-
         <v-tooltip v-model="showMessage" top>
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on"
-              v-if="!imLeader"
+            <v-btn
+              v-on="on"
+              v-if="!imLeader && $route.name != 'reuniaoAdm'"
               color="grey lighten-1"
               @click="showMessage = !showMessage"
               small
@@ -26,7 +29,6 @@
           </template>
           <span>Você não tem permissão para editar essa reunião.</span>
         </v-tooltip>
-
 
         <v-btn
           v-if="imLeader || $route.name == 'reuniaoAdm'"
@@ -66,28 +68,45 @@
         </v-dialog>
 
         <v-spacer></v-spacer>
-        
-        
+
         <v-dialog v-model="confirmDialog" persistent max-width="400">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-if="!editMeeting" @click="$emit('close')" title="Fechar" icon>
-            <v-icon color="grey">mdi-close</v-icon>
-          </v-btn>
-          <v-btn v-else title="Fechar" icon v-bind="attrs"
-            v-on="on">
-           <v-icon color="grey">mdi-close</v-icon>
-          </v-btn>
-        </template>
-         <v-card>
-          <v-card-title class="headline">Sair da edição da reunião?</v-card-title>
-          <v-card-text>Ao sair da edição sem salvar, 
-            quaisquer alterações que você tenha realizado serão perdidas.</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="confirmDialog = false">Continuar editando</v-btn>
-            <v-btn color="red darken-1" text @click="confirmDialog = false; $emit('close')">Sair</v-btn>
-          </v-card-actions>
-        </v-card>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-if="!editMeeting"
+              @click="$emit('close')"
+              title="Fechar"
+              icon
+            >
+              <v-icon color="grey">mdi-close</v-icon>
+            </v-btn>
+            <v-btn v-else title="Fechar" icon v-bind="attrs" v-on="on">
+              <v-icon color="grey">mdi-close</v-icon>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title class="headline"
+              >Sair da edição da reunião?</v-card-title
+            >
+            <v-card-text
+              >Ao sair da edição sem salvar, quaisquer alterações que você tenha
+              realizado serão perdidas.</v-card-text
+            >
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" text @click="confirmDialog = false"
+                >Continuar editando</v-btn
+              >
+              <v-btn
+                color="red darken-1"
+                text
+                @click="
+                  confirmDialog = false;
+                  $emit('close');
+                "
+                >Sair</v-btn
+              >
+            </v-card-actions>
+          </v-card>
         </v-dialog>
       </v-layout>
 
@@ -415,12 +434,12 @@ export default {
     async getTypeMeetings() {
       this.types = await meetingController.getMeetingTypes(this.$api);
     },
-    checkImLeader(){
+    checkImLeader() {
       const myID = localStorage.getItem("user_id");
       const idLeader = this.meeting.member.id;
 
-      this.imLeader= myID == idLeader;
-    }
+      this.imLeader = myID == idLeader;
+    },
   },
 };
 </script>
