@@ -139,6 +139,8 @@
                         :footer-props="{
                           itemsPerPageOptions: [-1],
                         }"
+                        :loading="showBar"
+                        loading-text="Carregando..."
                       >
                         <template v-slot:item.name="{ item }">
                           <span> {{ getFullName(item) }} </span>
@@ -147,7 +149,7 @@
                           <span> {{ getFullNameLeader(item.leader) }} </span>
                         </template>
                         <template v-slot:item.datejoined="{ item }">
-                          <span> {{item}} </span>
+                          <span> {{ item }} </span>
                         </template>
                       </v-data-table>
                     </v-card>
@@ -215,6 +217,8 @@
       :hide-default-footer="true"
       item-key="id"
       show-expand
+      :loading="showBar"
+      loading-text="Carregando..."
     >
       <template v-slot:item.actions="{ item }">
         <v-icon small @click="edit(item)">mdi-pencil</v-icon>
@@ -222,7 +226,10 @@
       </template>
       <template v-slot:expanded-item="{ item }">
         <td :colspan="5">
-          <v-simple-table>
+          <v-simple-table
+            :loading="showBarSimpleTable"
+            loading-text="Carregando..."
+          >
             <template v-slot:default>
               <thead>
                 <tr class="headerTable">
@@ -239,7 +246,9 @@
                     <td>{{ member.first_name }}</td>
                     <td>{{ member.leader.first_name }}</td>
                     <td>{{ member.department.abbreviation }}</td>
-                    <td> {{ moment(member.date_joined).format("DD/MM/YYYY") }}</td>
+                    <td>
+                      {{ moment(member.date_joined).format("DD/MM/YYYY") }}
+                    </td>
                   </tr>
                 </template>
 
@@ -263,6 +272,8 @@ export default {
   data() {
     return {
       expanded: [],
+      showBar: true,
+      showBarSimpleTable: true,
       singleExpand: false,
       postController,
       memberController,
@@ -314,6 +325,7 @@ export default {
         .getPosts(this.$api)
         .then((res) => {
           const allPosts = res.data;
+          this.showBar = false;
           this.posts = res.data;
 
           allPosts.forEach((post) => {
