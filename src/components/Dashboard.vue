@@ -14,6 +14,8 @@
         :footer-props="{
           itemsPerPageOptions: [-1],
         }"
+        :loading="showBarMembresia"
+        loading-text="Carregando..."
       >
         <template v-slot:item.officeHoursCriteria="{ item }">
           <v-chip
@@ -104,6 +106,8 @@
         :footer-props="{
           itemsPerPageOptions: [-1],
         }"
+        :loading="showBarEvento"
+        loading-text="Carregando..."
       >
         <template v-slot:item.type="{ item }">
           <span> {{ formatTypeEvent(item.type) }} </span>
@@ -138,6 +142,8 @@ export default {
     return {
       eventController,
       membershipCriteriaController,
+      showBarMembresia: true,
+      showBarEvento: true,
       moment,
       header: [
         { text: "Office Hours", value: "officeHoursCriteria" },
@@ -165,12 +171,14 @@ export default {
   methods: {
     async getEventsMonth() {
       this.eventos = await this.eventController.getEventsInMonth(this.$api);
+      this.showBarEvento = false;
     },
     async getCurrentMonthCriteria() {
       await this.membershipCriteriaController
         .listCurrentMonthCriteria(this.$api)
         .then((res) => {
           this.membresia = res.data;
+          this.showBarMembresia = false;
         })
         .catch((err) => {
           console.log(err);
