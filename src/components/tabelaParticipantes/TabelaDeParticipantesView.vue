@@ -5,6 +5,8 @@
     class="elevation-1"
     :sort-by="'full_name'"
     :sort-desc="false"
+    :loading="showBar"
+    loading-text="Carregando..."
   >
     <template v-slot:item.participante="{ item }">
       {{ item.full_name }}
@@ -77,6 +79,7 @@ export default {
     membros: [],
     memberController,
     participationController,
+    showBar: true,
     headers: [
       { text: "Participante", value: "participante", align: "start" },
       { text: "Presença", value: "attendance", align: "center" },
@@ -156,29 +159,31 @@ export default {
       return array;
     },
     async initializeAttendanceAlreadySent(eventId) {
+      // eslint-disable-next-line no-unused-vars
+      let participants;
       if (this.typeEvent == "meeting") {
-        this.participantes = await this.participationController.getParticipantsInMeeting(
+        participants = await this.participationController.getParticipantsInMeeting(
           this.$api,
           eventId
         );
       } else if (this.typeEvent == "event") {
-        this.participantes = await this.participationController.getParticipantsInEvent(
+        participants = await this.participationController.getParticipantsInEvent(
           this.$api,
           eventId
         );
       }
-
-      this.participantes.forEach(async (item) => {
+      let participantsWithName = [];
+      participants.forEach(async (item) => {
         const member = await this.memberController.getMemberById(
           this.$api,
           item.member.id
         );
         item.full_name = member.first_name + " " + member.last_name;
-        this.participantesWithName.push(item);
+        participantsWithName.push(item);
       });
-      this.participantesWithName = this.ordenaOrdemCrescente(
-        this.participantesWithName
-      );
+      participantsWithName = this.ordenaOrdemCrescente(participantsWithName);
+      this.participantesWithName = participantsWithName;
+      this.showBar = false;
     },
     editItem(item) {
       this.editedIndex = this.participantes.indexOf(item);

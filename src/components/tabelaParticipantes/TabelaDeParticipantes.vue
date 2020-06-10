@@ -5,6 +5,8 @@
     :sort-by="'full_name'"
     :sort-desc="false"
     class="elevation-1"
+    :loading="showBar"
+    loading-text="Carregando..."
   >
     <template v-slot:item.participante="{ item }">{{
       item.full_name
@@ -60,9 +62,14 @@
                       outlined
                       hint="Será mostrado apenas participantes que já não fazem parte do evento."
                       persistent-hint
+                      :loading="showBarSelect"
+                      loading-text="Carregando..."
                     >
                       <template v-slot:no-data>
-                        <span pa-2
+                        <span v-if="showBarSelect == true" class="py-2"
+                          >Carregando...</span
+                        >
+                        <span v-else class="py-2"
                           >Todos os participantes já estão no evento</span
                         >
                       </template>
@@ -98,6 +105,8 @@ import participationController from "../../controllers/ParticipationController";
 export default {
   data: () => ({
     dialog: false,
+    showBar: true,
+    showBarSelect: true,
     membros: [],
     membrosFullName: [],
     memberController,
@@ -209,7 +218,8 @@ export default {
         ) {
           return val != null;
         });
-      }, 2000);
+      }, 5000);
+      this.showBarSelect = false;
     },
     setFullName(array) {
       const newArray = new Array();
@@ -238,7 +248,6 @@ export default {
           this.$api,
           eventId
         );
-        console.log(this.participantes);
       } else if (this.typeEvent == "event") {
         this.participantes = await this.participationController.getParticipantsInEvent(
           this.$api,
@@ -258,7 +267,7 @@ export default {
       this.participantesWithName = this.ordenaOrdemCrescente(
         this.participantesWithName
       );
-
+      this.showBar = false;
       this.enviaParticipantesParaPai();
     },
     editItem(item) {
