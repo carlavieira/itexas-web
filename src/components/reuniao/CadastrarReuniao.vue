@@ -222,7 +222,6 @@ export default {
       meetingDetails.participantes = JSON.parse(
         JSON.stringify(this.participantes)
       );
-      console.log(meetingDetails);
       if (this.validate()) {
         return await this.meetingController
           .createMeeting(this.$api, meetingDetails)

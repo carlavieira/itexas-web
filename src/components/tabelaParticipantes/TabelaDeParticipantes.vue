@@ -162,10 +162,12 @@ export default {
 
   methods: {
     initialize() {
-      if (this.form == "create") this.initializeLiderandosTable();
-      else {
+      if (this.form == "create") {
+        this.initializeLiderandosTable();
+      } else {
         this.initializeAttendanceAlreadySent(this.objForm.id);
       }
+      this.showBar = false;
       this.initializeMembersInput();
     },
     ordenaOrdemCrescente(array) {
@@ -255,7 +257,6 @@ export default {
         );
       }
 
-      /* REMOVER ESSE GETMEMBERBY ID */
       this.participantes.forEach(async (item) => {
         const member = await this.memberController.getMemberById(
           this.$api,
@@ -267,7 +268,6 @@ export default {
       this.participantesWithName = this.ordenaOrdemCrescente(
         this.participantesWithName
       );
-      this.showBar = false;
       this.enviaParticipantesParaPai();
     },
     editItem(item) {
