@@ -82,9 +82,13 @@
     </v-row>
     <NovoEvento
       :show="btnEvento"
-      @close="btnEvento = false"
+      @close="
+        btnEvento = false;
+        forceRerender();
+      "
       v-on:showSnackbar="showSnackbar"
       @getAllEvents="getEvents()"
+      :key="componentKey"
     >
     </NovoEvento>
     <modalDetail
@@ -139,6 +143,7 @@ export default {
       color: "",
       eventos: [],
       userID: null,
+      componentKey: 0,
       json_fields: {
         Responsável: {
           callback: (value) => {
@@ -157,6 +162,9 @@ export default {
   methods: {
     formatDate(date) {
       return moment(date).format("DD/MM/YYYY");
+    },
+    forceRerender() {
+      this.componentKey += 1;
     },
     formatTime(time) {
       let hora = time.split(":");
