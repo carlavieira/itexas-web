@@ -11,6 +11,7 @@
         <v-row class="mt-6">
           <v-col class="col-12" sm="6" md="6" lg="6">
             <v-select
+              v-if="types"
               v-model="type"
               no-data-text="Carregando tipos de reunião"
               :items="types"
@@ -148,6 +149,7 @@ export default {
   data: (vm) => ({
     meetingController,
     valid: true,
+    type: null,
     types: [],
     rules: {
       type: [(v) => !!v || "Selecione um tipo de reunião"],
@@ -167,7 +169,6 @@ export default {
       color: "success",
       text: "Reunião cadastrada com sucesso",
     },
-    type: "",
     participantes: [],
   }),
 

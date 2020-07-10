@@ -424,10 +424,15 @@ export default {
         .then((res) => {
           console.log(res);
           this.$emit("getAllMeeting");
+          this.snackbarDetail.text = "Reunião editada com sucesso";
+          this.snackbarDetail.color = "warning";
 
           setTimeout(() => {
             this.$emit("close");
-            this.$emit("showSnackbar", this.snackbarDetail);
+            this.$emit("showSnackbar", {
+              text: "Reunião excluída com sucesso",
+              color: "red",
+            });
           }, 1000);
         });
     },

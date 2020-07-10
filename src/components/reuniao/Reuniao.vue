@@ -80,9 +80,13 @@
     </v-row>
     <NovaReuniao
       :show="btnReuniao"
-      @close="btnReuniao = false"
+      @close="
+        btnReuniao = false;
+        forceRerender();
+      "
       @getAllMeeting="getMeeting()"
       v-on:showSnackbar="showSnackbar"
+      :key="componentKey"
     ></NovaReuniao>
     <modalDetail
       v-if="showDetail"
@@ -114,6 +118,7 @@ export default {
       meetingDetail: null,
       showDetail: false,
       leaders: {},
+      componentKey: 0,
       snackbar: false,
       text: "",
       timeout: 3000,
@@ -148,6 +153,9 @@ export default {
 
   methods: {
     getMember: (item) => `${item.member.first_name} ${item.member.last_name}`,
+    forceRerender() {
+      this.componentKey += 1;
+    },
     getHeaders() {
       if (this.$route.name == "reuniaoAdm") {
         return [
