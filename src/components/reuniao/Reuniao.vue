@@ -198,7 +198,7 @@ export default {
       else if (sigla == "LR") return "Reunião de LR";
       else if (sigla == "CN") return "Reunião de Corner";
       else if (sigla == "O2O") return "One to One(O2O)";
-      else if (sigla == "TR") return "Traking";
+      else if (sigla == "TR") return "Tracking";
     },
 
     formatPercentage(item) {
